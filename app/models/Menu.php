@@ -1,13 +1,10 @@
 <?php
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
+namespace Bento\Model;
 
-class Menu extends Eloquent implements UserInterface, RemindableInterface {
+use DB;
 
-	use UserTrait, RemindableTrait;
+class Menu extends \Eloquent {
 
 	/**
 	 * The database table used by the model.
@@ -16,6 +13,38 @@ class Menu extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $table = 'Menu';
         protected $primaryKey = 'pk_Menu';
-
         
+        public static function get($date) {
+            
+            $return = array();
+            
+            // Get the Menu
+            $sql = 'SELECT pk_Menu, name, for_date FROM Menu WHERE for_date = ? AND published';
+            $menu = DB::select($sql, array($date));
+            
+            // Return if empty
+            if (count($menu) == 0)
+                return NULL;
+            else 
+                $menu = $menu[0];
+            
+            // Hide the pk
+            $pk_Menu = $menu->pk_Menu;
+            unset($menu->pk_Menu);
+            
+            // Get Menu_Items
+            $sql2 = "
+                SELECT name, description, type, temp, image1, image2, max_per_order 
+                FROM Menu_Item
+                LEFT JOIN Dish on (fk_item = pk_Dish)
+                WHERE fk_Menu = ?
+                order by type
+            ";
+             $menuItems = DB::select($sql2, array($pk_Menu));
+             
+             $return['Menu'] = $menu;
+             $return['MenuItems'] = $menuItems;
+             
+             return $return;
+        }
 }

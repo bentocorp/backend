@@ -19,11 +19,12 @@ Route::get('/', function()
 
 
 /**
- * Authenticated Users Only
+ * Authenticated Users Only Routes
  */
-Route::group(array('before' => 'auth'), function() {
+#Route::group(array('before' => 'auth', 'namespace' => 'Bento\Ctrl'), function() {
+Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
-    Route::controller('menu', 'MenuCtrl');
+    Route::get('menu/{date}', 'MenuCtrl@show');
 
 });
 
@@ -32,7 +33,10 @@ Route::group(array('before' => 'auth'), function() {
 
 
 /**
- * Admins Only
+ * Admins Only Routes
+ * 
+ * prefix => admin: All routes accessed through /admin/{...}
+ * before => admin: Calling the admin filter on all routes.
  */
 Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
 

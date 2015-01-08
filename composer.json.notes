@@ -1,0 +1,4 @@
+// In autoload:
+//"psr-0": {
+	//"Bento\\Ctrl" : "app/controllers"
+//}

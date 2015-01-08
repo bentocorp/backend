@@ -1,16 +1,28 @@
 <?php
 
-class MenuCtrl extends BaseController {
+namespace Bento\Ctrl;
 
-    public function getShow($date) {
+use Bento\Model\Menu;
+
+class MenuCtrl extends \BaseController {
+
+    /**
+     * Get a menu for a given day
+     * 
+     * @param date $date In the format of date('Y-m-d') or date('Ymd'). Meaning YYYY-mm-dd or YYYYmmdd both seem to work with MySQL
+     * @return json Menu
+     */
+    public function show($date) {
         
-        #$todayDate = date('Y-m-d');
-        #echo $todayDate;
-        $menuToday = Menu::where('for_date', $date)->first();
+        // Check the cache first
+        #\Cache::add('laraTest2', 'laraValue', 1);
         
-        echo "$date";
+        $menu = Menu::get($date);
         
-        Cache::put('laraTest', 'laraValue', 5);
+        if ($menu === NULL)
+            return \Response::make(null, 404);
+        else
+            return \Response::json($menu);
     }
 
 }
