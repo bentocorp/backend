@@ -17,4 +17,27 @@ Route::get('/', function()
 });
 
 
-#Route::controller('menu', 'MenuCtrl');
+
+/**
+ * Authenticated Users Only
+ */
+Route::group(array('before' => 'auth'), function() {
+
+    Route::controller('menu', 'MenuCtrl');
+
+});
+
+
+
+
+
+/**
+ * Admins Only
+ */
+Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
+
+    // admin routes here
+
+});
+
+
