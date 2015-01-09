@@ -3,6 +3,7 @@
 namespace Bento\Model;
 
 use DB;
+use Cache;
 
 class Menu extends \Eloquent {
 
@@ -15,6 +16,17 @@ class Menu extends \Eloquent {
         protected $primaryKey = 'pk_Menu';
         
         public static function get($date) {
+            
+            // Create normalized cache token
+            $date = str_replace('-', '', $date);
+            $cacheKey = "Menu-SF-$date";
+
+            // Check the cache first
+            if (Cache::has($cacheKey)) {
+                return Cache::get($cacheKey);
+            }
+            
+            // Otherwise, query the DB...
             
             $return = array();
             
@@ -45,6 +57,12 @@ class Menu extends \Eloquent {
              $return['Menu'] = $menu;
              $return['MenuItems'] = $menuItems;
              
+             // Now add to cache
+             $return['source'] = 'cache';
+             Cache::put($cacheKey, $return, 5);
+             
+             // Return
+            $return['source'] = 'db';             
              return $return;
         }
 }

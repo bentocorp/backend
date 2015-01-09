@@ -3,6 +3,7 @@
 namespace Bento\Ctrl;
 
 use Bento\Model\Menu;
+use Response;
 
 class MenuCtrl extends \BaseController {
 
@@ -13,16 +14,13 @@ class MenuCtrl extends \BaseController {
      * @return json Menu
      */
     public function show($date) {
-        
-        // Check the cache first
-        #\Cache::add('laraTest2', 'laraValue', 1);
-        
+                
         $menu = Menu::get($date);
         
         if ($menu === NULL)
-            return \Response::make(null, 404);
+            return Response::make(null, 404);
         else
-            return \Response::json($menu);
+            return Response::json($menu);
     }
 
 }
