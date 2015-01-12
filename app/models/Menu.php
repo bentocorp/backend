@@ -46,10 +46,10 @@ class Menu extends \Eloquent {
             
             // Get Menu_Items
             $sql2 = "
-                SELECT name, description, type, temp, image1, image2, max_per_order 
-                FROM Menu_Item
-                LEFT JOIN Dish on (fk_item = pk_Dish)
-                WHERE fk_Menu = ?
+                SELECT d.pk_Dish itemId, d.name, d.description, d.type, d.temp, d.image1, d.image2, d.max_per_order 
+                FROM Menu_Item mi
+                LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)
+                WHERE mi.fk_Menu = ?
                 order by type
             ";
              $menuItems = DB::select($sql2, array($pk_Menu));

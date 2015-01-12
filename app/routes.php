@@ -17,6 +17,20 @@ Route::get('/', function()
 });
 
 
+/**
+ * Public Routes
+ */
+Route::group(array('namespace' => 'Bento\Ctrl'), function() {
+
+    ## /menu routes
+    Route::get('menu/{date}', 'MenuCtrl@show');
+    
+    ## /status routes
+    Route::controller('status', 'StatusCtrl');
+
+});
+
+
 
 /**
  * Authenticated Users Only Routes
@@ -24,11 +38,11 @@ Route::get('/', function()
 #Route::group(array('before' => 'auth', 'namespace' => 'Bento\Ctrl'), function() {
 Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
-    Route::get('menu/{date}', 'MenuCtrl@show');
+    ## /order routes
+    Route::post('order/phase1', 'OrderCtrl@phase1');
+    Route::post('order/phase2', 'OrderCtrl@phase2');
 
 });
-
-
 
 
 

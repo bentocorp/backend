@@ -8,7 +8,10 @@ $baseDir = dirname($vendorDir);
 return array(
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Bento\\Ctrl\\MenuCtrl' => $baseDir . '/app/controllers/MenuCtrl.php',
+    'Bento\\Ctrl\\OrderCtrl' => $baseDir . '/app/controllers/OrderCtrl.php',
+    'Bento\\Ctrl\\StatusCtrl' => $baseDir . '/app/controllers/StatusCtrl.php',
     'Bento\\Model\\Menu' => $baseDir . '/app/models/Menu.php',
+    'Bento\\Model\\Status' => $baseDir . '/app/models/Status.php',
     'DatabaseSeeder' => $baseDir . '/app/database/seeds/DatabaseSeeder.php',
     'HomeController' => $baseDir . '/app/controllers/examples/HomeController.php',
     'IlluminateQueueClosure' => $vendorDir . '/laravel/framework/src/Illuminate/Queue/IlluminateQueueClosure.php',
