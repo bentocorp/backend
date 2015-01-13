@@ -13,8 +13,14 @@
 
 Route::get('/', function()
 {
-	return View::make('hello');
+    return View::make('hello');
 });
+
+// Boostrapping (comment out when done)
+Route::group(array('namespace' => 'Bento\Ctrl'), function() {
+    Route::get('bs/do1', 'BootstrapCtrl@do1');
+});
+
 
 
 /**
@@ -53,9 +59,22 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
  * before => admin: Calling the admin filter on all routes.
  */
 Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
+#Route::group(array('prefix' => 'admin'), function() {
 
-    // admin routes here
+    // Admin index
+    Route::get('/', function() {
+        return View::make('admin.index');
+    });
+    
+});
+#Route::when('admin/*', 'admin');
 
+// These need to be able to be called without being logged in (duh)
+Route::get('admin/login', function() {
+    return View::make('admin.login');
 });
 
+Route::post('admin/login', 'Bento\Admin\Ctrl\UserCtrl@login');
 
+
+/** /End Admin Routes */

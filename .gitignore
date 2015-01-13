@@ -8,5 +8,7 @@ composer.phar
 Thumbs.db
 /nbproject/private/
 
+#/app/config/**/database.php
+
 *.bak
 
