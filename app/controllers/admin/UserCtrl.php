@@ -2,42 +2,41 @@
 
 namespace Bento\Admin\Ctrl;
 
-use Input;
-use DB;
-use Redirect;
-use Hash;
+use View;
+use User;
 use Session;
+use Redirect;
 
-class UserCtrl extends \BaseController {
 
-    public function login() {
-        
-        // Get from form
-        $username = Input::get('username');
-        $password = Input::get('password');
-        
-        // Get from DB
-        $sql = "select * from admin_User where username = ?";
-        $user = DB::select($sql, array($username));
-        
-        // User not found
-        if (count($user) != 1)
-            return Redirect::to('admin/login');
-        // User found
-        else {
-            $user = $user[0];
+class UserCtrl extends AdminBaseController {
 
-            // Good password
-            if (Hash::check($password, $user->password)) {
-                Session::put('isAdminLoggedIn', true);
-                return Redirect::to('admin/');
-            }
-            // Bad password
-            else {
-                die('bad password');
-                return Redirect::to('admin/login');
-            }
-        }
+    public function getIndex() {
+        
+        $data = array();
+        $users = User::all();
+        
+        $data['users'] = $users;
+        
+        return View::make('admin.user.index', $data);
+    }
+     
+    
+    public function getImpersonate($id) {
+        $user = User::find($id);
+        
+        Session::put('api_token', $user->api_token);
+        Session::put('api_impersonating', $user);
+        
+        $txt = "Impersonating $user->email";
+        
+        return Redirect::to('admin/user')->with('msg', array('type' => 'success', 'txt' => $txt));
+    }
+
+    
+    public function getLogout() {
+        Session::forget('api_token');
+        Session::forget('api_impersonating');
+        return Redirect::back();
     }
     
 }

@@ -1,0 +1,29 @@
+
+
+body {
+    
+}
+
+
+#sidebar {
+    background-color:#f8f8f8;
+}
+
+
+.admin-jsonTextarea {
+    height: 200px !important;
+}
+
+.admin-jsonForm {
+    margin-left: 20px;
+}
+
+
+/********************
+Bootstrap Overrides 
+********************/
+@media (min-width: 1200px) {
+  .container {
+    width: 1370px;
+  }
+}

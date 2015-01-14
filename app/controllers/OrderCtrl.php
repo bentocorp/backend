@@ -5,6 +5,7 @@ namespace Bento\Ctrl;
 use Bento\Model\Order;
 use Bento\Model\OrderEvent;
 use Response;
+use Input;
 
 class OrderCtrl extends \BaseController {
 
@@ -13,15 +14,6 @@ class OrderCtrl extends \BaseController {
      * Store a new pending order.
      * Hold the inventory in good faith by updating LiveInventory
      * 
-     * Expected JSON:
-        data {
-            userToken: 45678,
-            otherAttrs: foobar,
-            order: [
-                {itemId: qty},
-                {itemId: qty}
-            ]
-        }
      * 
      * @return json 
      */
@@ -29,6 +21,7 @@ class OrderCtrl extends \BaseController {
         
         // Get data
         $data = Input::get('data');
+        print_r($data); die();
         
         // Make sure this user doesn't already have a pending order
         # how?

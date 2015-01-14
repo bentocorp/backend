@@ -24,7 +24,7 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
 
 /**
- * Public Routes
+ * API: Public Routes
  */
 Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
@@ -39,10 +39,10 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
 
 /**
- * Authenticated Users Only Routes
+ * API: Authenticated Users Only Routes
  */
-#Route::group(array('before' => 'auth', 'namespace' => 'Bento\Ctrl'), function() {
-Route::group(array('namespace' => 'Bento\Ctrl'), function() {
+Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), function() {
+#Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
     ## /order routes
     Route::post('order/phase1', 'OrderCtrl@phase1');
@@ -61,20 +61,23 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
 #Route::group(array('prefix' => 'admin'), function() {
 
+    View::share('user', Session::get('adminUser'));
+    
     // Admin index
     Route::get('/', function() {
         return View::make('admin.index');
     });
     
-});
-#Route::when('admin/*', 'admin');
+    Route::controller('user', 'Bento\Admin\Ctrl\UserCtrl');
+    
+    Route::controller('apitest', 'Bento\Admin\Ctrl\ApiTestCtrl');
+    
+}); // /End protected admin rotes
 
 // These need to be able to be called without being logged in (duh)
 Route::get('admin/login', function() {
     return View::make('admin.login');
 });
 
-Route::post('admin/login', 'Bento\Admin\Ctrl\UserCtrl@login');
-
-
+Route::controller('admin', 'Bento\Admin\Ctrl\AdminUserCtrl');
 /** /End Admin Routes */

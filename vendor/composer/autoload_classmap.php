@@ -7,12 +7,17 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
+    'Bento\\Admin\\Ctrl\\AdminBaseController' => $baseDir . '/app/controllers/admin/AdminBaseController.php',
+    'Bento\\Admin\\Ctrl\\AdminUserCtrl' => $baseDir . '/app/controllers/admin/AdminUserCtrl.php',
+    'Bento\\Admin\\Ctrl\\ApiTestCtrl' => $baseDir . '/app/controllers/admin/ApiTestCtrl.php',
     'Bento\\Admin\\Ctrl\\UserCtrl' => $baseDir . '/app/controllers/admin/UserCtrl.php',
+    'Bento\\Admin\\Model\\User' => $baseDir . '/app/models/admin/User.php',
     'Bento\\Ctrl\\BootstrapCtrl' => $baseDir . '/app/controllers/bootstrap/Bootstrap.php',
     'Bento\\Ctrl\\MenuCtrl' => $baseDir . '/app/controllers/MenuCtrl.php',
     'Bento\\Ctrl\\OrderCtrl' => $baseDir . '/app/controllers/OrderCtrl.php',
     'Bento\\Ctrl\\StatusCtrl' => $baseDir . '/app/controllers/StatusCtrl.php',
     'Bento\\Filter\\AdminFilter' => $baseDir . '/app/filters/AdminFilter.php',
+    'Bento\\Filter\\ApiAuthFilter' => $baseDir . '/app/filters/ApiAuthFilter.php',
     'Bento\\Model\\Menu' => $baseDir . '/app/models/Menu.php',
     'Bento\\Model\\Status' => $baseDir . '/app/models/Status.php',
     'CreateSessionTable' => $baseDir . '/app/database/migrations/2015_01_13_014144_create_session_table.php',

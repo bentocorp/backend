@@ -8,6 +8,8 @@
 
     <!-- Bootstrap -->
     {{ HTML::style('css/bootstrap.min.css') }}
+    
+    {{ HTML::style('css/main.css') }}
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -16,13 +18,83 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
-    <h1>Hello, world!</h1>
-    @yield('content')
+  <body class="container">
 
+    <br>
+    
+    <div class="row">
+      <div class="col-lg-12">
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <a class="navbar-brand" href="/admin">Bento Admin</a>
+            </div>
+            <div class="collapse navbar-collapse">
+              <p class="navbar-text navbar-right">{{{ $user->name }}} 
+                (<a href="/admin/logout" class="navbar-link">Logout</a>) 
+                <?php
+                  if (Session::has('api_token')) {
+                      $fake = Session::get('api_impersonating');
+                      echo "<br><small>(Impersonating $fake->email) [<a href='/admin/user/logout' class='navbar-link'>Logout</a>]</small>";
+                  }
+                  ?>
+              </p>
+            </div>
+          </div>
+        </nav>
+        
+        
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+          <div id="sidebar">
+          
+            <ul class="nav nav-pills nav-stacked">
+              <li role="presentation"><a href="/admin">Home</a></li>
+            </ul>
+
+            <h4>Kitchen</h4>
+            <ul class="nav nav-pills nav-stacked">
+              <li role="presentation"><a href="/admin/dish">Dishes</a></li>
+              <li role="presentation"><a href="/admin/menu">Menus</a></li>
+              <li role="presentation"><a href="/admin/preplog">Prep Log</a></li>
+            </ul>
+
+            <h4>Business</h4>
+            <ul class="nav nav-pills nav-stacked">
+              <li role="presentation"><a href="/admin/coupon">Coupons</a></li>
+              <li role="presentation"><a href="/admin/driver">Drivers</a></li>
+              <li role="presentation"><a href="/admin/order">Orders</a></li>
+              <li role="presentation"><a href="/admin/user">Users</a></li>
+            </ul>
+
+            <h4>Ops</h4>
+            <ul class="nav nav-pills nav-stacked">
+              <li role="presentation"><a href="/admin/dashboard">Dashboard</a></li>
+              <li role="presentation"><a href="/admin/apitest">API Tests</a></li>
+            </ul>
+          
+          </div>
+        </div>
+        <div class="col-lg-9">
+          <?php
+            if (Session::has('msg')) {
+                $msg = Session::get('msg');
+                echo "<div class='alert alert-{$msg['type']}' role='alert'>{$msg['txt']}</div>";
+            }
+            ?>
+          
+          @yield('content')
+        </div>
+    </div>
+      
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     {{ HTML::script('js/bootstrap.min.js') }}
+    
   </body>
 </html>

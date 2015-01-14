@@ -12,6 +12,7 @@ class AdminFilter {
         if (Session::has('isAdminLoggedIn')){
             // Return nothing to execute the route
             #return Redirect::to('admin/');
+            #return Redirect::intended();
         }
         else {
             return Redirect::to('admin/login');

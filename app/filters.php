@@ -54,6 +54,7 @@ Route::filter('auth.basic', function()
 
 
 Route::filter('admin', 'Bento\Filter\AdminFilter');
+Route::filter('api_auth', 'Bento\Filter\ApiAuthFilter');
 
 
 /*
