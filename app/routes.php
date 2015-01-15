@@ -13,7 +13,8 @@
 
 Route::get('/', function()
 {
-    return View::make('hello');
+    #return View::make('hello');
+    return Redirect::away('http://signup.bentonow.com');
 });
 
 // Boostrapping (comment out when done)
