@@ -4,7 +4,7 @@
 # server in each group is considered to be the first
 # unless any hosts have the primary property set.
 # Don't declare `role :all`, it's a meta role
-role :app, %w{bento-prod-api1}
+role :app, %w{bento-prod-api1 bento-prod-api2}
 #role :web, %w{some-other-thing}
 #role :db,  %w{deploy@example.com}
 

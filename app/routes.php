@@ -11,10 +11,15 @@
 |
 */
 
-Route::get('/', function()
-{
+// Index
+Route::get('/', function() {
     #return View::make('hello');
     return Redirect::away('http://signup.bentonow.com');
+});
+
+// Health check
+Route::get('/healthcheck', function() {
+    return Response::make('ok', 200);
 });
 
 // Boostrapping (comment out when done)
@@ -24,8 +29,9 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
 
 
-/**
+/****************************************************************************
  * API: Public Routes
+ ****************************************************************************
  */
 Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
@@ -39,8 +45,9 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
 
 
-/**
+/****************************************************************************
  * API: Authenticated Users Only Routes
+ ****************************************************************************
  */
 Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), function() {
 #Route::group(array('namespace' => 'Bento\Ctrl'), function() {
@@ -53,8 +60,9 @@ Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), functio
 
 
 
-/**
+/****************************************************************************
  * Admins Only Routes
+ ****************************************************************************
  * 
  * prefix => admin: All routes accessed through /admin/{...}
  * before => admin: Calling the admin filter on all routes.
