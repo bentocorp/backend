@@ -22,10 +22,10 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'bento',
-			'username'  => 'root',
-			'password'  => '',
+			'host'      => $_ENV['dbhost'],
+			'database'  => $_ENV['dbschema'],
+			'username'  => $_ENV['dbusername'],
+			'password'  => $_ENV['dbpassword'],
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

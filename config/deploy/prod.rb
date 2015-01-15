@@ -20,7 +20,7 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 2 do
       # Your restart mechanism here, for example:
       #execute "cd #{release_path}/build_scripts && phing devtest"
-      #execute "cp #{deploy_to}/../components/.env.php #{release_path}"
+      execute "cp #{deploy_to}/../components/.env.php #{release_path}"
       #execute "cp -r #{deploy_to}/../components/vendor #{release_path}"
     end
   end
