@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'default' => 'mysql',
+	'default' => 'sqlite',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -63,6 +63,7 @@ return array(
 			'prefix'    => '',
 		),
 
+                /*
 		'pgsql' => array(
 			'driver'   => 'pgsql',
 			'host'     => 'localhost',
@@ -82,6 +83,7 @@ return array(
 			'password' => '',
 			'prefix'   => '',
 		),
+                 */
 
 	),
 
