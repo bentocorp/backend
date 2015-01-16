@@ -23,7 +23,7 @@ class ApiAuthFilter {
             if (count($user) != 1)
                 Response::make('Unauthorized', 401);
             else
-                User::set($user);
+                User::set($user[0]);
         }
         // Not logged in
         else {

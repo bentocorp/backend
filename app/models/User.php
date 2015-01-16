@@ -35,5 +35,5 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
         public static function get() {
             return self::$apiUser;
         }
-
+        
 }

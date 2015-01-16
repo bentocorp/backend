@@ -10,16 +10,27 @@ api_token: {{{Session::get('api_token')}}}
 
 <h1>Orders</h1>
  
-    <form action="/order/phase1" method="post" class="admin-jsonForm">
+    <form action="/order/phase1" method="post" class="admin-jsonForm" enctype='application/json'>
       <h3><span class="label label-primary">&nbsp;</span> POST: /order/phase1</h3>
-      
+      <br>
+      <b>Returns:</b><br>
+      <ul>
+        <li><code>200</code> if ok. <br>
+          {"reserveId":5}<br></li>
+        <li><code>400</code> if pending order exists. <br>
+          {"Error":"A pending order already exists for you."}<br></li>
+        <li><code>410</code> if the inventory is not available. <br>
+          {"Error":"Some of our inventory just sold out!"}<br>
+          <mark>At this point, you should call <code>/status/menu</code> again and
+            refresh which items are out of stock!</mark></li>
+      </ul>
+      <br>
       data:<br>
       <textarea name="data" class="form-control admin-jsonTextarea">
 {
-    otherAttrs: foobar,
-    order: [
-        {itemId: qty},
-        {itemId: qty}
+    "order": [
+        {"itemId": 2},
+        {"itemId": 2}
     ]
 }
       </textarea>
@@ -35,7 +46,8 @@ api_token: {{{Session::get('api_token')}}}
     
     <h3>GET:</h3>
     <ul>
-      <li><span class="label label-success">&nbsp;</span> <a href="/menu/20150107">/menu/20150107</a></li>
+      <li><span class="label label-success">&nbsp;</span> <a href="/menu/20150107">/menu/20150107</a><br>
+        return: 200 | 404</li>
     </ul>
 
 <h1>Status</h1>

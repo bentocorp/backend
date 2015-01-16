@@ -4,6 +4,8 @@ namespace Bento\Ctrl;
 
 use Bento\Model\Order;
 use Bento\Model\OrderEvent;
+use Bento\Model\PendingOrder;
+use Bento\Model\LiveInventory;
 use Response;
 use Input;
 
@@ -20,17 +22,22 @@ class OrderCtrl extends \BaseController {
     public function phase1() {
         
         // Get data
-        $data = Input::get('data');
-        print_r($data); die();
+        $data = json_decode(Input::get('data'));
         
         // Make sure this user doesn't already have a pending order
-        # how?
+        $pendingOrder = PendingOrder::checkUser();
+        if ($pendingOrder)
+            return Response::json(array('Error' => 'A pending order already exists for you.'), 400);
                 
         // Update LiveInventory and store into PendingOrder
         // (Phase 2 makes it final)
+        $reserved = LiveInventory::reserve($data);
+        #$reserved = false;
         
-        
-        return Response::json($status);
+        if ($reserved !== false)
+            return Response::json(array('reserveId' => $reserved));
+        else
+            return Response::json(array('Error' => 'Some of our inventory in your order just sold out!'), 410);
     }
     
     
