@@ -22,13 +22,19 @@ class PendingOrder extends \Eloquent {
          */
         public static function checkUser() {
             
-            $user = User::get();
-            
-            $pending = self::where('fk_User', '=', $user->pk_User)->first();
+            $pending = self::getUserPendingOrder();
             
             if ($pending === NULL)
                 return false;
             else
                 return true;
+        }
+        
+        
+        public static function getUserPendingOrder() {
+            $user = User::get();
+            $pending = self::where('fk_User', '=', $user->pk_User)->first();
+            
+            return $pending;
         }
 }

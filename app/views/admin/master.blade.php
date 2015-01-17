@@ -7,9 +7,10 @@
     <title>Bento Admin</title>
 
     <!-- Bootstrap -->
-    {{ HTML::style('css/bootstrap.min.css') }}
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     
-    {{ HTML::style('css/main.css') }}
+    <!-- Everything else -->
+    <link rel="stylesheet" href="/css/main.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -68,6 +69,7 @@
               <li role="presentation"><a href="/admin/coupon">Coupons</a></li>
               <li role="presentation"><a href="/admin/driver">Drivers</a></li>
               <li role="presentation"><a href="/admin/order">Orders</a></li>
+              <li role="presentation"><a href="/admin/order">Pending Orders</a></li>
               <li role="presentation"><a href="/admin/user">Users</a></li>
             </ul>
 
@@ -94,7 +96,7 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    {{ HTML::script('js/bootstrap.min.js') }}
+    <script src="/js/bootstrap.min.js"></script>
     
   </body>
 </html>

@@ -2,7 +2,9 @@
 
 namespace Bento\Model;
 
+use Bento\Model\PendingOrder;
 use DB;
+use User;
 use Illuminate\Database\QueryException;
 
 
@@ -26,22 +28,32 @@ class LiveInventory extends \Eloquent {
          */
         public static function reserve($data) {
             
-            #UPDATE `bento`.`LiveInventory` SET `qty`='-1' WHERE `pk_LiveInventory`='17';
-
             /*
              * The DB is set to an unsigned int, so it cannot become negative.
              * We wrap each deduction in a transaction, and if any of them fail, we know
              * that we don't have enough inventory to complete this order.
              */
             try {
-                DB::transaction(function()
+                DB::transaction(function() use ($data)
                 {
-                    DB::update("update LiveInventory set qty = qty - 1 WHERE fk_item = ?", array(11));
-                    DB::update("update LiveInventory set qty = qty - 1 WHERE fk_item = ?", array(9));
+                    foreach ($data->order as $order) {
+                      DB::update("update LiveInventory set qty = qty - ? WHERE fk_item = ?", array($order->qty, $order->id));
+                    }
                 });
             }
             catch(QueryException $e) {
                 return false;
             }
+            
+            // Everything is good so far. Insert into PendingOrder.
+            $user = User::get();
+            
+            $pendingOrder = new PendingOrder;
+            $pendingOrder->fk_User = $user->pk_User;
+            $pendingOrder->order_json = json_encode($data);
+            $pendingOrder->save();
+            
+            // Returning the PendingOrder id
+            return $pendingOrder->pk_PendingOrder;
         }
 }
