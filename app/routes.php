@@ -35,6 +35,9 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
  */
 Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
+    ## /init routes
+    #Route::controller('init', 'InitCtrl');
+    
     ## /menu routes
     Route::get('menu/{date}', 'MenuCtrl@show');
     
@@ -51,7 +54,7 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
  */
 Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), function() {
 #Route::group(array('namespace' => 'Bento\Ctrl'), function() {
-
+        
     ## /order routes
     Route::post('order/phase1', 'OrderCtrl@phase1');
     Route::post('order/phase2', 'OrderCtrl@phase2');
@@ -76,6 +79,8 @@ Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
     Route::get('/', function() {
         return View::make('admin.index');
     });
+    
+    Route::controller('pendingorder', 'Bento\Admin\Ctrl\PendingOrderCtrl');
     
     Route::controller('user', 'Bento\Admin\Ctrl\UserCtrl');
     

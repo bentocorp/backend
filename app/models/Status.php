@@ -9,7 +9,7 @@ class Status {
 
     public static function overall() {
         
-        $sql = "select `value` from hash where `key` = 'status'";
+        $sql = "select `value` from settings where `key` = 'status'";
         $response = DB::select($sql, array())[0];
         
         return $response;

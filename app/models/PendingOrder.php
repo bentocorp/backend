@@ -3,9 +3,12 @@
 namespace Bento\Model;
 
 use User;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class PendingOrder extends \Eloquent {
 
+        use SoftDeletingTrait;
+    
 	/**
 	 * The database table used by the model.
 	 *

@@ -50,7 +50,7 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-2">
           <div id="sidebar">
           
             <ul class="nav nav-pills nav-stacked">
@@ -69,7 +69,7 @@
               <li role="presentation"><a href="/admin/coupon">Coupons</a></li>
               <li role="presentation"><a href="/admin/driver">Drivers</a></li>
               <li role="presentation"><a href="/admin/order">Orders</a></li>
-              <li role="presentation"><a href="/admin/order">Pending Orders</a></li>
+              <li role="presentation"><a href="/admin/pendingorder">Pending Orders</a></li>
               <li role="presentation"><a href="/admin/user">Users</a></li>
             </ul>
 
@@ -81,7 +81,7 @@
           
           </div>
         </div>
-        <div class="col-lg-9">
+        <div class="col-lg-10">
           <?php
             if (Session::has('msg')) {
                 $msg = Session::get('msg');

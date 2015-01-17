@@ -36,6 +36,7 @@ class UserCtrl extends AdminBaseController {
     public function getLogout() {
         Session::forget('api_token');
         Session::forget('api_impersonating');
+        
         return Redirect::back();
     }
     
