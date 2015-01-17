@@ -19,8 +19,9 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body class="container">
+  <body>
 
+  <div class="container">
     <br>
     
     <div class="row">
@@ -92,6 +93,14 @@
           @yield('content')
         </div>
     </div>
+    
+  </div><!-- /container -->
+    
+    <footer class="footer">
+        <div class="container">
+          <p class="text-muted">&copy; Bento.</p>
+        </div>
+    </footer>
       
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

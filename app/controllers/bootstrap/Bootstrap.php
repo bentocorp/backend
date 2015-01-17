@@ -12,10 +12,13 @@ class BootstrapCtrl extends \BaseController {
         $password = Hash::make('pass');
         echo $password;
         
+        /*
         if (Hash::check('pass', 'encrypted'))
         {
             echo' The passwords match...';
         }
+         * 
+         */
     }
 
 }
