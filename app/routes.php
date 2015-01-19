@@ -17,15 +17,15 @@ Route::get('/', function() {
     return Redirect::away('http://signup.bentonow.com');
 });
 
-// Health check
+// AWS Health check
 Route::get('/healthcheck', function() {
     return Response::make('ok', 200);
 });
 
 // Boostrapping (comment out when done)
-Route::group(array('namespace' => 'Bento\Ctrl'), function() {
-    Route::get('bs/do1', 'BootstrapCtrl@do1');
-});
+#Route::group(array('namespace' => 'Bento\Ctrl'), function() {
+#    Route::get('bs/do1', 'BootstrapCtrl@do1');
+#});
 
 
 
@@ -43,7 +43,9 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
     
     ## /status routes
     Route::controller('status', 'StatusCtrl');
-
+    
+    ## /misc routes
+    Route::get('/ioscopy', 'MiscCtrl@getIoscopy');
 });
 
 
@@ -85,6 +87,8 @@ Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
     Route::controller('user', 'Bento\Admin\Ctrl\UserCtrl');
     
     Route::controller('apitest', 'Bento\Admin\Ctrl\ApiTestCtrl');
+    
+    Route::controller('misc', 'Bento\Admin\Ctrl\MiscCtrl');
     
 }); // /End protected admin rotes
 

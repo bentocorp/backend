@@ -31,7 +31,9 @@ class Menu extends \Eloquent {
             $return = array();
             
             // Get the Menu
-            $sql = 'SELECT pk_Menu, name, for_date FROM Menu WHERE for_date = ? AND published';
+            $sql = 'SELECT pk_Menu, name, for_date, bgimg 
+                    FROM Menu 
+                    WHERE for_date = ? AND published';
             $menu = DB::select($sql, array($date));
             
             // Return if empty
@@ -46,7 +48,7 @@ class Menu extends \Eloquent {
             
             // Get Menu_Items
             $sql2 = "
-                SELECT d.pk_Dish itemId, d.name, d.description, d.type, d.temp, d.image1, d.image2, d.max_per_order 
+                SELECT d.pk_Dish itemId, d.name, d.description, d.type, d.image1, d.max_per_order
                 FROM Menu_Item mi
                 LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)
                 WHERE mi.fk_Menu = ?

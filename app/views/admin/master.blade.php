@@ -78,6 +78,7 @@
             <ul class="nav nav-pills nav-stacked">
               <li role="presentation"><a href="/admin/dashboard">Dashboard</a></li>
               <li role="presentation"><a href="/admin/apitest">API Tests</a></li>
+              <li role="presentation"><a href="/admin/misc/ioscopy">iOS Copy</a></li>
             </ul>
           
           </div>

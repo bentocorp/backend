@@ -64,9 +64,10 @@ class OrderCtrl extends \BaseController {
         // Get data
         $data = json_decode(Input::get('data'));
         
-        // Get the pending order
+        // Get the PendingOrder
         $pendingOrder = PendingOrder::getUserPendingOrder();
         
+        // Return 404 if PendingOrder not found
         if ($pendingOrder === NULL)
             return Response::json('', 404);
         
@@ -74,17 +75,19 @@ class OrderCtrl extends \BaseController {
         #$stripe->veryifyOrder($data);
         
         // Insert into Order
-        $order = new Order();
+        #$order = new Order();
         # do stuff
-        $order->save();
+        #$order->save();
         
         // Insert into OrderEvent
-        $orderEvent = new OrderEvent();
+        #$orderEvent = new OrderEvent();
         # do stuff
-        $orderEvent->save();
+        #$orderEvent->save();
         
         // Dispatch the driver
         # do stuff
+        
+        return Response::json('', 200);
     }
     
 }
