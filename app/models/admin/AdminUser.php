@@ -2,7 +2,7 @@
 
 namespace Bento\Admin\Model;
 
-use Illuminate\Auth\UserTrait;
+#use Illuminate\Auth\UserTrait;
 
 
 class AdminUser extends \Eloquent {

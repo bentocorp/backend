@@ -79,6 +79,7 @@
               <li role="presentation"><a href="/admin/dashboard">Dashboard</a></li>
               <li role="presentation"><a href="/admin/apitest">API Tests</a></li>
               <li role="presentation"><a href="/admin/misc/ioscopy">iOS Copy</a></li>
+              <li role="presentation"><a href="/admin/settings">Settings</a></li>
             </ul>
           
           </div>

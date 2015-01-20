@@ -2,7 +2,8 @@
 
 namespace Bento\Ctrl;
 
-use Bento\Model\Status;
+use Request;
+use Route;
 use Response;
 
 class InitCtrl extends \BaseController {
@@ -12,24 +13,26 @@ class InitCtrl extends \BaseController {
      * 
      * @return json 
      */
-    public function getOverall() {
-                
-        $status = Status::overall();
+    public function getIndex() {
         
-        return Response::json($status);
+        $return = array();
+        
+        ## /status/overall
+        $request = Request::create('/status/overall', 'GET');
+        $instance = json_decode(Route::dispatch($request)->getContent());
+        $return['/status/overall'] = $instance;
+        
+        ## /ioscopy
+        $request = Request::create('/ioscopy', 'GET');
+        $instance = json_decode(Route::dispatch($request)->getContent());
+        $return['/ioscopy'] = $instance;
+        
+        ## /servicearea
+        $request = Request::create('/servicearea', 'GET');
+        $instance = json_decode(Route::dispatch($request)->getContent());
+        $return['/servicearea'] = $instance;
+        
+        return Response::json($return);
     }
     
-    
-    /**
-     * Get current status of each menu item
-     * 
-     * @return json 
-     */
-    public function getMenu() {
-                
-        $status = Status::menu();
-        
-        return Response::json($status);
-    }
-
 }

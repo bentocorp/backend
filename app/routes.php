@@ -36,7 +36,7 @@ Route::get('/healthcheck', function() {
 Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
     ## /init routes
-    #Route::controller('init', 'InitCtrl');
+    Route::controller('init', 'InitCtrl');
     
     ## /menu routes
     Route::get('menu/{date}', 'MenuCtrl@show');
@@ -52,6 +52,7 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
     
     ## /misc routes
     Route::get('/ioscopy', 'MiscCtrl@getIoscopy');
+    Route::get('/servicearea', 'MiscCtrl@getServicearea');
 });
 
 
@@ -95,6 +96,8 @@ Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
     Route::controller('apitest', 'Bento\Admin\Ctrl\ApiTestCtrl');
     
     Route::controller('misc', 'Bento\Admin\Ctrl\MiscCtrl');
+    
+    Route::controller('settings', 'Bento\Admin\Ctrl\SettingsCtrl');
     
 }); // /End protected admin rotes
 
