@@ -44,6 +44,12 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
     ## /status routes
     Route::controller('status', 'StatusCtrl');
     
+    ## PUBLIC /user routes
+    Route::post('user/signup', 'UserCtrl@postSignup');
+    Route::post('user/fbsignup', 'UserCtrl@postFbsignup');
+    Route::post('user/login', 'UserCtrl@postLogin');
+    Route::post('user/fblogin', 'UserCtrl@postFblogin');
+    
     ## /misc routes
     Route::get('/ioscopy', 'MiscCtrl@getIoscopy');
 });

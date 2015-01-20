@@ -21,6 +21,7 @@ return array(
     'Bento\\Ctrl\\MiscCtrl' => $baseDir . '/app/controllers/MiscCtrl.php',
     'Bento\\Ctrl\\OrderCtrl' => $baseDir . '/app/controllers/OrderCtrl.php',
     'Bento\\Ctrl\\StatusCtrl' => $baseDir . '/app/controllers/StatusCtrl.php',
+    'Bento\\Ctrl\\UserCtrl' => $baseDir . '/app/controllers/UserCtrl.php',
     'Bento\\Filter\\AdminFilter' => $baseDir . '/app/filters/AdminFilter.php',
     'Bento\\Filter\\ApiAuthFilter' => $baseDir . '/app/filters/ApiAuthFilter.php',
     'Bento\\Model\\LiveInventory' => $baseDir . '/app/models/LiveInventory.php',
