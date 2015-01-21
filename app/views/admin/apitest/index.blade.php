@@ -40,13 +40,31 @@ Order
     </ul>
 
     <form action="/order/phase1" method="post">
-      data:<br>
+      data: (an example with two CustomerBentoBox)<br>
       <textarea name="data" class="form-control admin-jsonTextarea">
 {
-    "order": [
-        {"id": 1, "qty": 2},
-        {"id": 3, "qty": 2}
-    ]
+    "OrderItems": [
+        {
+            "item_type": "CustomerBentoBox",
+            "items": [{"id": 3, "qty": 2}, {"id": 1, "qty": 2}, {"id": 5, "qty": 1}, {"id": 11, "qty": 1}]
+        },
+        {
+            "item_type": "CustomerBentoBox",
+            "items": [{"id": 4, "qty": 1}, {"id": 5, "qty": 2}, {"id": 11, "qty": 1}]
+        }
+    ],
+    "OrderDetails": {
+        "address": {
+            "street": "1111 Kearny st.",
+            "city": "San Francisco",
+            "state": "CA",
+            "zip": "94133"
+        },
+        "coords": {
+            "lat": "37.798220",
+            "long": "-122.405606"
+        }
+    }
 }
       </textarea>
       <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">

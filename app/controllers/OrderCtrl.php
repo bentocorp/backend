@@ -37,8 +37,10 @@ class OrderCtrl extends \BaseController {
         // (Phase 2 makes it final)
         $reserved = LiveInventory::reserve($data);
         
+        // Inventory reservation went ok.
         if ($reserved !== false)
             return Response::json(array('reserveId' => $reserved));
+        // Inventory reservation failed. We are out of something.
         else {
             // Since the inventory is incorrect in the client, conveniently send it back to them
             $menuStatus = Status::menu();
@@ -89,7 +91,6 @@ class OrderCtrl extends \BaseController {
         $order->fk_User = $user->pk_User;
         $order->amount = $ch->amount / 100;
         $order->stripe_charge_id = $stripeChargeId;
-        $order->stripe_charge_obj = $ch;
         $order->save();
         
         // Insert into OrderEvent

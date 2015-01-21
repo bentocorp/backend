@@ -28,16 +28,32 @@ class LiveInventory extends \Eloquent {
          */
         public static function reserve($data) {
             
-            /*
+            /* First calculate the totals */
+            $totals = array();
+            
+            // For each CustomerBentoBox
+            foreach ($data->OrderItems as $orderItem) {
+                // Now for each thing in the box
+                foreach($orderItem->items as $item) {
+                    // Increment, or init
+                    $totals[$item->id] = isset($totals[$item->id]) 
+                            ? $totals[$item->id] += $item->qty  
+                            : $item->qty;
+                }
+            }
+            #print_r($totals); die(); #
+            
+            /* Next, try to reserve the totals
+             * 
              * The DB is set to an unsigned int, so it cannot become negative.
              * We wrap each deduction in a transaction, and if any of them fail, we know
              * that we don't have enough inventory to complete this order.
              */
             try {
-                DB::transaction(function() use ($data)
+                DB::transaction(function() use ($totals)
                 {
-                    foreach ($data->order as $order) {
-                      DB::update("update LiveInventory set qty = qty - ? WHERE fk_item = ?", array($order->qty, $order->id));
+                    foreach ($totals as $itemId => $itemQty) {
+                      DB::update("update LiveInventory set qty = qty - ? WHERE fk_item = ?", array($itemQty, $itemId));
                     }
                 });
             }
