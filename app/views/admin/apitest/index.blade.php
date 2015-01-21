@@ -71,7 +71,8 @@ Order
       <textarea name="data" class="form-control admin-jsonTextarea">
 {
     "pendingOrderId": 4,
-    "orderDetails": 0
+    "orderDetails": 0,
+    "stripe_chargeId": "ch_15NBUFEmZcPNENoGNKwyB7C9"
 }
       </textarea>
       <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">

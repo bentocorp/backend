@@ -28,6 +28,7 @@ return array(
     'Bento\\Filter\\ApiAuthFilter' => $baseDir . '/app/filters/ApiAuthFilter.php',
     'Bento\\Model\\LiveInventory' => $baseDir . '/app/models/LiveInventory.php',
     'Bento\\Model\\Menu' => $baseDir . '/app/models/Menu.php',
+    'Bento\\Model\\Order' => $baseDir . '/app/models/Order.php',
     'Bento\\Model\\PendingOrder' => $baseDir . '/app/models/PendingOrder.php',
     'Bento\\Model\\Status' => $baseDir . '/app/models/Status.php',
     'CreateSessionTable' => $baseDir . '/app/database/migrations/2015_01_13_014144_create_session_table.php',

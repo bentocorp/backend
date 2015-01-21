@@ -7,10 +7,10 @@ use Bento\Model\OrderEvent;
 use Bento\Model\PendingOrder;
 use Bento\Model\LiveInventory;
 use Bento\Model\Status;
+use User;
 use Response;
 use Input;
-use Request;
-use Route;
+use Stripe; use Stripe_Charge;
 
 class OrderCtrl extends \BaseController {
 
@@ -67,22 +67,38 @@ class OrderCtrl extends \BaseController {
         // Get the PendingOrder
         $pendingOrder = PendingOrder::getUserPendingOrder();
         
+        // Get the user
+        $user = User::get();
+        
         // Return 404 if PendingOrder not found
         if ($pendingOrder === NULL)
             return Response::json('', 404);
         
         // Perform payment verification with gateway
-        #$stripe->veryifyOrder($data);
+        try {
+            Stripe::setApiKey($_ENV['Stripe_sk_test']);
+            $stripeChargeId = $data->stripe_chargeId;
+            $ch = Stripe_Charge::retrieve($stripeChargeId);
+        }
+        catch (\Exception $e) {
+            return Response::json(array('Error' => 'Invalid stripe_chargeId.'), 400);
+        }
         
         // Insert into Order
-        #$order = new Order();
-        # do stuff
-        #$order->save();
+        $order = new Order();
+        $order->fk_User = $user->pk_User;
+        $order->amount = $ch->amount / 100;
+        $order->stripe_charge_id = $stripeChargeId;
+        $order->stripe_charge_obj = $ch;
+        $order->save();
         
         // Insert into OrderEvent
         #$orderEvent = new OrderEvent();
         # do stuff
         #$orderEvent->save();
+        
+        // Soft-delete pending order
+        $pendingOrder->delete();
         
         // Dispatch the driver
         # do stuff
