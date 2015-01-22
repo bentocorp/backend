@@ -17,6 +17,16 @@ Order
 <hr>
 <h1>Order</h1>
  
+    <b>A reminder about the flow:</b><br>
+    <p>
+    The user makes their bento box, and wants to pay. BEFORE you process their payment on stripe,
+    you have to send the order to /order/phase1. I will check the inventory, make sure I have it, 
+    and reserve the inventory for that user. If all that is okay, I return 200. Then you process
+    their payment, and send me the confirmation to /order/phase2. Then I dispatch the order.
+    </p>
+    
+    <br>
+
     <!-- <div class="admin-jsonForm"> -->
     <h3><span class="label label-primary">&nbsp;</span> 
       POST: /order/phase1</h3>
