@@ -3,7 +3,8 @@
 namespace Bento\Ctrl;
 
 use Bento\Model\Order;
-use Bento\Model\OrderEvent;
+use Bento\Model\OrderStatus;
+use Bento\Model\CustomerBentoBox;
 use Bento\Model\PendingOrder;
 use Bento\Model\LiveInventory;
 use Bento\Model\Status;
@@ -68,15 +69,12 @@ class OrderCtrl extends \BaseController {
         
         // Get the PendingOrder
         $pendingOrder = PendingOrder::getUserPendingOrder();
-        
-        // Get the user
-        $user = User::get();
-        
+                
         // Return 404 if PendingOrder not found
         if ($pendingOrder === NULL)
             return Response::json('', 404);
         
-        // Perform payment verification with gateway
+        // Perform payment verification with Stripe
         try {
             Stripe::setApiKey($_ENV['Stripe_sk_test']);
             $stripeChargeId = $data->stripe_chargeId;
@@ -86,17 +84,42 @@ class OrderCtrl extends \BaseController {
             return Response::json(array('Error' => 'Invalid stripe_chargeId.'), 400);
         }
         
+        // Everything's good at this point.
+        $this->processOrder($pendingOrder, $ch);
+    }
+    
+    
+    private function processOrder($pendingOrder, $ch) {
+        
+        // Get the user
+        $user = User::get();
+
         // Insert into Order
-        $order = new Order();
+        $order = new Order;
+        
+        $orderJson = json_decode($pendingOrder->order_json);
+        
+        $order->street = $orderJson->OrderDetails->address->street;
+        $order->city = $orderJson->OrderDetails->address->city;
+        $order->state = $orderJson->OrderDetails->address->state;
+        $order->zip = $orderJson->OrderDetails->address->zip;
+        $order->lat = $orderJson->OrderDetails->coords->lat;
+        $order->long = $orderJson->OrderDetails->coords->long;
+        
         $order->fk_User = $user->pk_User;
         $order->amount = $ch->amount / 100;
-        $order->stripe_charge_id = $stripeChargeId;
+        $order->stripe_charge_id = $ch->id;
+        $order->fk_PendingOrder = $pendingOrder->pk_PendingOrder;
+        
         $order->save();
         
-        // Insert into OrderEvent
-        #$orderEvent = new OrderEvent();
-        # do stuff
-        #$orderEvent->save();
+        // Insert into OrderStatus
+        $orderStatus = new OrderStatus;
+        $orderStatus->fk_Order = $order->pk_Order;
+        $orderStatus->save();
+        
+        // Insert into CustomerBentoBox
+        $this->insertCustomerBentoBoxes($orderJson, $order->pk_Order);
         
         // Soft-delete pending order
         $pendingOrder->delete();
@@ -105,6 +128,27 @@ class OrderCtrl extends \BaseController {
         # do stuff
         
         return Response::json('', 200);
+    }
+    
+    
+    private function insertCustomerBentoBoxes($orderJson, $pk_Order) {
+        
+        // For each CustomerBentoBox
+        foreach ($orderJson->OrderItems as $orderItem) {
+            
+            // Make a CustomerBentoBox
+            $box = new CustomerBentoBox;
+            $box->fk_Order = $pk_Order;
+            
+            // Now for each thing in the box
+            foreach($orderItem->items as $item) {
+                $fk = "fk_$item->type";
+                $box->{$fk} = $item->id;
+            }
+            
+            // Save the box
+            $box->save();
+        }
     }
     
 }

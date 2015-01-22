@@ -37,8 +37,8 @@ class LiveInventory extends \Eloquent {
                 foreach($orderItem->items as $item) {
                     // Increment, or init
                     $totals[$item->id] = isset($totals[$item->id]) 
-                            ? $totals[$item->id] += $item->qty  
-                            : $item->qty;
+                            ? $totals[$item->id] += 1  
+                            : 1;
                 }
             }
             #print_r($totals); die(); #

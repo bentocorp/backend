@@ -46,11 +46,23 @@ Order
     "OrderItems": [
         {
             "item_type": "CustomerBentoBox",
-            "items": [{"id": 3, "qty": 2}, {"id": 1, "qty": 2}, {"id": 5, "qty": 1}, {"id": 11, "qty": 1}]
+            "items": [
+                {"id": 3,  "type": "main"}, 
+                {"id": 1,  "type": "side1"},
+                {"id": 1,  "type": "side2"},
+                {"id": 5,  "type": "side3"}, 
+                {"id": 11, "type": "side4"}
+            ]
         },
         {
             "item_type": "CustomerBentoBox",
-            "items": [{"id": 4, "qty": 1}, {"id": 5, "qty": 2}, {"id": 11, "qty": 1}]
+            "items": [
+                {"id": 4,  "type": "main"}, 
+                {"id": 5,  "type": "side1"}, 
+                {"id": 11, "type": "side2"},
+                {"id": 6,  "type": "side3"},
+                {"id": 5,  "type": "side4"} 
+            ]
         }
     ],
     "OrderDetails": {
@@ -89,7 +101,6 @@ Order
       <textarea name="data" class="form-control admin-jsonTextarea">
 {
     "pendingOrderId": 4,
-    "orderDetails": 0,
     "stripe_chargeId": "ch_15NBUFEmZcPNENoGNKwyB7C9"
 }
       </textarea>

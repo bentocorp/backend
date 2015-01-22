@@ -32,7 +32,10 @@
               <td>{{{ $row->updated_at }}}</td>
               <td>{{{ $row->deleted_at }}}</td>
               <td>{{{ $row->fk_User }}}</td>
-              <td>{{{ $row->order_json }}}</td>
+              <td>
+                <p class="collapse" id="viewJson-{{{ $row->pk_PendingOrder }}}">{{{ $row->order_json }}}</p>
+                <p><a class="btn btn-default" data-toggle="collapse" data-target="#viewJson-{{{ $row->pk_PendingOrder }}}">View &raquo;</a></p>
+              </td>
               <td><?php echo $delete ?></td>
             </tr>
             <?php

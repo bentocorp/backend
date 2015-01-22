@@ -38,7 +38,7 @@
                 <?php
                   if (Session::has('api_token')) {
                       $fake = Session::get('api_impersonating');
-                      echo "<br><small>(Impersonating $fake->email) [<a href='/admin/user/logout' class='navbar-link'>Logout</a>]</small>";
+                      echo "<br><small>(Impersonating $fake->email $fake->pk_User) [<a href='/admin/user/logout' class='navbar-link'>Logout</a>]</small>";
                   }
                   ?>
               </p>

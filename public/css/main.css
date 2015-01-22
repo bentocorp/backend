@@ -11,7 +11,7 @@ body {
 
 
 .admin-jsonTextarea {
-    height: 200px !important;
+    min-height: 200px !important;
 }
 
 .admin-jsonForm {
