@@ -222,6 +222,23 @@ class UserCtrl extends \BaseController {
     }
     
     
+    public function getLogout() {
+        
+        try {
+            $user = User::get();
+
+            // Delete Token
+            $sql = "UPDATE User SET api_token = NULL WHERE api_token = ?";
+            DB::update($sql, array($user->api_token));
+        }
+        catch (\Exception $e) {
+            return Response::json(array('error' => 'User not found.'), 404);
+        }
+        
+        return Response::json('', 200);
+    }
+    
+    
 /*
    public function setupCommonValidtion() {
         

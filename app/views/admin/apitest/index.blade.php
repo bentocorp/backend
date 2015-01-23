@@ -167,7 +167,7 @@ Misc
 
 <!--
 ******************************************************************************
-User Login/Registration
+User 
 ******************************************************************************
 -->
 <hr>
@@ -295,5 +295,16 @@ User Login/Registration
     </form>
 
 
+    <h3>GET:</h3>
+    <ul>
+      <li><span class="label label-success">&nbsp;</span> <a href="/user/logout">/user/logout</a><br>
+        You must include the <code>api_token</code> as per usual.<br>
+        <b>return:</b> <br>
+        <code>200</code> if ok <br>
+        <code>404</code> if api_token not found <br>
+        <code>403</code> if no api_token given <br>
+      </li>
+    </ul>
+    
 
 @stop

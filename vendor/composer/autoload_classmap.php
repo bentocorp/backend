@@ -17,6 +17,7 @@ return array(
     'Bento\\Admin\\Ctrl\\UserCtrl' => $baseDir . '/app/controllers/admin/UserCtrl.php',
     'Bento\\Admin\\Model\\AdminUser' => $baseDir . '/app/models/admin/AdminUser.php',
     'Bento\\Admin\\Model\\Dashboard' => $baseDir . '/app/models/admin/Dashboard.php',
+    'Bento\\Admin\\Model\\Drivers' => $baseDir . '/app/models/admin/Drivers.php',
     'Bento\\Admin\\Model\\Menu' => $baseDir . '/app/models/admin/Menu.php',
     'Bento\\Admin\\Model\\Misc' => $baseDir . '/app/models/admin/Misc.php',
     'Bento\\Admin\\Model\\Orders' => $baseDir . '/app/models/admin/Orders.php',

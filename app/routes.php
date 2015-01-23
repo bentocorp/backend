@@ -67,7 +67,9 @@ Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), functio
     ## /order routes
     Route::post('order/phase1', 'OrderCtrl@phase1');
     Route::post('order/phase2', 'OrderCtrl@phase2');
-
+    
+    ## /user auth routes
+    Route::get('user/logout', 'UserCtrl@getLogout');
 });
 
 
