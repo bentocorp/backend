@@ -297,12 +297,32 @@ User
 
     <h3>GET:</h3>
     <ul>
-      <li><span class="label label-success">&nbsp;</span> <a href="/user/logout">/user/logout</a><br>
+      <li><span class="label label-primary">&nbsp;</span> <a href="/user/logout">/user/logout</a><br>
         You must include the <code>api_token</code> as per usual.<br>
         <b>return:</b> <br>
         <code>200</code> if ok <br>
         <code>404</code> if api_token not found <br>
         <code>403</code> if no api_token given <br>
+      </li>
+    </ul>
+    
+    
+<!--
+******************************************************************************
+Coupon
+******************************************************************************
+-->
+<hr>
+<h1>Coupon</h1>
+    
+    <h3>GET:</h3>
+    <ul>
+      <li><span class="label label-primary">&nbsp;</span> 
+        <a href="/coupon/apply/{code}">/coupon/apply/{code}</a><br>
+        All are invalid for now, except for 1121113370998kkk7<br>
+        <b>return:</b> <br>
+        <code>200</code> if ok <br>
+        <code>400</code> if invalid coupon <br>
       </li>
     </ul>
     

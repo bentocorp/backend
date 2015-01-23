@@ -23,6 +23,7 @@ return array(
     'Bento\\Admin\\Model\\Orders' => $baseDir . '/app/models/admin/Orders.php',
     'Bento\\Admin\\Model\\Settings' => $baseDir . '/app/models/admin/Settings.php',
     'Bento\\Ctrl\\BootstrapCtrl' => $baseDir . '/app/controllers/bootstrap/Bootstrap.php',
+    'Bento\\Ctrl\\CouponCtrl' => $baseDir . '/app/controllers/Coupon.php',
     'Bento\\Ctrl\\InitCtrl' => $baseDir . '/app/controllers/InitCtrl.php',
     'Bento\\Ctrl\\MenuCtrl' => $baseDir . '/app/controllers/MenuCtrl.php',
     'Bento\\Ctrl\\MiscCtrl' => $baseDir . '/app/controllers/MiscCtrl.php',

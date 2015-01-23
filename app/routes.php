@@ -70,6 +70,9 @@ Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), functio
     
     ## /user auth routes
     Route::get('user/logout', 'UserCtrl@getLogout');
+    
+    ## /coupon routes
+    Route::controller('coupon', 'CouponCtrl');
 });
 
 
