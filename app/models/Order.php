@@ -14,7 +14,7 @@ class Order extends \Eloquent {
 	protected $table = 'Order';
         protected $primaryKey = 'pk_Order';
         
-               
+        
 
         
 }

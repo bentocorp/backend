@@ -86,8 +86,10 @@ Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
     
     // Admin index
     Route::get('/', function() {
-        return View::make('admin.index');
+        return Redirect::to('admin/dashboard');
     });
+    
+    Route::controller('dashboard', 'Bento\Admin\Ctrl\DashboardCtrl');
     
     Route::controller('pendingorder', 'Bento\Admin\Ctrl\PendingOrderCtrl');
     

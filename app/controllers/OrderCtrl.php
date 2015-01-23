@@ -108,6 +108,8 @@ class OrderCtrl extends \BaseController {
         
         $order->fk_User = $user->pk_User;
         $order->amount = $ch->amount / 100;
+        $order->tax = $orderJson->OrderDetails->tax;
+        $order->tip = $orderJson->OrderDetails->tip;
         $order->stripe_charge_id = $ch->id;
         $order->fk_PendingOrder = $pendingOrder->pk_PendingOrder;
         
