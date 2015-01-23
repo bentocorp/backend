@@ -146,7 +146,9 @@ Status
 
     <h3>GET:</h3>
     <ul>
-      <li><span class="label label-success">&nbsp;</span> <a href="/status/overall">/status/overall</a></li>
+      <li><span class="label label-success">&nbsp;</span> <a href="/status/overall">/status/overall</a><br>
+        &nbsp; { "value": "open" | "closed" | "sold out" }
+      </li>
       <li><span class="label label-success">&nbsp;</span> <a href="/status/menu">/status/menu</a></li>
     </ul>
     
@@ -325,6 +327,28 @@ Coupon
         <code>400</code> if invalid coupon <br>
       </li>
     </ul>
+    
+    
+    <h3><span class="label label-success">&nbsp;</span> <span class="label label-primary">&nbsp;</span>
+      POST: /coupon/request</h3>
+    
+    <br>
+    <b>Returns:</b><br>
+    <ul>
+      <li><code>200</code> if ok.</li>
+    </ul>
+
+    <form action="/coupon/request" method="post">
+      data:<br>
+      <textarea name="data" class="form-control admin-jsonTextarea">
+{
+    "reason": "sold out",
+    "email": "me@me.com"
+}
+      </textarea>
+      <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
     
 
 @stop

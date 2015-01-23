@@ -32,8 +32,18 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
             self::$apiUser = $apiUser;
         }
 
+        
         public static function get() {
             return self::$apiUser;
+        }
+        
+        
+        public static function getUserByApiToken($api_token) {
+            // Get the User
+            $sql = 'SELECT * FROM User WHERE api_token = ?';
+            $user = DB::select($sql, array($api_token));  
+            
+            return $user;
         }
         
 }

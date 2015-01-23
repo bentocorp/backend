@@ -16,8 +16,7 @@ class ApiAuthFilter {
             $api_token = Input::get('api_token');
 
             // Get the User
-            $sql = 'SELECT * FROM User WHERE api_token = ?';
-            $user = DB::select($sql, array($api_token));
+            $user = User::getUserByApiToken($api_token);
 
             // Return if incorrect
             if (count($user) != 1)

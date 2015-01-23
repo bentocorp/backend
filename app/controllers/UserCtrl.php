@@ -156,7 +156,7 @@ class UserCtrl extends \BaseController {
         $data = json_decode(Input::get('data'));
         
         // Try to get user from DB
-        $sql = "SELECT email, phone, api_token, password
+        $sql = "SELECT email, phone, api_token, password, is_admin
                 FROM User WHERE email = ?";
         $user = DB::select($sql, array($data->email));
         
@@ -170,7 +170,7 @@ class UserCtrl extends \BaseController {
             
             // Good password
             if (Hash::check($data->password, $user->password)) {
-                // Remove password from the return
+                // Remove password from the return!
                 unset($user->password);
                 return Response::json($user, 200);
             }
@@ -187,7 +187,7 @@ class UserCtrl extends \BaseController {
         $data = json_decode(Input::get('data'));
         
         // Try to get user from DB
-        $sql = "SELECT email, phone, api_token, fb_id
+        $sql = "SELECT email, phone, api_token, fb_id, is_admin
                 FROM User WHERE email = ?";
         $user = DB::select($sql, array($data->email));
         

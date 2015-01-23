@@ -50,6 +50,9 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
     Route::post('user/login', 'UserCtrl@postLogin');
     Route::post('user/fblogin', 'UserCtrl@postFblogin');
     
+    ## PUBLIC /coupon routes
+    Route::post('coupon/request', 'CouponCtrl@postRequest');
+    
     ## /misc routes
     Route::get('/ioscopy', 'MiscCtrl@getIoscopy');
     Route::get('/servicearea', 'MiscCtrl@getServicearea');
