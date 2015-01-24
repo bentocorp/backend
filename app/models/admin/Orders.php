@@ -2,6 +2,7 @@
 
 namespace Bento\Admin\Model;
 
+use Bento\Lib\Lib;
 use DB;
 
 class Orders {
@@ -9,21 +10,23 @@ class Orders {
 
     public static function getOpenOrders() {
         
-        // Get from db           
+        // Get from db 
+        # Open Orders
         $sql = "
             select
-                o.pk_Order,
-                o.created_at as order_created_at,
-                o.street, o.city, o.state, o.zip,
-                os.`status`,
-                concat(u.firstname, ' ', u.lastname) as user_name,
-                u.phone as user_phone,
-                concat(d.firstname, ' ', d.lastname) as driver_name
+                    o.pk_Order,
+                    o.created_at as order_created_at,
+                    o.street, o.city, o.state, o.zip,
+                    os.`status`,
+                    concat(u.firstname, ' ', u.lastname) as user_name,
+                    u.phone as user_phone,
+                    concat(d.firstname, ' ', d.lastname) as driver_name,
+                d.pk_Driver
             from `Order` o
             left join OrderStatus os on (o.pk_Order = os.fk_Order)
             left join Driver d on (os.fk_Driver = d.pk_Driver)
             left join User u on (o.fk_User = u.pk_User)
-            where os.status = 'Open'
+            where os.status IN ('Open', 'En Route')
             ORDER BY order_created_at DESC
         ";
         $rows = DB::select($sql, array());
@@ -49,6 +52,14 @@ class Orders {
         $rows = DB::select($sql, array());
         
         return $rows;
+    }
+    
+    
+    public static function getStatusesForDropdown() {
+        
+        $enum = Lib::getEnumValuesHash('OrderStatus', 'status');
+        
+        return $enum;
     }
                 
 }

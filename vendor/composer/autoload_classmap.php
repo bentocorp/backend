@@ -32,6 +32,7 @@ return array(
     'Bento\\Ctrl\\UserCtrl' => $baseDir . '/app/controllers/UserCtrl.php',
     'Bento\\Filter\\AdminFilter' => $baseDir . '/app/filters/AdminFilter.php',
     'Bento\\Filter\\ApiAuthFilter' => $baseDir . '/app/filters/ApiAuthFilter.php',
+    'Bento\\Lib\\Lib' => $baseDir . '/app/models/lib/Lib.php',
     'Bento\\Model\\CouponRequest' => $baseDir . '/app/models/CouponRequest.php',
     'Bento\\Model\\CustomerBentoBox' => $baseDir . '/app/models/CustomerBentoBox.php',
     'Bento\\Model\\LiveInventory' => $baseDir . '/app/models/LiveInventory.php',
