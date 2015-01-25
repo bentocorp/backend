@@ -173,11 +173,9 @@ class UserCtrl extends \BaseController {
                 // Remove password from the return!
                 unset($user->password);
                 
-                // Create new api_token
-                $api_token = $this->makeApiToken($data->email);
-                DB::table('users')
-                        ->where('email', $data->email)
-                        ->update(array('api_token' => $api_token));
+                // Set new api_token
+                $api_token = $this->makeApiToken($user->email);
+                User::setNewApiToken($api_token, $user->email);
                 
                 return Response::json($user, 200);
             }
@@ -211,11 +209,9 @@ class UserCtrl extends \BaseController {
                 // Remove FB Id from the return
                 unset($user->fb_id);
                 
-                // Create new api_token
-                $api_token = $this->makeApiToken($data->email);
-                DB::table('users')
-                        ->where('email', $data->email)
-                        ->update(array('api_token' => $api_token));
+                // Set new api_token
+                $api_token = $this->makeApiToken($user->email);
+                User::setNewApiToken($api_token, $user->email);
                 
                 return Response::json($user, 200);
             }
@@ -234,7 +230,7 @@ class UserCtrl extends \BaseController {
         
         return $api_token;
     }
-    
+        
     
     public function getLogout() {
         

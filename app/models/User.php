@@ -5,6 +5,8 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
+use DB;
+
 class User extends \Eloquent implements UserInterface, RemindableInterface {
 
 	use UserTrait, RemindableTrait;
@@ -44,6 +46,15 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
             $user = DB::select($sql, array($api_token));  
             
             return $user;
+        }
+        
+        
+        public static function setNewApiToken($api_token, $email) {
+            
+            // Create new api_token
+            DB::table('User')
+                    ->where('email', $email)
+                    ->update(array('api_token' => $api_token));
         }
         
 }
