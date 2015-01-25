@@ -11,7 +11,7 @@ use Bento\Model\Status;
 use User;
 use Response;
 use Input;
-use Stripe; use Stripe_Charge;
+use Stripe; use Stripe_Charge; use Stripe_Customer;
 
 class OrderCtrl extends \BaseController {
 
@@ -130,6 +130,179 @@ class OrderCtrl extends \BaseController {
         # do stuff
         
         return Response::json('', 200);
+    }
+    
+    
+    /**
+     * We don't need a two phase commit if we're processing payment on the backend.
+     */
+    public function postIndex() {
+        
+        // Get data
+        $data = json_decode(Input::get('data'));
+        
+        // Get the User
+        $user = User::get();
+        
+        // If no Stripe token, and no saved User data, error.
+        if ($user->stripe_customer_obj === NULL && $data->Stripe->stripeToken == '') {
+            return Response::json(
+                    array("error" => "No payment specified, and no payment on file."), 
+                    402);
+        }
+        
+        // Update LiveInventory 
+        $reserved = LiveInventory::reserve($data);
+        
+        // Inventory reservation failed. We are out of something.
+        if ($reserved === false) {
+            // Since the inventory is incorrect in the client, conveniently send it back to them
+            $menuStatus = Status::menu();
+            
+            $response = array(
+                'Error' => 'Some of our inventory in your order just sold out!',
+                'MenuStatus' => $menuStatus
+                );
+            
+            return Response::json($response, 410);
+        }
+        
+        // Otherwise, everything's good. Keep going.
+        
+        // ** Process payment
+        $stripeCharge = null;
+        
+        // No payment method on file for user
+        if ($user->stripe_customer_obj === NULL) {
+            $stripeCharge = $this->stripeChargeFromToken($data);
+        }
+        // Payment IS on file for user
+        else {
+            $stripeCharge = $this->stripeChargeFromSaved($data);
+        }
+        
+        // Payment Success
+        if ($stripeCharge['status'] === true) {
+            $this->paymentSuccess($data, $stripeCharge);
+            
+            return Response::json('', 200);
+        }
+        // Payment Failure
+        else {
+            return Response::json(array("error" => "Payment for your card has failed."), 200);
+        }
+        
+    }
+    
+    
+    private function stripeChargeFromToken($order) {
+        
+        // Set your secret key: remember to change this to your live secret key in production
+        // See your keys here https://dashboard.stripe.com/account
+         Stripe::setApiKey($_ENV['Stripe_sk_test']);
+         
+        // Get the User
+        $user = User::get();
+         
+        // Get the credit card details submitted by the form
+        $token = $order->Stripe->stripeToken;
+        #var_dump($order->Stripe); die();
+
+        // Create a Customer
+        $customer = Stripe_Customer::create(array(
+          "card" => $token,
+          "description" => $user->email)
+        );
+
+        // Charge the Customer instead of the card
+        Stripe_Charge::create(array(
+          "amount" => $order->OrderDetails->total_cents, # amount in cents, again
+          "currency" => "usd",
+          "customer" => $customer->id)
+        );
+
+        // Save the customer ID in your database so you can use it later
+        #saveStripeCustomerId($user, $customer->id);
+        $user->stripe_customer_obj = $customer;
+        $user->save();
+    }
+    
+    
+    private function stripeChargeFromSaved() {
+        
+         Stripe::setApiKey($_ENV['Stripe_sk_test']);
+    }
+    
+    
+    private function paymentSuccess($orderJson, $stripeCharge) {
+        
+        // Get the user
+        $user = User::get();
+
+        // Insert into Order
+        $order = new Order;
+                
+        $order->street = $orderJson->OrderDetails->address->street;
+        $order->city = $orderJson->OrderDetails->address->city;
+        $order->state = $orderJson->OrderDetails->address->state;
+        $order->zip = $orderJson->OrderDetails->address->zip;
+        $order->lat = $orderJson->OrderDetails->coords->lat;
+        $order->long = $orderJson->OrderDetails->coords->long;
+        
+        $order->fk_User = $user->pk_User;
+        $order->amount = $orderJson->OrderDetails->total_cents / 100;
+        $order->tax = $orderJson->OrderDetails->tax / 100;
+        $order->tip = $orderJson->OrderDetails->tip / 100;
+        $order->stripe_charge_id = $stripeCharge->id;
+        
+        $order->save();
+        
+        // Insert into OrderStatus
+        $orderStatus = new OrderStatus;
+        $orderStatus->fk_Order = $order->pk_Order;
+        $orderStatus->save();
+        
+        // Insert into CustomerBentoBox
+        $this->insertCustomerBentoBoxes($orderJson, $order->pk_Order);
+                
+        // Dispatch the driver
+        # do stuff
+    }
+    
+    
+    private function validateStripeCardToken() {
+        
+        // Set your secret key: remember to change this to your live secret key in production
+        // See your keys here https://dashboard.stripe.com/account
+        Stripe::setApiKey($_ENV['Stripe_sk_test']);
+
+        // Get the credit card details submitted by the form
+        $token = $_POST['stripeToken'];
+
+        // Create a Customer
+        $customer = Stripe_Customer::create(array(
+          "card" => $token,
+          "description" => "payinguser@example.com")
+        );
+
+        // Charge the Customer instead of the card
+        Stripe_Charge::create(array(
+          "amount" => 1000, # amount in cents, again
+          "currency" => "usd",
+          "customer" => $customer->id)
+        );
+
+        // Save the customer ID in your database so you can use it later
+        saveStripeCustomerId($user, $customer->id);
+
+        // Later...
+        $customerId = getStripeCustomerId($user);
+
+        Stripe_Charge::create(array(
+          "amount"   => 1500, # $15.00 this time
+          "currency" => "usd",
+          "customer" => $customerId)
+        );
     }
     
     

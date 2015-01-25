@@ -172,6 +172,13 @@ class UserCtrl extends \BaseController {
             if (Hash::check($data->password, $user->password)) {
                 // Remove password from the return!
                 unset($user->password);
+                
+                // Create new api_token
+                $api_token = $this->makeApiToken($data->email);
+                DB::table('users')
+                        ->where('email', $data->email)
+                        ->update(array('api_token' => $api_token));
+                
                 return Response::json($user, 200);
             }
             // Bad password
@@ -203,6 +210,13 @@ class UserCtrl extends \BaseController {
             if ($data->fb_id == $user->fb_id) {
                 // Remove FB Id from the return
                 unset($user->fb_id);
+                
+                // Create new api_token
+                $api_token = $this->makeApiToken($data->email);
+                DB::table('users')
+                        ->where('email', $data->email)
+                        ->update(array('api_token' => $api_token));
+                
                 return Response::json($user, 200);
             }
             // Bad Facebook Id

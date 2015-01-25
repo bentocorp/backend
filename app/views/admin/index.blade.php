@@ -152,12 +152,12 @@ Drivers
 // Get the inventory that everyone is supposed to have
 #$invItemNames = LiveInventory::getItemNames();
 
-$invItemNamesH = array();
+#$invItemNamesH = array();
 $invItemKeys = array();
 
 // Get everything into a consistent lookup table
 foreach($menu['MenuItems'] as $inv) {
-    $invItemNamesH[$inv->short_name] = $inv; // Hash it
+    #$invItemNamesH[$inv->short_name] = $inv; // Hash it
     $invItemKeys[$inv->pk_Dish] = $inv; // Hash it
 }
 

@@ -61,6 +61,10 @@ class LiveInventory extends \Eloquent {
             return false;
         }
 
+        // Everything is good so far.
+        return true;
+        
+        /*
         // Everything is good so far. Insert into PendingOrder.
         $user = User::get();
 
@@ -70,7 +74,10 @@ class LiveInventory extends \Eloquent {
         $pendingOrder->save();
 
         // Returning the PendingOrder id
-        return $pendingOrder->pk_PendingOrder;
+        #return $pendingOrder->pk_PendingOrder;
+        return true;
+         * 
+         */
     }
     
     

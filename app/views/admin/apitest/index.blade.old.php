@@ -17,7 +17,6 @@ Order
 <hr>
 <h1>Order</h1>
  
-    <!--
     <b>A reminder about the flow:</b><br>
     <p>
     The user makes their bento box, and wants to pay. BEFORE you process their payment on stripe,
@@ -25,19 +24,20 @@ Order
     and reserve the inventory for that user. If all that is okay, I return 200. Then you process
     their payment, and send me the confirmation to /order/phase2. Then I dispatch the order.
     </p>
-    -->
     
     <br>
 
     <!-- <div class="admin-jsonForm"> -->
     <h3><span class="label label-primary">&nbsp;</span> 
-      POST: /order</h3>
+      POST: /order/phase1</h3>
 
     <br>
     <b>Returns:</b><br>
     <ul>
-      <li><code>200</code> if ok.</li>
-      <li><code>402</code> if No payment specified, and no payment on file.<br></li>
+      <li><code>200</code> if ok. <br>
+        {"reserveId":5}<br></li>
+      <li><code>400</code> if pending order exists. <br>
+        {"Error":"A pending order already exists for you."}<br></li>
       <li><code>410</code> if the inventory is not available. The UI
         should be updated, and the return includes the inventory:<br>
         <pre>
@@ -47,10 +47,9 @@ Order
 }
         </pre>
       </li>
-      <li><code>406</code> if payment failed.</li>
     </ul>
 
-    <form action="/order" method="post">
+    <form action="/order/phase1" method="post">
       data: (an example with two CustomerBentoBox)<br>
       <textarea name="data" class="form-control admin-jsonTextarea">
 {
@@ -101,7 +100,31 @@ Order
     </form>
     <!-- </div> -->
 
+
+    <h3><span class="label label-primary">&nbsp;</span>
+      POST: /order/phase2</h3>
     
+    <br>
+    <b>Returns:</b><br>
+    <ul>
+      <li><code>200</code> if ok.</li>
+      <li><code>404</code> if pending order not found. This should really never happen.</li>
+      <li><code>400</code> if the payment wasn't verified. The UI needs to handle this somehow.</li>
+    </ul>
+
+    <form action="/order/phase2" method="post">
+      data:<br>
+      <textarea name="data" class="form-control admin-jsonTextarea">
+{
+    "pendingOrderId": 4,
+    "stripe_chargeId": "ch_15NBUFEmZcPNENoGNKwyB7C9"
+}
+      </textarea>
+      <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+    
+
 <!--
 ******************************************************************************
 Menu
