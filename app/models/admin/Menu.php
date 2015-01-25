@@ -35,11 +35,19 @@ class Menu extends \Eloquent {
             
             // Get Menu_Items
             $sql2 = "
-                SELECT * 
+                SELECT 
+                        d.pk_Dish, d.name, d.description, d.type, d.short_name,
+                    (
+                                # summate
+                                select sum(qty) as total
+                                from DriverInventory di
+                                where fk_item = d.pk_Dish
+                                group by fk_item
+                    ) as DriverInventoryTotal
                 FROM Menu_Item mi
                 LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)
                 WHERE mi.fk_Menu = ?
-                order by type
+                order by d.type ASC, d.name ASC
             ";
             $menuItems = DB::select($sql2, array($menu->pk_Menu));
              

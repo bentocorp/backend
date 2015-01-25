@@ -14,13 +14,13 @@ class Orders {
         # Open Orders
         $sql = "
             select
-                    o.pk_Order,
-                    o.created_at as order_created_at,
-                    o.street, o.city, o.state, o.zip,
-                    os.`status`,
-                    concat(u.firstname, ' ', u.lastname) as user_name,
-                    u.phone as user_phone,
-                    concat(d.firstname, ' ', d.lastname) as driver_name,
+                o.pk_Order,
+                o.created_at as order_created_at,
+                o.street, o.city, o.state, o.zip,
+                os.`status`,
+                concat(u.firstname, ' ', u.lastname) as user_name,
+                u.phone as user_phone,
+                concat(d.firstname, ' ', d.lastname) as driver_name,
                 d.pk_Driver
             from `Order` o
             left join OrderStatus os on (o.pk_Order = os.fk_Order)

@@ -2,6 +2,7 @@
 
 namespace Bento\Model;
 
+use DB;
 
 class OrderStatus extends \Eloquent {
 
@@ -14,4 +15,12 @@ class OrderStatus extends \Eloquent {
 	protected $table = 'OrderStatus';
         protected $primaryKey = 'pk_OrderStatus';
     
+        
+        public static function saveStatus($pk_Order, $data) {
+            
+            DB::table('OrderStatus')
+                    ->where('fk_Order', $pk_Order)
+                    ->update($data);
+            
+        }
 }
