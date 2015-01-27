@@ -271,7 +271,8 @@ class OrderCtrl extends \BaseController {
             // Send some error emails
             Mail::send('emails.admin.error_stripe', array('e' => $e, 'user' => $this->user), function($message)
             {
-                $message->to('admin@bentonow.com', 'Bento App')->subject('[App] [err]: Stripe Failure');
+                $env = \App::environment();
+                $message->to('engalert@bentonow.com', 'Bento App')->subject("[App.{$env}.err]: Stripe Failure");
             });
             
             // Return with errors

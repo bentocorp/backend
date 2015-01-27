@@ -54,7 +54,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'admin@mg.bentonow.com', 'name' => 'Bento App Admin'),
+	'from' => array('address' => 'admin@mg.bentonow.com', 'name' => 'Bento Backend Admin'),
 
 	/*
 	|--------------------------------------------------------------------------

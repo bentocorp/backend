@@ -51,6 +51,14 @@ Log::useDailyFiles(storage_path().'/logs/'.$logFile);
 App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
+        
+        // Send some error emails
+        Mail::send('emails.admin.error_exception', array('e' => $exception, 'user' => User::get()), 
+        function($message)
+        {
+            $env = App::environment();
+            $message->to('engalert@bentonow.com', 'Bento App')->subject("[App.{$env}.err]: Uncaught Exception");
+        });
 });
 
 /*
