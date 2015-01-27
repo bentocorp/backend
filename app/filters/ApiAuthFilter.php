@@ -17,10 +17,12 @@ class ApiAuthFilter {
 
             // Get the User
             $user = User::getUserByApiToken($api_token);
+            
+            #var_dump($user->count()); die();
 
             // Return if incorrect
-            if (count($user) != 1)
-                Response::make('Unauthorized', 401);
+            if ($user->count() != 1)
+                return Response::make('Unauthorized', 401);
             else
                 User::set($user[0]);
         }
