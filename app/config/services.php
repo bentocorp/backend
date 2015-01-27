@@ -15,8 +15,8 @@ return array(
 	*/
 
 	'mailgun' => array(
-		'domain' => '',
-		'secret' => '',
+		'domain' => 'mg.bentonow.com',
+		'secret' => 'key-43f6b04d7c76f3692ef72ffe593d4ed2',
 	),
 
 	'mandrill' => array(

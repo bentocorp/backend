@@ -141,8 +141,11 @@ Orders
 Drivers
 ******************************************************************************
 -->
+<h1>Drivers with Inventory</h1>
 
 <?php
+
+if ($menu !== NULL):
 
 /*
  * The purpose of all of this hashing is to build dynamic columns based on the inventory of the day,
@@ -163,7 +166,7 @@ foreach($menu['MenuItems'] as $inv) {
 
 ?>
 
-<h1>Drivers with Inventory</h1>
+
 
 <table class="table table-striped">
     <thead>
@@ -225,6 +228,12 @@ foreach($menu['MenuItems'] as $inv) {
     </tbody>
 </table>
 
+<?php
+else:
+    echo "<span class='label label-warning'>Warning</span> I can't pull driver inventory if there's no current menu to know what "
+    . "inventory they're supposed to have.";
+endif;
+?>
 
 
 

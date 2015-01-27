@@ -11,10 +11,29 @@ use Bento\Model\Status;
 use User;
 use Response;
 use Input;
+use Mail;
 use Stripe; use Stripe_Charge; use Stripe_Customer;
 
 class OrderCtrl extends \BaseController {
+    
+    private $pendingOrder;
+    private $user;
+    
+    private $stripeCharge = NULL;
+    private $stripeCustomer = NULL;
 
+    
+    public function __construct() {
+        
+        // Set your secret key: remember to change this to your live secret key in production
+        // See your keys here https://dashboard.stripe.com/account
+        Stripe::setApiKey($_ENV['Stripe_sk_test']);
+        
+        // Get the user
+        $this->user = User::get();
+    }
+    
+    
     /**
      * Phase 1:
      * Store a new pending order.
@@ -138,11 +157,14 @@ class OrderCtrl extends \BaseController {
      */
     public function postIndex() {
         
+        // Vars
+        $stripeCharge = false;
+        
         // Get data
         $data = json_decode(Input::get('data'));
         
         // Get the User
-        $user = User::get();
+        $user = $this->user;
         
         // If no Stripe token, and no saved User data, error.
         if ($user->stripe_customer_obj === NULL && $data->Stripe->stripeToken == '') {
@@ -151,10 +173,10 @@ class OrderCtrl extends \BaseController {
                     402);
         }
         
-        // Update LiveInventory 
+        // Check the LiveInventory 
         $reserved = LiveInventory::reserve($data);
         
-        // Inventory reservation failed. We are out of something.
+        // If inventory reservation failed. We are out of something.
         if ($reserved === false) {
             // Since the inventory is incorrect in the client, conveniently send it back to them
             $menuStatus = Status::menu();
@@ -168,9 +190,9 @@ class OrderCtrl extends \BaseController {
         }
         
         // Otherwise, everything's good. Keep going.
+        $this->pendingOrder = $reserved;
         
         // ** Process payment
-        $stripeCharge = null;
         
         // No payment method on file for user
         if ($user->stripe_customer_obj === NULL) {
@@ -182,62 +204,151 @@ class OrderCtrl extends \BaseController {
         }
         
         // Payment Success
-        if ($stripeCharge['status'] === true) {
-            $this->paymentSuccess($data, $stripeCharge);
+        if ($stripeCharge['status'] !== false) {
+            
+            $this->paymentSuccess($data, $stripeCharge['body']);
             
             return Response::json('', 200);
         }
         // Payment Failure
         else {
-            return Response::json(array("error" => "Payment for your card has failed."), 200);
+            return Response::json(array("error" => $stripeCharge['body']['message']), 406);
         }
         
     }
     
     
-    private function stripeChargeFromToken($order) {
+    private function stripeCharge($fn) {
         
-        // Set your secret key: remember to change this to your live secret key in production
-        // See your keys here https://dashboard.stripe.com/account
-         Stripe::setApiKey($_ENV['Stripe_sk_test']);
-         
-        // Get the User
-        $user = User::get();
-         
-        // Get the credit card details submitted by the form
-        $token = $order->Stripe->stripeToken;
-        #var_dump($order->Stripe); die();
-
-        // Create a Customer
-        $customer = Stripe_Customer::create(array(
-          "card" => $token,
-          "description" => $user->email)
+        // Reset for certainty
+        $this->stripeCharge = NULL;
+        
+        // Setup return
+        $return = array(
+            'status' => false,
+            'body' => null
         );
-
-        // Charge the Customer instead of the card
-        Stripe_Charge::create(array(
-          "amount" => $order->OrderDetails->total_cents, # amount in cents, again
-          "currency" => "usd",
-          "customer" => $customer->id)
-        );
-
-        // Save the customer ID in your database so you can use it later
-        #saveStripeCustomerId($user, $customer->id);
-        $user->stripe_customer_obj = $customer;
-        $user->save();
+        
+        // Execute the Stripe code
+        try {
+            $fn();
+        }
+        catch (\Exception $e) {
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            $return['body'] = $err;
+            
+            // Send some emails
+            #Mail::send('emails.admin.error_stripe', array('e' => $e), function($message)
+            #{
+            #    $message->to('admin@bentonow.com', 'Bento App')->subject('APP: Stripe Failure');
+            #});
+            
+            // Return with errors
+            return $return;
+        }
+        
+        // Return okay
+        $return['status'] = true;
+        $return['body'] = $this->stripeCharge;
     }
     
     
-    private function stripeChargeFromSaved() {
+    /**
+     * 
+     * @param obj $order
+     * @return boolean False or stripeCharge object
+     */
+    private function stripeChargeFromToken($order) {
+         
+        /*
+        $return = array(
+            'status' => false,
+            'body' => null
+        );
+         * 
+         */
         
-         Stripe::setApiKey($_ENV['Stripe_sk_test']);
+        $customer = NULL;
+                 
+        // Get the User
+        $user = $this->user;
+         
+        // Get the credit card details submitted by the form
+        $token = $order->Stripe->stripeToken;
+
+        // Define Stripe charge function
+        $fn = function() use ($user, $token, $order, &$customer) {
+            // Create a Customer
+            $customer = Stripe_Customer::create(array(
+              "card" => $token,
+              "description" => $user->email)
+            );  
+            
+            // Charge the Customer instead of the card
+            $this->stripeCharge = Stripe_Charge::create(array(
+              "amount" => $order->OrderDetails->total_cents, # amount in cents, again
+              "currency" => "usd",
+              "customer" => $customer->id)
+            );
+        };
+        
+        $stripeChargeResult = $this->stripeCharge($fn);
+        
+        /*
+        try {
+            // Create a Customer
+            $customer = Stripe_Customer::create(array(
+              "card" => $token,
+              "description" => $user->email)
+            );  
+            
+            // Charge the Customer instead of the card
+            $stripeCharge = Stripe_Charge::create(array(
+              "amount" => $order->OrderDetails->total_cents, # amount in cents, again
+              "currency" => "usd",
+              "customer" => $customer->id)
+            );
+        }
+        catch (\Exception $e) {
+            $body = $e->getJsonBody();
+            $err  = $body['error'];
+            $return['body'] = $err;
+            
+            return $return;
+        }
+         * *
+         */
+
+        
+        #var_dump($stripeCharge); die();
+
+        // Save the customer ID in your database so you can use it later
+        $user->stripe_customer_obj = $customer;
+        $user->save();
+                
+        return $stripeChargeResult;
+    }
+    
+    
+    private function stripeChargeFromSaved($order) {
+        
+        $user = $this->user;
+        
+        $customerId = json_decode($user->stripe_customer_obj)->id;
+
+        Stripe_Charge::create(array(
+          "amount"   => $order->OrderDetails->total_cents, # amount in cents, again
+          "currency" => "usd",
+          "customer" => $customerId)
+        );
     }
     
     
     private function paymentSuccess($orderJson, $stripeCharge) {
         
         // Get the user
-        $user = User::get();
+        $user = $this->user;
 
         // Insert into Order
         $order = new Order;
@@ -251,9 +362,10 @@ class OrderCtrl extends \BaseController {
         
         $order->fk_User = $user->pk_User;
         $order->amount = $orderJson->OrderDetails->total_cents / 100;
-        $order->tax = $orderJson->OrderDetails->tax / 100;
-        $order->tip = $orderJson->OrderDetails->tip / 100;
+        $order->tax = $orderJson->OrderDetails->tax_cents / 100;
+        $order->tip = $orderJson->OrderDetails->tip_cents / 100;
         $order->stripe_charge_id = $stripeCharge->id;
+        $order->fk_PendingOrder = $this->pendingOrder->pk_PendingOrder;
         
         $order->save();
         
@@ -264,7 +376,10 @@ class OrderCtrl extends \BaseController {
         
         // Insert into CustomerBentoBox
         $this->insertCustomerBentoBoxes($orderJson, $order->pk_Order);
-                
+        
+        // Soft-delete pending order
+        $this->pendingOrder->delete();
+        
         // Dispatch the driver
         # do stuff
     }

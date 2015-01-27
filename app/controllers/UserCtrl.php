@@ -157,7 +157,7 @@ class UserCtrl extends \BaseController {
         
         // Try to get user from DB
         $sql = "SELECT email, phone, api_token, password, is_admin
-                FROM User WHERE email = ?";
+                FROM User WHERE email = ? AND email IS NOT NULL and password IS NOT NULL";
         $user = DB::select($sql, array($data->email));
         
         
@@ -193,7 +193,7 @@ class UserCtrl extends \BaseController {
         
         // Try to get user from DB
         $sql = "SELECT email, phone, api_token, fb_id, is_admin
-                FROM User WHERE email = ?";
+                FROM User WHERE email = ? AND email IS NOT NULL and fb_id IS NOT NULL";
         $user = DB::select($sql, array($data->email));
         
         

@@ -62,9 +62,9 @@ class LiveInventory extends \Eloquent {
         }
 
         // Everything is good so far.
-        return true;
+        #return true;
         
-        /*
+        
         // Everything is good so far. Insert into PendingOrder.
         $user = User::get();
 
@@ -73,11 +73,10 @@ class LiveInventory extends \Eloquent {
         $pendingOrder->order_json = json_encode($data);
         $pendingOrder->save();
 
-        // Returning the PendingOrder id
+        // Returning the PendingOrder
+        return $pendingOrder;
         #return $pendingOrder->pk_PendingOrder;
-        return true;
-         * 
-         */
+        #return true;
     }
     
     

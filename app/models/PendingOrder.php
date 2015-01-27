@@ -40,4 +40,17 @@ class PendingOrder extends \Eloquent {
             
             return $pending;
         }
+        
+        
+        /*
+        public static function getUserPendingOrderByPendingId($pk_PendingOrder) {
+            $user = User::get();
+            $pending = self::
+                    where('fk_User', '=', $user->pk_User)
+                    ->where('pk_PendingOrder', '=', $pk_PendingOrder);
+            
+            return $pending;
+        }
+         * 
+         */
 }

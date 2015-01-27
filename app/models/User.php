@@ -5,7 +5,7 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
-use DB;
+#use DB;
 
 class User extends \Eloquent implements UserInterface, RemindableInterface {
 
@@ -43,8 +43,13 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
         public static function getUserByApiToken($api_token) {
             // Get the User
             $sql = 'SELECT * FROM User WHERE api_token = ?';
-            $user = DB::select($sql, array($api_token));  
+            #$user = DB::select($sql, array($api_token));
+            #$user = self::whereRaw('api_token = ?', array($api_token))->get(); #works
             
+            $user = self::hydrateRaw($sql, array($api_token));
+            
+            #var_dump($user); die();
+                  
             return $user;
         }
         
