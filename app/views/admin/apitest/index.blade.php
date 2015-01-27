@@ -52,6 +52,8 @@ Order
 
     <form action="/order" method="post">
       data: (an example with two CustomerBentoBox)<br>
+      <b>NOTE: <code>stripeToken</code></b> must always be present. If the user is 
+        just using their existing card, set this to NULL.</b><br>
       <textarea name="data" class="form-control admin-jsonTextarea">
 {
     "OrderItems": [
@@ -220,15 +222,7 @@ User
     <br>
     <b>Returns:</b><br>
     <ul>
-      <li><code>200</code> if ok. <br>
-        <pre>
-{
-    "email": "test2@bentonow.com",
-    "phone": "555-123-4567",
-    "api_token": "somelongtoken"
-}
-        </pre>
-      </li>
+      <li><code>200</code> if ok.</li>
       <li><code>404</code> if email not found</li>
       <li><code>403</code> if bad password</li>
     </ul>
@@ -252,15 +246,7 @@ User
     <br>
     <b>Returns:</b><br>
     <ul>
-      <li><code>200</code> if ok. <br>
-        <pre>
-{
-    "email": "test1@bentonow.com",
-    "phone": "555-123-4567",
-    "api_token": "somelongtoken"
-}
-        </pre>
-      </li>
+      <li><code>200</code> if ok.</li>
       <li><code>404</code> if email not found</li>
       <li><code>403</code> if bad fb_id</li>
     </ul>

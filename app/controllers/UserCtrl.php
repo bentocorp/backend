@@ -156,8 +156,9 @@ class UserCtrl extends \BaseController {
         $data = json_decode(Input::get('data'));
         
         // Try to get user from DB
-        $sql = "SELECT email, phone, api_token, password, is_admin
+        $sql = "SELECT email, phone, api_token, password, is_admin, stripe_customer_obj
                 FROM User WHERE email = ? AND email IS NOT NULL and password IS NOT NULL";
+        
         $user = DB::select($sql, array($data->email));
         
         
@@ -175,7 +176,11 @@ class UserCtrl extends \BaseController {
                 
                 // Set new api_token
                 $api_token = $this->makeApiToken($user->email);
-                User::setNewApiToken($api_token, $user->email);
+                User::setNewApiToken($api_token, $user->email); // set to db
+                $user->api_token = $api_token; // set to return object
+                
+                // Add Stripe info if it's there
+                $user = $this->addStripeInfo($user);
                 
                 return Response::json($user, 200);
             }
@@ -192,8 +197,9 @@ class UserCtrl extends \BaseController {
         $data = json_decode(Input::get('data'));
         
         // Try to get user from DB
-        $sql = "SELECT email, phone, api_token, fb_id, is_admin
+        $sql = "SELECT email, phone, api_token, fb_id, is_admin, stripe_customer_obj
                 FROM User WHERE email = ? AND email IS NOT NULL and fb_id IS NOT NULL";
+        
         $user = DB::select($sql, array($data->email));
         
         
@@ -211,7 +217,11 @@ class UserCtrl extends \BaseController {
                 
                 // Set new api_token
                 $api_token = $this->makeApiToken($user->email);
-                User::setNewApiToken($api_token, $user->email);
+                User::setNewApiToken($api_token, $user->email); // set to db
+                $user->api_token = $api_token; // set to return object
+                
+                // Add Stripe info if it's there
+                $user = $this->addStripeInfo($user);
                 
                 return Response::json($user, 200);
             }
@@ -246,6 +256,26 @@ class UserCtrl extends \BaseController {
         }
         
         return Response::json('', 200);
+    }
+    
+    
+    private function addStripeInfo($user) {
+        
+        if ($user->stripe_customer_obj !== NULL) {
+            $cu = unserialize($user->stripe_customer_obj);
+            $card = $cu->cards->data[0];
+            #var_dump($card);
+            $user->card = new \stdClass();
+            $user->card->brand = $card->brand;
+            $user->card->last4 = $card->last4;
+        }
+        else {
+            $user->card = NULL;
+        }
+        
+        unset($user->stripe_customer_obj);
+        
+        return $user;
     }
     
     

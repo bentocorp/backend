@@ -5,7 +5,7 @@ namespace Bento\Ctrl;
 use Bento\Model\Order;
 use Bento\Model\OrderStatus;
 use Bento\Model\CustomerBentoBox;
-use Bento\Model\PendingOrder;
+#use Bento\Model\PendingOrder;
 use Bento\Model\LiveInventory;
 use Bento\Model\Status;
 use User;
@@ -19,8 +19,8 @@ class OrderCtrl extends \BaseController {
     private $pendingOrder;
     private $user;
     
-    private $stripeCharge = NULL;
-    private $stripeCustomer = NULL;
+    private $stripeChargeObj = NULL;
+    #private $stripeCustomer = NULL;
 
     
     public function __construct() {
@@ -42,6 +42,7 @@ class OrderCtrl extends \BaseController {
      * 
      * @return json 
      */
+    /*
     public function phase1() {
         
         // Get data
@@ -73,6 +74,8 @@ class OrderCtrl extends \BaseController {
             return Response::json($response, 410);
         }
     }
+     * 
+     */
     
     
     /**
@@ -81,6 +84,7 @@ class OrderCtrl extends \BaseController {
      * 
      * @return json 
      */
+    /*
     public function phase2() {
         
         // Get data
@@ -150,6 +154,8 @@ class OrderCtrl extends \BaseController {
         
         return Response::json('', 200);
     }
+     * 
+     */
     
     
     /**
@@ -166,8 +172,9 @@ class OrderCtrl extends \BaseController {
         // Get the User
         $user = $this->user;
         
-        // If no Stripe token, and no saved User data, error.
-        if ($user->stripe_customer_obj === NULL && $data->Stripe->stripeToken == '') {
+        
+        // If no Stripe token, AND no saved User data, error.
+        if ($user->stripe_customer_obj == NULL && !$this->hasStripeToken($data)) {
             return Response::json(
                     array("error" => "No payment specified, and no payment on file."), 
                     402);
@@ -194,14 +201,14 @@ class OrderCtrl extends \BaseController {
         
         // ** Process payment
         
-        // No payment method on file for user
-        if ($user->stripe_customer_obj === NULL) {
+        // A card token takes priority. This way a user can always 
+        // change their card on file. And at this point in execution, we know they have one
+        // or the other.
+        if ($this->hasStripeToken($data))
             $stripeCharge = $this->stripeChargeFromToken($data);
-        }
-        // Payment IS on file for user
-        else {
+        else
             $stripeCharge = $this->stripeChargeFromSaved($data);
-        }
+        
         
         // Payment Success
         if ($stripeCharge['status'] !== false) {
@@ -217,11 +224,33 @@ class OrderCtrl extends \BaseController {
         
     }
     
+    /**
+     * Determine if there is a Stripe token present. Try to account for a lot
+     * of different things an overseas iOS developer might do.
+     * 
+     * @param obj $data The json_decoded order data.
+     * @return boolean 
+     */
+    private function hasStripeToken($data) {
+               
+        try {
+            $token = $data->Stripe->stripeToken;
+        }
+        catch (\Exception $e) {
+            return false;
+        }
+        
+        if ($token == NULL || $token == 'null' || $token == 'NULL' || $token == '')
+            return false;
+        else
+            return true;
+    }
+    
     
     private function stripeCharge($fn) {
         
         // Reset for certainty
-        $this->stripeCharge = NULL;
+        $this->stripeChargeObj = NULL;
         
         // Setup return
         $return = array(
@@ -233,24 +262,27 @@ class OrderCtrl extends \BaseController {
         try {
             $fn();
         }
+        // Errors
         catch (\Exception $e) {
             $body = $e->getJsonBody();
             $err  = $body['error'];
             $return['body'] = $err;
             
-            // Send some emails
-            #Mail::send('emails.admin.error_stripe', array('e' => $e), function($message)
-            #{
-            #    $message->to('admin@bentonow.com', 'Bento App')->subject('APP: Stripe Failure');
-            #});
+            // Send some error emails
+            Mail::send('emails.admin.error_stripe', array('e' => $e, 'user' => $this->user), function($message)
+            {
+                $message->to('admin@bentonow.com', 'Bento App')->subject('[App] [err]: Stripe Failure');
+            });
             
             // Return with errors
             return $return;
         }
         
-        // Return okay
+        // No errors. Return okay
         $return['status'] = true;
-        $return['body'] = $this->stripeCharge;
+        $return['body'] = $this->stripeChargeObj;
+        
+        return $return;
     }
     
     
@@ -260,15 +292,7 @@ class OrderCtrl extends \BaseController {
      * @return boolean False or stripeCharge object
      */
     private function stripeChargeFromToken($order) {
-         
-        /*
-        $return = array(
-            'status' => false,
-            'body' => null
-        );
-         * 
-         */
-        
+                 
         $customer = NULL;
                  
         // Get the User
@@ -277,16 +301,40 @@ class OrderCtrl extends \BaseController {
         // Get the credit card details submitted by the form
         $token = $order->Stripe->stripeToken;
 
-        // Define Stripe charge function
+        // Define Stripe charge function. This is wrapped in a try/catch.
         $fn = function() use ($user, $token, $order, &$customer) {
-            // Create a Customer
-            $customer = Stripe_Customer::create(array(
-              "card" => $token,
-              "description" => $user->email)
-            );  
             
+            // If we don't have a customer object on file:
+            if ($user->stripe_customer_obj == NULL) {
+            
+                // Create a Customer
+                $customer = Stripe_Customer::create(array(
+                  "card" => $token,
+                  "description" => $user->email)
+                );
+
+                // If ok (no exception thrown), Save the customer ID in our database so we can use it later
+                $user->stripe_customer_obj = serialize($customer);
+                $user->save();
+            }
+            // Otherwise we have them on file, and they're updating their card
+            else {
+                // Get our customer on file
+                $customer = unserialize($user->stripe_customer_obj);
+                
+                // Update with stripe
+                $cu = Stripe_Customer::retrieve($customer->id);
+                $cu->card = $token;
+                $cu->save();
+                
+                // Update in our DB
+                $cu2 = Stripe_Customer::retrieve($customer->id);
+                $user->stripe_customer_obj = serialize($cu2);
+                $user->save();
+            }
+                        
             // Charge the Customer instead of the card
-            $this->stripeCharge = Stripe_Charge::create(array(
+            $this->stripeChargeObj = Stripe_Charge::create(array(
               "amount" => $order->OrderDetails->total_cents, # amount in cents, again
               "currency" => "usd",
               "customer" => $customer->id)
@@ -294,39 +342,7 @@ class OrderCtrl extends \BaseController {
         };
         
         $stripeChargeResult = $this->stripeCharge($fn);
-        
-        /*
-        try {
-            // Create a Customer
-            $customer = Stripe_Customer::create(array(
-              "card" => $token,
-              "description" => $user->email)
-            );  
-            
-            // Charge the Customer instead of the card
-            $stripeCharge = Stripe_Charge::create(array(
-              "amount" => $order->OrderDetails->total_cents, # amount in cents, again
-              "currency" => "usd",
-              "customer" => $customer->id)
-            );
-        }
-        catch (\Exception $e) {
-            $body = $e->getJsonBody();
-            $err  = $body['error'];
-            $return['body'] = $err;
-            
-            return $return;
-        }
-         * *
-         */
-
-        
-        #var_dump($stripeCharge); die();
-
-        // Save the customer ID in your database so you can use it later
-        $user->stripe_customer_obj = $customer;
-        $user->save();
-                
+                                
         return $stripeChargeResult;
     }
     
@@ -335,13 +351,20 @@ class OrderCtrl extends \BaseController {
         
         $user = $this->user;
         
-        $customerId = json_decode($user->stripe_customer_obj)->id;
-
-        Stripe_Charge::create(array(
-          "amount"   => $order->OrderDetails->total_cents, # amount in cents, again
-          "currency" => "usd",
-          "customer" => $customerId)
-        );
+        $customerId = unserialize($user->stripe_customer_obj)->id;
+        
+        // Define Stripe charge function
+        $fn = function() use ($order, $customerId) {
+            $this->stripeChargeObj = Stripe_Charge::create(array(
+              "amount"   => $order->OrderDetails->total_cents, # amount in cents, again
+              "currency" => "usd",
+              "customer" => $customerId)
+            );
+        };
+        
+        $stripeChargeResult = $this->stripeCharge($fn);
+        
+        return $stripeChargeResult;
     }
     
     
@@ -377,6 +400,10 @@ class OrderCtrl extends \BaseController {
         // Insert into CustomerBentoBox
         $this->insertCustomerBentoBoxes($orderJson, $order->pk_Order);
         
+        // Bind the completed Order to the PendingOrder
+        $this->pendingOrder->fk_Order = $order->pk_Order;
+        $this->pendingOrder->save();
+        
         // Soft-delete pending order
         $this->pendingOrder->delete();
         
@@ -384,43 +411,7 @@ class OrderCtrl extends \BaseController {
         # do stuff
     }
     
-    
-    private function validateStripeCardToken() {
         
-        // Set your secret key: remember to change this to your live secret key in production
-        // See your keys here https://dashboard.stripe.com/account
-        Stripe::setApiKey($_ENV['Stripe_sk_test']);
-
-        // Get the credit card details submitted by the form
-        $token = $_POST['stripeToken'];
-
-        // Create a Customer
-        $customer = Stripe_Customer::create(array(
-          "card" => $token,
-          "description" => "payinguser@example.com")
-        );
-
-        // Charge the Customer instead of the card
-        Stripe_Charge::create(array(
-          "amount" => 1000, # amount in cents, again
-          "currency" => "usd",
-          "customer" => $customer->id)
-        );
-
-        // Save the customer ID in your database so you can use it later
-        saveStripeCustomerId($user, $customer->id);
-
-        // Later...
-        $customerId = getStripeCustomerId($user);
-
-        Stripe_Charge::create(array(
-          "amount"   => 1500, # $15.00 this time
-          "currency" => "usd",
-          "customer" => $customerId)
-        );
-    }
-    
-    
     private function insertCustomerBentoBoxes($orderJson, $pk_Order) {
         
         // For each CustomerBentoBox

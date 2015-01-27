@@ -61,5 +61,5 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
                     ->where('email', $email)
                     ->update(array('api_token' => $api_token));
         }
-        
+                
 }
