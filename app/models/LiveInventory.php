@@ -90,10 +90,44 @@ class LiveInventory extends \Eloquent {
             d.`name`, d.short_name
         from LiveInventory li 
         left join Dish d on (li.fk_item = d.pk_Dish)
-        order by type asc
+        order by type asc, d.`name` asc
         ";
         $rows = DB::select($sql, array());
         
         return $rows;
+    }
+    
+    
+    public static function getLiveAndDriver() {
+        
+        $sql = "
+        SELECT li.fk_item, d.`name`, d.short_name, li.qty as lqty,
+                (select sum(di.qty) from DriverInventory di where di.fk_item = li.fk_item group by fk_item) as dqty
+        FROM bento.LiveInventory li
+        left join Dish d on (li.fk_item = d.pk_Dish)
+        order by type asc, d.`name` asc
+        ";
+        
+        $rows = self::hydrateRaw($sql, array());
+        
+        return $rows;
+    }
+    
+    
+    public static function recalculate() {
+        
+        DB::transaction(function()
+        {
+            $driverInventory = self::getLiveAndDriver();
+            
+            // Empty it
+            DB::table('LiveInventory')->truncate();
+            
+            // Populate it
+            foreach ($driverInventory as $row) {
+                $sql = "insert into LiveInventory (fk_item, qty, change_reason) values (?,?,?)";
+                DB::insert($sql, array($row->fk_item, $row->dqty, 'admin_update'));
+            }
+        });
     }
 }

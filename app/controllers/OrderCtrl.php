@@ -163,6 +163,11 @@ class OrderCtrl extends \BaseController {
      */
     public function postIndex() {
         
+        // If the restaurant is not open, we're done!
+        $status = Status::getOverall();
+        if ($status != 'open')
+            return Response::json(array("error" => "Not open."), 423);
+        
         // Vars
         $stripeCharge = false;
         
@@ -211,7 +216,7 @@ class OrderCtrl extends \BaseController {
         
         
         // Payment Success
-        if ($stripeCharge['status'] !== false) {
+        if ($stripeCharge['status'] === true) {
             
             $this->paymentSuccess($data, $stripeCharge['body']);
             

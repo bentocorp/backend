@@ -48,6 +48,7 @@ Order
         </pre>
       </li>
       <li><code>406</code> if payment failed.</li>
+      <li><code>423</code> if the restaurant is not open.</li>
     </ul>
 
     <form action="/order" method="post">

@@ -4,7 +4,8 @@ namespace Bento\Admin\Ctrl;
 
 use Bento\Admin\Model\Menu;
 use Bento\Admin\Model\Orders;
-use Bento\Admin\Model\Drivers;
+use Bento\Admin\Model\Driver;
+use Bento\Model\LiveInventory;
 use View;
 use Carbon\Carbon;
 
@@ -33,10 +34,14 @@ class DashboardCtrl extends \BaseController {
         $data['orderStatusDropdown'] = $orderStatusDropdown;
         
         // Get current drivers
-        $currentDrivers = Drivers::getCurrentDrivers();
-        $driversDropdown = Drivers::getCurrentDriversForDropdown();
+        $currentDrivers = Driver::getCurrentDrivers();
+        $driversDropdown = Driver::getCurrentDriversForDropdown();
         $data['currentDrivers'] = $currentDrivers;
         $data['driversDropdown'] = $driversDropdown;
+        
+        // Get LiveInventory compared with DriverInventory
+        $liveInventory = LiveInventory::getLiveAndDriver();
+        $data['liveInventory'] = $liveInventory;
            
         return View::make('admin.index', $data);
     }

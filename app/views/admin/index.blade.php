@@ -1,9 +1,9 @@
 
 <?php
 
-use Bento\Model\LiveInventory;
+#use Bento\Model\LiveInventory;
 use Bento\Admin\Model\Orders;
-use Bento\Admin\Model\Drivers;
+use Bento\Admin\Model\Driver;
 
 ?>
 
@@ -20,7 +20,7 @@ Menu
 <h1>Today's Menu</h1>
 <?php
 
-#var_dump($menu); die();
+#var_dump($menu['MenuItems']); die();
 #die();
 #echo Carbon::createFromFormat('Y-m-d H', time())->toDateTimeString(); 
 
@@ -33,7 +33,7 @@ if ($menu !== NULL) {
             <th>type</th>
             <th>Name</th>
             <th>&nbsp;</th>
-            <th>Inv.</th>
+            <th>D. Inv.</th>
           </tr>
         </thead>
 
@@ -48,7 +48,7 @@ if ($menu !== NULL) {
             
             echo "<tr>";
                 echo "<td>$row->type</td>";
-                echo "<td>$row->name</td>";
+                echo "<td><span title='pk: $row->pk_Dish'>$row->name</span></td>";
                 echo "<td>$row->short_name</td>";
                 echo "<td>$hasDriverInventory</td>";
             echo "</tr>";
@@ -143,6 +143,9 @@ Drivers
 -->
 <h1>Drivers with Inventory</h1>
 
+<p><b>Note:</b> Live Inventory is automatically recalculated <i>every time</i> you
+  manually update the Driver Inventory. <br>This is computationally expensive, so do so wisely!</p>
+
 <?php
 
 if ($menu !== NULL):
@@ -189,7 +192,7 @@ foreach($menu['MenuItems'] as $inv) {
         // For each Driver
         foreach ($currentDrivers as $row) {
             
-            $driverInventory = Drivers::getDriverInventory($row->pk_Driver);
+            $driverInventory = Driver::getDriverInventory($row->pk_Driver);
             $driverDishes = array();
             
             // Hash the inventory (an integer indexed array is not helpful here)
@@ -230,11 +233,58 @@ foreach($menu['MenuItems'] as $inv) {
 
 <?php
 else:
-    echo "<span class='label label-warning'>Warning</span> I can't pull driver inventory if there's no current menu to know what "
+    echo "<span class='label label-warning'>Warning</span> I can't build driver inventory UI if there's no current menu to know what "
     . "inventory they're supposed to have.";
 endif;
 ?>
 
+
+<!--
+******************************************************************************
+Live Inventory
+******************************************************************************
+-->
+<h1>Live Inventory</h1>
+<table class="table table-striped" style="width:auto;">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>&nbsp;</th>
+        <th>Live Inv.</th>
+        <th>Driver Inv.</th>
+        <th>Match?</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    <?php
+    foreach ($liveInventory as $row) {
+
+        // Do live and driver inventories match?
+        
+        $isMatch = '&nbsp;';
+        $isMatchClass = '';
+        
+        if($row->lqty == $row->dqty) {
+            $isMatch = '<span class="glyphicon glyphicon-ok"></span>';
+            $isMatchClass = 'success';
+        }
+        else {
+            $isMatch = '<span class="glyphicon glyphicon-remove"></span>';
+            $isMatchClass = 'danger';
+        }
+
+        echo "<tr>";
+            echo "<td>$row->name</td>";
+            echo "<td>$row->short_name</td>";
+            echo "<td>$row->lqty</td>";
+            echo "<td>$row->dqty</td>";
+            echo "<td class='$isMatchClass'>$isMatch</td>";
+        echo "</tr>";
+    }
+    ?>
+    </tbody>
+</table>
 
 
 <!--

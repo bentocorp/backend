@@ -16,6 +16,14 @@ class Status {
     }
     
     
+    public static function getOverall() {
+        
+        $obj = self::overall();
+        
+        return $obj->value;
+    }
+    
+    
     public static function menu() {
         
         $sql = "select fk_item itemId, qty from LiveInventory";
