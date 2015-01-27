@@ -262,9 +262,10 @@ class UserCtrl extends \BaseController {
     private function addStripeInfo($user) {
         
         if ($user->stripe_customer_obj !== NULL) {
-            $cu = unserialize($user->stripe_customer_obj);
+            $cu = unserialize(base64_decode($user->stripe_customer_obj)); // THIS IS WHY YOU USE ELOQUENT!
+            #var_dump($cu); die();
             $card = $cu->cards->data[0];
-            #var_dump($card);
+            
             $user->card = new \stdClass();
             $user->card->brand = $card->brand;
             $user->card->last4 = $card->last4;

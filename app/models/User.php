@@ -61,5 +61,16 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
                     ->where('email', $email)
                     ->update(array('api_token' => $api_token));
         }
+        
+        
+        public function getStripeCustomerObjAttribute($value) {
+            return unserialize(base64_decode($value));
+        }
+        
+        
+        public function setStripeCustomerObjAttribute($value) {
+            $this->attributes['stripe_customer_obj'] = base64_encode(serialize($value));
+
+        }
                 
 }

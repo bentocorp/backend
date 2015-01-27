@@ -314,13 +314,13 @@ class OrderCtrl extends \BaseController {
                 );
 
                 // If ok (no exception thrown), Save the customer ID in our database so we can use it later
-                $user->stripe_customer_obj = serialize($customer);
+                $user->stripe_customer_obj = $customer;
                 $user->save();
             }
             // Otherwise we have them on file, and they're updating their card
             else {
                 // Get our customer on file
-                $customer = unserialize($user->stripe_customer_obj);
+                $customer = $user->stripe_customer_obj;
                 
                 // Update with stripe
                 $cu = Stripe_Customer::retrieve($customer->id);
@@ -329,7 +329,7 @@ class OrderCtrl extends \BaseController {
                 
                 // Update in our DB
                 $cu2 = Stripe_Customer::retrieve($customer->id);
-                $user->stripe_customer_obj = serialize($cu2);
+                $user->stripe_customer_obj = $cu2;
                 $user->save();
             }
                         
@@ -351,7 +351,7 @@ class OrderCtrl extends \BaseController {
         
         $user = $this->user;
         
-        $customerId = unserialize($user->stripe_customer_obj)->id;
+        $customerId = $user->stripe_customer_obj->id;
         
         // Define Stripe charge function
         $fn = function() use ($order, $customerId) {
