@@ -1,5 +1,7 @@
 <?php
 
+$env = \App::environment();
+
 return array(
 
 	/*
@@ -54,7 +56,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'admin@mg.bentonow.com', 'name' => 'Bento Backend Admin'),
+	'from' => array('address' => "eng.{$env}.alert@mg.bentonow.com", 'name' => "Bento $env"),
 
 	/*
 	|--------------------------------------------------------------------------
