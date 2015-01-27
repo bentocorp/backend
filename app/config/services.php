@@ -16,7 +16,7 @@ return array(
 
 	'mailgun' => array(
 		'domain' => 'mg.bentonow.com',
-		'secret' => 'key-43f6b04d7c76f3692ef72ffe593d4ed2',
+		'secret' => $_ENV['Mailgun_secret_api'],
 	),
 
 	'mandrill' => array(
