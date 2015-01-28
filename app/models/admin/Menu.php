@@ -60,5 +60,58 @@ class Menu extends \Eloquent {
         }
         
         
+        public static function getRelative($date, $dateComparator = '=') {
+                        
+            // Otherwise, query the DB...
+            
+            $return = array();
+            
+            // Get the Menu            
+            $sql = "SELECT *  
+                    FROM Menu 
+                    WHERE for_date $dateComparator ? AND published";
+            $menus = DB::select($sql, array($date));
+            #var_dump($menus); die();
+            
+            // Return if empty
+            if (count($menus) == 0)
+                return NULL;
+            else {
+                
+                $compoundMenu = array();
+                
+                foreach($menus as $menu) {
+                    $compoundMenu['Menu'] = $menu;
+                    
+                    // Get Menu_Items
+                    $sql2 = "
+                        SELECT 
+                                d.pk_Dish, d.name, d.description, d.type, d.short_name,
+                            (
+                                        # summate
+                                        select sum(qty) as total
+                                        from DriverInventory di
+                                        where fk_item = d.pk_Dish
+                                        group by fk_item
+                            ) as DriverInventoryTotal
+                        FROM Menu_Item mi
+                        LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)
+                        WHERE mi.fk_Menu = ?
+                        order by d.type ASC, d.name ASC
+                    ";
+                    
+                    $menuItems = DB::select($sql2, array($menu->pk_Menu));
+                    
+                    $compoundMenu['MenuItems'] = $menuItems;
+                    
+                    $return[] = $compoundMenu;
+                }
+            }
+                                      
+            // Return
+            return $return;
+        }
+        
+        
         
 }

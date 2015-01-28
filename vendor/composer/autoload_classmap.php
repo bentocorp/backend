@@ -12,6 +12,7 @@ return array(
     'Bento\\Admin\\Ctrl\\ApiTestCtrl' => $baseDir . '/app/controllers/admin/ApiTestCtrl.php',
     'Bento\\Admin\\Ctrl\\DashboardCtrl' => $baseDir . '/app/controllers/admin/DashboardCtrl.php',
     'Bento\\Admin\\Ctrl\\DriverCtrl' => $baseDir . '/app/controllers/admin/DriverCtrl.php',
+    'Bento\\Admin\\Ctrl\\MenuCtrl' => $baseDir . '/app/controllers/admin/MenuCtrl.php',
     'Bento\\Admin\\Ctrl\\MiscCtrl' => $baseDir . '/app/controllers/admin/MiscCtrl.php',
     'Bento\\Admin\\Ctrl\\OrderCtrl' => $baseDir . '/app/controllers/admin/OrderCtrl.php',
     'Bento\\Admin\\Ctrl\\PendingOrderCtrl' => $baseDir . '/app/controllers/admin/PendingOrderCtrl.php',

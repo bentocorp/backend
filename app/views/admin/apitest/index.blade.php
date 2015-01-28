@@ -61,19 +61,19 @@ Order
         {
             "item_type": "CustomerBentoBox",
             "items": [
-                {"id": 3,  "type": "main"}, 
+                {"id": 11,  "type": "main"}, 
                 {"id": 1,  "type": "side1"},
                 {"id": 1,  "type": "side2"},
                 {"id": 5,  "type": "side3"}, 
-                {"id": 11, "type": "side4"}
+                {"id": 3, "type": "side4"}
             ]
         },
         {
             "item_type": "CustomerBentoBox",
             "items": [
-                {"id": 4,  "type": "main"}, 
+                {"id": 9,  "type": "main"}, 
                 {"id": 5,  "type": "side1"}, 
-                {"id": 11, "type": "side2"},
+                {"id": 4, "type": "side2"},
                 {"id": 6,  "type": "side3"},
                 {"id": 5,  "type": "side4"} 
             ]

@@ -100,9 +100,11 @@ Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
     
     Route::controller('dashboard', 'Bento\Admin\Ctrl\DashboardCtrl');
     
-    Route::controller('drivers', 'Bento\Admin\Ctrl\DriverCtrl');
+    Route::controller('driver', 'Bento\Admin\Ctrl\DriverCtrl');
     
-    Route::controller('orders', 'Bento\Admin\Ctrl\OrderCtrl');
+    Route::controller('order', 'Bento\Admin\Ctrl\OrderCtrl');
+    
+    Route::controller('menu', 'Bento\Admin\Ctrl\MenuCtrl');
     
     Route::controller('pendingorder', 'Bento\Admin\Ctrl\PendingOrderCtrl');
     
