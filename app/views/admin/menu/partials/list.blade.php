@@ -22,14 +22,14 @@ if ($menuList !== NULL): ?>
         $menu = $compoundMenu['Menu'];
 
         echo "<tr>";
-            echo "<td>$menu->for_date</td>";
+            echo "<th>$menu->for_date</th>";
             echo "<td><a href='/admin/menu/edit/{$menu->pk_Menu}'>$menu->name</a></td>";
             echo "<td>$menu->created_at</td>";
             echo "<td>$menu->updated_at</td>";
         echo "</tr>";
         echo "<tr><td colspan='4' style='padding-left:40px;'>";
             foreach ($compoundMenu['MenuItems'] as $menuItem) {
-                echo "<b>$menuItem->type:</b> $menuItem->name  &nbsp;|&nbsp; ";
+                echo "<i>$menuItem->type:</i> $menuItem->name  &nbsp;|&nbsp; ";
             }
             if (count($compoundMenu['MenuItems']) == 0)
                 echo "<span class='label label-warning'>Warning</span> <b>No menu items for this menu!</b>";

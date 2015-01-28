@@ -69,9 +69,10 @@ class Menu extends \Eloquent {
             // Get the Menu            
             $sql = "SELECT *  
                     FROM Menu 
-                    WHERE for_date $dateComparator ? AND published";
+                    WHERE for_date $dateComparator ? AND published
+                    ORDER BY for_date ASC
+             ";
             $menus = DB::select($sql, array($date));
-            #var_dump($menus); die();
             
             // Return if empty
             if (count($menus) == 0)
