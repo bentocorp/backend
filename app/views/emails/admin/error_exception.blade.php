@@ -22,7 +22,7 @@ echo "</pre>";
 
 echo '<h2>$_SERVER:</h2>';
 echo "<pre>";
-var_dump ($_SERVER);
+echo "REQUEST_URI: {$_SERVER['REQUEST_URI']}";
 echo "</pre>";
 
 
