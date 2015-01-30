@@ -3,7 +3,7 @@
 namespace Bento\Admin\Model;
 
 use DB;
-use Cache;
+
 
 class Menu extends \Eloquent {
 
