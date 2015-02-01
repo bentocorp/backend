@@ -61,6 +61,12 @@ App::error(function(Exception $exception, $code)
         });
 });
 
+
+App::missing(function($exception)
+{
+    return Response::make('Not found', 404);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler
