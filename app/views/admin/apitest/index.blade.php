@@ -174,6 +174,7 @@ User
             "The password must be at least 8 characters."
         ]
       </li>
+      <li><code>409</code> if email already exists.</li>
     </ul>
 
     <form action="/user/signup" method="post">
@@ -196,8 +197,11 @@ User
       POST: /user/fbsignup</h3>
     
     <br>
-    <b>Returns:</b><br>
-    Same as /user/signup
+    <b>Returns:</b>
+    <ul>
+      <li>Same as /user/signup, plus:</li>
+      <li><code>403</code> if bad fb_token.</li>
+    </ul>
     <br>
 
     <form action="/user/fbsignup" method="post">
@@ -209,7 +213,10 @@ User
     "email": "test1@bentonow.com",
     "phone": "555-123-4567",
     "fb_id": "someid",
-    "fb_profile_pic": "http://profilepic.jpg"
+    "fb_token": "CAALQCVl1AkkBAMz3ycA3l4mkNvBqVu0y5qjh1dhZARrjqTitqyZAl62z77I80AZAqoXC8BF3E47wZBIeH2rte11QU0LRl7eOZBHk7ZAVZCNpHcbmJtIKHkzLtrL4pYkmoKW9t1cjLxZAhqNqwjZBrLgZAlkwzcU4dSut8PtlRpeafXaZBv9YUyrs30MOEW4t1Tp381A7qqUpHCu4MmZCH4qmQfan",
+    "fb_profile_pic": "http://profilepic.jpg",
+    "fb_age_range": "some range",
+    "fb_gender": "male"
 }
       </textarea>
       <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">
@@ -257,7 +264,7 @@ User
       <textarea name="data" class="form-control admin-jsonTextarea">
 {
     "email": "test1@bentonow.com",
-    "fb_id": "someid"
+    "fb_token": "CAALQCVl1AkkBAMz3ycA3l4mkNvBqVu0y5qjh1dhZARrjqTitqyZAl62z77I80AZAqoXC8BF3E47wZBIeH2rte11QU0LRl7eOZBHk7ZAVZCNpHcbmJtIKHkzLtrL4pYkmoKW9t1cjLxZAhqNqwjZBrLgZAlkwzcU4dSut8PtlRpeafXaZBv9YUyrs30MOEW4t1Tp381A7qqUpHCu4MmZCH4qmQfan"
 }
       </textarea>
       <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">

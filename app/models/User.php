@@ -11,6 +11,13 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
 
 	use UserTrait, RemindableTrait;
 
+        
+        // Static vars
+        
+        private static $apiUser;
+        
+        // Instance vars
+        
 	/**
 	 * The database table used by the model.
 	 *
@@ -26,9 +33,7 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
 	 * @var array
 	 */
 	protected $hidden = array('password', 'remember_token');
-        
-        private static $apiUser;
-        
+                
         
         public static function set($apiUser) {
             self::$apiUser = $apiUser;
@@ -63,6 +68,44 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
         }
         
         
+        public static function getUserForLogin($email) {
+
+            $sql = "SELECT pk_User, email, phone, api_token, password, is_admin, stripe_customer_obj
+                    FROM User WHERE email = ? AND email IS NOT NULL 
+                        and password IS NOT NULL";
+
+            $user = self::hydrateRaw($sql, array($email));
+            
+            self::$apiUser = $user[0];
+            
+            return $user;
+        }
+        
+        
+        public static function getFbUserForLogin($email) {
+
+            $sql = "SELECT pk_User, email, phone, api_token, fb_token, fb_id, is_admin, stripe_customer_obj
+                    FROM User WHERE email = ? AND email IS NOT NULL 
+                        and fb_id IS NOT NULL and fb_token IS NOT NULL";
+
+            $user = self::hydrateRaw($sql, array($email));
+            
+            self::$apiUser = $user[0];
+            
+            return $user;
+        }
+        
+        
+        public static function logout() {
+            
+            $user = self::$apiUser;
+
+            // Delete Token
+            $sql = "UPDATE User SET api_token = NULL WHERE api_token = ?";
+            DB::update($sql, array($user->api_token));
+        }
+        
+        
         public function getStripeCustomerObjAttribute($value) {
             return unserialize(base64_decode($value));
         }
@@ -70,7 +113,20 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
         
         public function setStripeCustomerObjAttribute($value) {
             $this->attributes['stripe_customer_obj'] = base64_encode(serialize($value));
-
+        }
+        
+        
+        public function getFbTokenAttribute($value) {
+            try {
+                return Crypt::decrypt($value);
+            }   catch (\Exception $e) {
+                return $value;
+            }
+        }
+        
+        
+        public function setFbTokenAttribute($value) {
+            $this->attributes['fb_token'] = Crypt::encrypt($value);
         }
                 
 }

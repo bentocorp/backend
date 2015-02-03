@@ -135,4 +135,31 @@ abstract class StripeTestCase extends UnitTestCase
       );
     }
   }
+
+  /**
+   * Genereate a semi-random string
+   */
+  public function generateRandomString($length = 24)
+  {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+  }
+
+  protected static function createTestBitcoinReceiver($email)
+  {
+    $receiver = Stripe_BitcoinReceiver::create(
+        array(
+          'amount' => 100,
+          'currency' => 'usd',
+          'description' => 'some details',
+          'email' => $email
+        )
+    );
+    return $receiver;
+  }
 }

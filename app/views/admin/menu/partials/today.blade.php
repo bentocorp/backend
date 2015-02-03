@@ -46,10 +46,10 @@ if ($menu !== NULL) {
       </div>
       <div style="float:left;"><img src="{{{$menu["Menu"]->bgimg}}}" style="max-height:350px"></div>
     </div>
+
+    <a class="btn btn-default" href="/admin/menu/view/{{{$menu["Menu"]->pk_Menu}}}" role="button">View Details</a>
 <?php
 }
 else 
     echo '<div class="alert alert-danger" role="alert">No menu defined today.</div>';
 ?>
-
-<a class="btn btn-default" href="/admin/menu/view/{{{$menu["Menu"]->pk_Menu}}}" role="button">View Details</a>

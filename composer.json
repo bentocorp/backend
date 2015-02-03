@@ -7,7 +7,8 @@
 	"require": {
 		"laravel/framework": "4.2.*",
         "stripe/stripe-php": "1.*",
-        "guzzlehttp/guzzle": "~4.0"
+        "guzzlehttp/guzzle": "~4.0",
+        "facebook/php-sdk-v4" : "4.0.*"
 	},
 	"autoload": {
 		"classmap": [
@@ -15,6 +16,7 @@
 			"app/controllers",
 			"app/models",
 			"app/filters",
+            "app/exceptions",
 			"app/database/migrations",
 			"app/database/seeds",
 			"app/tests/TestCase.php"

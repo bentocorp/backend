@@ -7,7 +7,7 @@ use Input;
 use Response;
 use Hash;
 use User;
-use DB;
+use Facebook\FacebookSession;
 
 
 class UserCtrl extends \BaseController {
@@ -16,7 +16,8 @@ class UserCtrl extends \BaseController {
     #private $cmnValFields;
     #private $cmnValRules;
     
-    #private $data;
+    private $facebookSession;
+    private $user;
     
     
     /**
@@ -25,8 +26,15 @@ class UserCtrl extends \BaseController {
      * @return httpStatusCode 200|400
      */
     public function postSignup() {
+        
         // Get data
         $data = json_decode(Input::get('data'));
+        
+        // Check user doesn't already exist
+        $existingUser = User::where('email', $data->email)->get();
+        
+        if ($existingUser !== NULL)
+            return Response::json(array('error' => 'This email is already registered.'), 409);
         
         // Setup validation
         $valFields = 
@@ -92,8 +100,15 @@ class UserCtrl extends \BaseController {
      * @return httpStatusCode 200|400
      */
     public function postFbsignup() {
+        
         // Get data
         $data = json_decode(Input::get('data'));
+        
+        // Check user doesn't already exist
+        $existingUser = User::where('email', $data->email)->get();
+        
+        if ($existingUser !== NULL)
+            return Response::json(array('error' => 'This email is already registered.'), 409);
         
         // Setup validation
         $valFields = 
@@ -127,24 +142,43 @@ class UserCtrl extends \BaseController {
             
             return Response::json($messages->all(), 400);
         }
-        // Good input, save FB user to DB
+        // Good input
         else {
+            // Verify FB token. To validate the session:
+            try {
+                $fb_token = $this->getFbToken($data->fb_token);
+            }
+            catch (\Exception $ex) {
+                // Session not valid, Graph API returned an exception with the reason. OR:
+                // Graph API returned info, but it may mismatch the current app or have expired.
+                #echo $ex->getMessage();
+                return Response::json(array('error' => $ex->getMessage()), 403);
+            }
+            
+            // Everything good, save FB user to DB
+            
             // Make their secret token
             $api_token = $this->makeApiToken($data->email);
             
             // Put user into DB
             $user = new User;
-            $user->api_token    = $api_token;
-            $user->firstname    = $data->firstname;
-            $user->lastname     = $data->lastname;
-            $user->email        = $data->email;
-            $user->phone        = $data->phone;
-            $user->reg_type     = 'Facebook';
-            $user->fb_id        = $data->fb_id;
-            $user->fb_profile_pic    = $data->fb_profile_pic;
+            $user->api_token        = $api_token;
+            $user->firstname        = $data->firstname;
+            $user->lastname         = $data->lastname;
+            $user->email            = $data->email;
+            $user->phone            = $data->phone;
+            $user->reg_type         = 'Facebook';
+            $user->fb_id            = $data->fb_id;
+            $user->fb_token         = $fb_token; // This is treated as a password
+            $user->fb_profile_pic   = $data->fb_profile_pic;
+            $user->fb_age_range     = $data->fb_age_range;
+            $user->fb_gender        = $data->fb_gender;
             $user->save();
             
-            $response = array('api_token' => $api_token);
+            $response = array(
+                'api_token' => $api_token,
+                'fb_token'  => $fb_token,
+            );
             
             return Response::json($response, 200);
         }
@@ -152,22 +186,21 @@ class UserCtrl extends \BaseController {
 
 
     public function postLogin() {
+        
         // Get data
         $data = json_decode(Input::get('data'));
         
         // Try to get user from DB
-        $sql = "SELECT email, phone, api_token, password, is_admin, stripe_customer_obj
-                FROM User WHERE email = ? AND email IS NOT NULL and password IS NOT NULL";
-        
-        $user = DB::select($sql, array($data->email));
-        
-        
+        $userSingleton = User::getUserForLogin($data->email);
+        $user = unserialize(serialize($userSingleton)); // clone
+                
         // User not found
-        if (count($user) != 1)
+        if ($user->count() != 1)
             return Response::json('', 404);
         // User found
-        else {
+        else { // <-- Refactor this crazy thing
             $user = $user[0];
+            $this->user = $user;
             
             // Good password
             if (Hash::check($data->password, $user->password)) {
@@ -193,43 +226,87 @@ class UserCtrl extends \BaseController {
     
     
     public function postFblogin() {
+        
         // Get data
         $data = json_decode(Input::get('data'));
         
         // Try to get user from DB
-        $sql = "SELECT email, phone, api_token, fb_id, is_admin, stripe_customer_obj
-                FROM User WHERE email = ? AND email IS NOT NULL and fb_id IS NOT NULL";
-        
-        $user = DB::select($sql, array($data->email));
-        
+        $userSingleton = User::getFbUserForLogin($data->email);
+        $user = unserialize(serialize($userSingleton)); // clone
         
         // User not found
-        if (count($user) != 1)
+        if ($user->count() != 1)
             return Response::json('', 404);
         // User found
         else {
-            $user = $user[0];
+            $this->user = $user[0];
             
-            // Good Facebook Id
-            if ($data->fb_id == $user->fb_id) {
-                // Remove FB Id from the return
-                unset($user->fb_id);
-                
-                // Set new api_token
-                $api_token = $this->makeApiToken($user->email);
-                User::setNewApiToken($api_token, $user->email); // set to db
-                $user->api_token = $api_token; // set to return object
-                
-                // Add Stripe info if it's there
-                $user = $this->addStripeInfo($user);
-                
-                return Response::json($user, 200);
-            }
-            // Bad Facebook Id
-            else {
-                return Response::json('', 403);
-            }
+            return $this->fbProcessLoginUser($this->user, $data);
         }
+    }
+    
+    
+    /**
+     * Process the user that we've found in the DB for FB login
+     */
+    private function fbProcessLoginUser($user, $data) {
+        
+        // Good Facebook Token
+        if ($data->fb_token == $user->fb_token) {
+
+            $user = $this->getFbLoginSuccessUser($user);
+
+            return Response::json($user, 200);
+        }
+        // Bad Existing Facebook Token
+        else {
+            #die('bad token');
+            // Last resort: Try to get a new token from FB
+            try {
+              $fb_token = $this->getFbToken($data->fb_token);
+            } catch (\Exception $ex) {
+              return Response::json(array('error' => $ex->getMessage()), 403);
+            }
+            
+            // All good at this point. Last resort worked.
+            
+            $user = $this->getFbLoginSuccessUser($user);
+            
+            // Set the new fb_token to the return obj
+            $user->fb_token = $fb_token;
+            
+            // Encrypt and save the new fb_token to the DB.
+            // We get a separate user obj so as not to muck with the return.
+            $dbuser = User::get();
+            #var_dump($dbuser); die('here');
+            $dbuser->fb_token = $fb_token; // This is treated as a password
+            $dbuser->save();
+
+            return Response::json($user, 200);
+        }
+    }
+    
+    
+    /**
+     * FB login is successful, so prep the DB and user obj accordingly.
+     * 
+     * @param obj $user
+     * @return obj User
+     */
+    private function getFbLoginSuccessUser($user) {
+        
+        // Remove unwanted items from the return
+        unset($user->pk_User, $user->fb_id, $user->fb_token);
+
+        // Set new api_token
+        $api_token = $this->makeApiToken($user->email);
+        User::setNewApiToken($api_token, $user->email); // set to db
+        $user->api_token = $api_token; // set to return object
+
+        // Add Stripe info if it's there
+        $user2 = $this->addStripeInfo($user);
+        
+        return $user2;
     }
     
     
@@ -245,13 +322,8 @@ class UserCtrl extends \BaseController {
     public function getLogout() {
         
         try {
-            $user = User::get();
-
-            // Delete Token
-            $sql = "UPDATE User SET api_token = NULL WHERE api_token = ?";
-            DB::update($sql, array($user->api_token));
-        }
-        catch (\Exception $e) {
+            User::logout();
+        }   catch (\Exception $e) {
             return Response::json(array('error' => 'User not found.'), 404);
         }
         
@@ -261,9 +333,9 @@ class UserCtrl extends \BaseController {
     
     private function addStripeInfo($user) {
         
-        if ($user->stripe_customer_obj !== NULL) {
-            $cu = unserialize(base64_decode($user->stripe_customer_obj)); // THIS IS WHY YOU USE ELOQUENT!
-            #var_dump($cu); die();
+        if ($user->stripe_customer_obj !== false) {
+            $cu = $user->stripe_customer_obj;
+            #var_dump($user); die();
             $card = $cu->cards->data[0];
             
             $user->card = new \stdClass();
@@ -277,6 +349,33 @@ class UserCtrl extends \BaseController {
         unset($user->stripe_customer_obj);
         
         return $user;
+    }
+    
+    /**
+     * The purpose of this function is to validate the FB access token from the
+     * mobile app, thereby returning a long-term FB token.
+     * 
+     * @param string $token The token provided by the frontend native app.
+     * @return string Long term FB token
+     * @throws Exception Throws a FacebookRequestException, or some other exception, if the token does not validate.
+     */
+    private function getFbToken($token) {
+        
+        FacebookSession::setDefaultApplication($_ENV['FB_app_id'], $_ENV['FB_app_secret']);
+        
+        // We have an access token from the mobile app
+        $session = new FacebookSession($token);
+        
+        // This might throw an exception
+        $session->validate();
+        
+        // Check if token matches the user
+        $sessionInfo = $session->getSessionInfo();
+        #print_r($sessionInfo); die();
+        if ($this->user->fb_id != $sessionInfo->getId())
+            throw new \FbMismatchedIdException("The fb_token and fb_id don't match.");
+        
+        return $session->getToken();
     }
     
     
