@@ -50,7 +50,7 @@ class UserCtrl extends \BaseController {
                 'name' => 'required',
                 'email' => 'required|email|unique:User',
                 'phone' => 'required',
-                'password' => 'required|min:8',
+                'password' => 'required|min:6',
             );
         
         

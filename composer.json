@@ -10,6 +10,9 @@
         "guzzlehttp/guzzle": "~4.0",
         "facebook/php-sdk-v4" : "4.0.*"
 	},
+	"require-dev": {
+	    "mockery/mockery": "dev-master"
+	},
 	"autoload": {
 		"classmap": [
 			"app/commands",

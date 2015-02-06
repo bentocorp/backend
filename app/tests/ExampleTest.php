@@ -1,5 +1,6 @@
 <?php
 
+
 class ExampleTest extends TestCase {
 
 	/**
@@ -7,11 +8,12 @@ class ExampleTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testBasicExample()
+    
+	public function testHealthCheck()
 	{
-		$crawler = $this->client->request('GET', '/');
+            $crawler = $this->client->request('GET', '/healthcheck');
 
-		$this->assertTrue($this->client->getResponse()->isOk());
+            $this->assertTrue($this->client->getResponse()->isOk());
 	}
 
 }

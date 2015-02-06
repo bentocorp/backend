@@ -4,7 +4,6 @@ namespace Bento\Filter;
 
 use Input;
 use Response;
-use DB;
 use User;
 
 class ApiAuthFilter {
