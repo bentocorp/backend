@@ -160,7 +160,7 @@ foreach($menu['MenuItems'] as $inv) {
             
             ?>
             <tr>
-              <form action="/admin/drivers/save-inventory/{{{$row->pk_Driver}}}" method="post">
+              <form action="/admin/driver/save-inventory/{{{$row->pk_Driver}}}" method="post">
                 <th scope="row">{{{ $row->pk_Driver }}}</th>
                 <td>{{{ $row->firstname }}} {{{ $row->lastname }}}</td>
                 <td>{{{ $row->mobile_phone }}}</td>

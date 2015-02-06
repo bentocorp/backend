@@ -251,7 +251,7 @@ class UserCtrl extends \BaseController {
      */
     private function fbProcessLoginUser($user, $data) {
         
-        // Good Facebook Token
+        // Good Existing Facebook Token
         if ($data->fb_token == $user->fb_token) {
 
             $user = $this->getFbLoginSuccessUser($user);
@@ -265,7 +265,7 @@ class UserCtrl extends \BaseController {
             try {
               $fb_token = $this->getFbToken($data->fb_token);
             } catch (\Exception $ex) {
-              return Response::json(array('error' => $ex->getMessage()), 403);
+              return Response::json(array('error' => $ex->getMessage(), 'source' => 'Facebook'), 403);
             }
             
             // All good at this point. Last resort worked.
