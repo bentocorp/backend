@@ -31,9 +31,9 @@ class UserCtrl extends \BaseController {
         $data = json_decode(Input::get('data'));
         
         // Check user doesn't already exist
-        $existingUser = User::where('email', $data->email)->get();
+        $existingUser = User::exists($data->email);
         
-        if ($existingUser !== NULL)
+        if ($existingUser)
             return Response::json(array('error' => 'This email is already registered.'), 409);
         
         // Setup validation
@@ -84,7 +84,6 @@ class UserCtrl extends \BaseController {
             $user->email        = $data->email;
             $user->phone        = $data->phone;
             $user->password     = Hash::make($data->password);
-            $user->reg_type     = 'none';
             $user->save();
             
             $response = array('api_token' => $api_token);
@@ -103,11 +102,12 @@ class UserCtrl extends \BaseController {
         
         // Get data
         $data = json_decode(Input::get('data'));
+        $this->user = $data;
         
         // Check user doesn't already exist
-        $existingUser = User::where('email', $data->email)->get();
+        $existingUser = User::exists($data->email);
         
-        if ($existingUser !== NULL)
+        if ($existingUser)
             return Response::json(array('error' => 'This email is already registered.'), 409);
         
         // Setup validation
@@ -371,9 +371,9 @@ class UserCtrl extends \BaseController {
         
         // Check if token matches the user
         $sessionInfo = $session->getSessionInfo();
-        #print_r($sessionInfo); die();
+        
         if ($this->user->fb_id != $sessionInfo->getId())
-            throw new \FbMismatchedIdException("The fb_token and fb_id don't match.");
+            throw new \FbMismatchedIdException("The fb_id for this fb_token and the provided fb_id don't match.");
         
         return $session->getToken();
     }

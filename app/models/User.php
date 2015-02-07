@@ -113,6 +113,21 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
         }
         
         
+        public static function exists($email) {
+            
+            $existingUser = User::where('email', $email)->get();
+            
+            if ($existingUser->count() > 0)
+                return true;
+            else
+                return false;
+        }
+        
+        
+        /*********************************************************************
+         * Attribute getters and setters
+         *********************************************************************/
+        
         public function getStripeCustomerObjAttribute($value) {
             return unserialize(base64_decode($value));
         }
