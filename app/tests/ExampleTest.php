@@ -11,8 +11,12 @@ class ExampleTest extends TestCase {
     
 	public function testHealthCheck()
 	{
+            // Given a healthcheck
+            
+            // When I call it
             $crawler = $this->client->request('GET', '/healthcheck');
 
+            // Then I get ok
             $this->assertTrue($this->client->getResponse()->isOk());
 	}
 

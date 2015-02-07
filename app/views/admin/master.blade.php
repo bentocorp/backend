@@ -64,17 +64,22 @@
               <li role="presentation"><a href="/admin/dish">Dishes</a></li>
               <!-- <li role="presentation"><a href="/admin/preplog">Prep Log</a></li> -->
             </ul>
+            
+            <h4>Service</h4>
+            <ul class="nav nav-pills nav-stacked">
+              <li role="presentation"><a href="/admin/inventory">Inventory</a></li>
+              <li role="presentation"><a href="/admin/order">Orders</a></li>
+              <li role="presentation"><a href="/admin/pendingorder">Pending Orders</a></li>
+            </ul>
 
             <h4>Business</h4>
             <ul class="nav nav-pills nav-stacked">
-              <li role="presentation"><a href="/admin/coupon">Coupons</a></li>
               <li role="presentation"><a href="/admin/driver">Drivers</a></li>
-              <li role="presentation"><a href="/admin/order">Orders</a></li>
-              <li role="presentation"><a href="/admin/pendingorder">Pending Orders</a></li>
               <li role="presentation"><a href="/admin/user">Users</a></li>
+              <li role="presentation"><a href="/admin/coupon">Coupons</a></li>
             </ul>
 
-            <h4>Ops</h4>
+            <h4>Dev</h4>
             <ul class="nav nav-pills nav-stacked">
               <li role="presentation"><a href="/admin/apitest">API Tests</a></li>
               <li role="presentation"><a href="/admin/misc/ioscopy">iOS Copy</a></li>

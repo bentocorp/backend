@@ -101,7 +101,7 @@ class LiveInventory extends \Eloquent {
     public static function getLiveAndDriver() {
         
         $sql = "
-        SELECT li.fk_item, d.`name`, d.short_name, li.qty as lqty,
+        SELECT li.fk_item, d.`name`, d.short_name, li.qty as lqty, d.type,
                 (select sum(di.qty) from DriverInventory di where di.fk_item = li.fk_item group by fk_item) as dqty
         FROM bento.LiveInventory li
         left join Dish d on (li.fk_item = d.pk_Dish)
