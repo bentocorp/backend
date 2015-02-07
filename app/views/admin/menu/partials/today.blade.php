@@ -1,5 +1,11 @@
 
-<h1>Today's Menu</h1>
+<?php
+use Bento\Admin\Model\Menu;
+
+$todaysLocalDate = Menu::getDateForTodaysMenu('Y-m-d');
+?>
+
+<h1>Today's Menu <small>{{{ $todaysLocalDate }}}</small></h1>
 
 <b>Note:</b> Menus for the mobile app are cached for up to five minutes.<br>
 <br>

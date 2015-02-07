@@ -7,7 +7,6 @@ use Bento\Admin\Model\Orders;
 use Bento\Admin\Model\Driver;
 use Bento\Model\LiveInventory;
 use View;
-use Carbon\Carbon;
 
 
 
@@ -18,7 +17,7 @@ class DashboardCtrl extends \BaseController {
         $data = array();
         
         // Get today's menu
-        $date = Carbon::now('America/Los_Angeles')->format('Ymd');
+        $date = Menu::getDateForTodaysMenu();
         $menu = Menu::get($date);
         $data['menu'] = $menu;
         

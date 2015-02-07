@@ -103,4 +103,21 @@ class Driver extends \Eloquent {
         
         LiveInventory::recalculate();
     }
+    
+    
+    public static function getAggregateInventory() {
+        
+        // Get from db           
+        $sql = "
+        # roll into items for recalculation
+        select fk_item, sum(qty) as dqty
+        from DriverInventory
+        group by fk_item
+        ";
+        
+        $rows = DB::select($sql, array());
+        
+        return $rows;
+    }
+    
 }

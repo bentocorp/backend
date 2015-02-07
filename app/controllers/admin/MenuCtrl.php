@@ -4,7 +4,6 @@ namespace Bento\Admin\Ctrl;
 
 use Bento\Admin\Model\Menu;
 use View;
-use Carbon\Carbon;
 
 
 
@@ -14,9 +13,8 @@ class MenuCtrl extends \BaseController {
         
         $data = array();
         
-        $date = Carbon::now('America/Los_Angeles')->format('Ymd');
-        
         // Get today's menu
+        $date = Menu::getDateForTodaysMenu();
         $menu = Menu::get($date);
         $data['menu'] = $menu;
         

@@ -3,6 +3,7 @@
 namespace Bento\Model;
 
 use Bento\Model\PendingOrder;
+use Bento\Admin\Model\Driver;
 use DB;
 use User;
 use Illuminate\Database\QueryException;
@@ -101,11 +102,24 @@ class LiveInventory extends \Eloquent {
     public static function getLiveAndDriver() {
         
         $sql = "
+        # count stuff in the LiveInventory
         SELECT li.fk_item, d.`name`, d.short_name, li.qty as lqty, d.type,
-                (select sum(di.qty) from DriverInventory di where di.fk_item = li.fk_item group by fk_item) as dqty
+                        (select sum(di.qty) from DriverInventory di where di.fk_item = li.fk_item group by fk_item) as dqty
         FROM bento.LiveInventory li
         left join Dish d on (li.fk_item = d.pk_Dish)
-        order by type asc, d.`name` asc
+
+        union
+        
+        # for Drivers, roll into items that are NOT in the LiveInventory
+        select di.fk_item, d.`name`, d.short_name, li.qty as lqty, d.type,
+                sum(di.qty) as dqty
+        from DriverInventory di
+        left join Dish d on (di.fk_item = d.pk_Dish)
+        left join LiveInventory li on (li.fk_item = di.fk_item)
+        where li.qty IS NULL
+        group by di.fk_item
+
+        order by type asc, name asc
         ";
         
         $rows = self::hydrateRaw($sql, array());
@@ -118,7 +132,7 @@ class LiveInventory extends \Eloquent {
         
         DB::transaction(function()
         {
-            $driverInventory = self::getLiveAndDriver();
+            $driverInventory = Driver::getAggregateInventory();
             
             // Empty it
             DB::table('LiveInventory')->truncate();
@@ -130,4 +144,5 @@ class LiveInventory extends \Eloquent {
             }
         });
     }
+    
 }

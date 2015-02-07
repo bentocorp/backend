@@ -14,7 +14,7 @@ use Bento\Admin\Model\Driver;
 if ($menu !== NULL):
 
 /*
- * The purpose of all of this hashing is to build dynamic columns based on the inventory of the day,
+ * The purpose of all of this hashing is to build dynamic columns based on the menu of the day,
  * and to be able to line up the headers with the driver rows.
  */
 
@@ -40,7 +40,7 @@ foreach($menu['MenuItems'] as $inv) {
         <th>Email</th>
         <?php
         foreach($invItemKeys as $item) {
-            echo "<th>$item->short_name</th>";
+            echo "<th><span title='$item->name'>$item->short_name</span></th>";
         }
         ?>
         <th>&nbsp;</th>

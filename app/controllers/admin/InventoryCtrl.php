@@ -5,7 +5,6 @@ namespace Bento\Admin\Ctrl;
 use Bento\Admin\Model\Menu;
 use Bento\Admin\Model\Driver;
 use Bento\Model\LiveInventory;
-use Carbon\Carbon;
 use View;
 
 
@@ -16,7 +15,8 @@ class InventoryCtrl extends \BaseController {
         
         $data = array();
         
-        $date = Carbon::now('America/Los_Angeles')->format('Ymd');
+        // Get today's menu
+        $date = Menu::getDateForTodaysMenu();
         $menu = Menu::get($date);
         $data['menu'] = $menu;
                 
