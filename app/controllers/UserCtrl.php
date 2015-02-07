@@ -195,7 +195,7 @@ class UserCtrl extends \BaseController {
         $user = unserialize(serialize($userSingleton)); // clone
                 
         // User not found
-        if ($user->count() != 1)
+        if ($user == NULL)
             return Response::json('', 404);
         // User found
         else { // <-- Refactor this crazy thing
@@ -235,7 +235,7 @@ class UserCtrl extends \BaseController {
         $user = unserialize(serialize($userSingleton)); // clone
         
         // User not found
-        if ($user->count() != 1)
+        if ($user == NULL)
             return Response::json('', 404);
         // User found
         else {

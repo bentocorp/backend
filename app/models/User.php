@@ -76,9 +76,7 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
 
             $user = self::hydrateRaw($sql, array($email));
             
-            self::$apiUser = $user[0];
-            
-            return $user;
+            return self::parseUserForLogin($user);
         }
         
         
@@ -90,9 +88,18 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
 
             $user = self::hydrateRaw($sql, array($email));
             
-            self::$apiUser = $user[0];
+            return self::parseUserForLogin($user);
+        }
+        
+        
+        private static function parseUserForLogin($user) {
             
-            return $user;
+            if ($user->count() == 1) {
+                self::$apiUser = $user[0];
+                return $user;
+            }
+            else 
+                return NULL;
         }
         
         
