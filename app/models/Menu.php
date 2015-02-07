@@ -52,7 +52,7 @@ class Menu extends \Eloquent {
                 FROM Menu_Item mi
                 LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)
                 WHERE mi.fk_Menu = ?
-                order by type
+                order by d.type ASC, d.name ASC 
             ";
             $menuItems = DB::select($sql2, array($pk_Menu));
              
