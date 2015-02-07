@@ -25,7 +25,7 @@ class MenuCtrl extends \BaseController {
         $data['menuUpcoming'] = $menuUpcoming;
         
         // Get past
-        $menuPast = Menu::getRelative($date, '<');
+        $menuPast = Menu::getRelative($date, '<', 'DESC');
         $data['menuPast'] = $menuPast;
            
         return View::make('admin.menu.index', $data);

@@ -60,7 +60,7 @@ class Menu extends \Eloquent {
         }
         
         
-        public static function getRelative($date, $dateComparator = '=') {
+        public static function getRelative($date, $dateComparator = '=', $sort = 'ASC') {
                         
             // Otherwise, query the DB...
             
@@ -70,7 +70,7 @@ class Menu extends \Eloquent {
             $sql = "SELECT *  
                     FROM Menu 
                     WHERE for_date $dateComparator ? AND published
-                    ORDER BY for_date ASC
+                    ORDER BY for_date $sort
              ";
             $menus = DB::select($sql, array($date));
             
