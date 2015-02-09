@@ -55,14 +55,7 @@
           <div id="sidebar">
           
             <ul class="nav nav-pills nav-stacked">
-              <li role="presentation"><a href="/admin">Home</a></li>
-            </ul>
-
-            <h4>Kitchen</h4>
-            <ul class="nav nav-pills nav-stacked">
-              <li role="presentation"><a href="/admin/menu">Menus</a></li>
-              <li role="presentation"><a href="/admin/dish">Dishes</a></li>
-              <!-- <li role="presentation"><a href="/admin/preplog">Prep Log</a></li> -->
+              <li role="presentation"><a href="/admin">Dashboard</a></li>
             </ul>
             
             <h4>Service</h4>
@@ -72,6 +65,13 @@
               <li role="presentation"><a href="/admin/pendingorder">Pending Orders</a></li>
             </ul>
 
+            <h4>Kitchen</h4>
+            <ul class="nav nav-pills nav-stacked">
+              <li role="presentation"><a href="/admin/menu">Menus</a></li>
+              <li role="presentation"><a href="/admin/dish">Dishes</a></li>
+              <!-- <li role="presentation"><a href="/admin/preplog">Prep Log</a></li> -->
+            </ul>
+            
             <h4>Business</h4>
             <ul class="nav nav-pills nav-stacked">
               <li role="presentation"><a href="/admin/driver">Drivers</a></li>
