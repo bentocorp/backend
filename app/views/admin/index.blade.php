@@ -48,7 +48,7 @@ Orders
             
             ?>
             <tr class="info">
-              <form action="/admin/orders/save-status/{{{$row->pk_Order}}}" method="post">
+              <form action="/admin/order/save-status/{{{$row->pk_Order}}}" method="post">
                 <th scope="row">{{{ $row->pk_Order }}}</th>
                 <td>{{{ $row->user_name }}}</td>
                 <td>{{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}</td>

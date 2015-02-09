@@ -20,10 +20,12 @@ if ($menuList !== NULL): ?>
     foreach ($menuList as $compoundMenu) {
 
         $menu = $compoundMenu['Menu'];
+        
+        $menuName = $menu->name == '' ? $menu->for_date : $menu->name;
 
         echo "<tr>";
             echo "<th>$menu->for_date</th>";
-            echo "<td><a href='/admin/menu/edit/{$menu->pk_Menu}'>$menu->name</a></td>";
+            echo "<td><a href='/admin/menu/edit/{$menu->pk_Menu}'>$menuName</a></td>";
             echo "<td>$menu->created_at</td>";
             echo "<td>$menu->updated_at</td>";
         echo "</tr>";

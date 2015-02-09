@@ -53,7 +53,7 @@ if ($menu !== NULL) {
       <div style="float:left;"><img src="{{{$menu["Menu"]->bgimg}}}" style="max-height:350px"></div>
     </div>
 
-    <a class="btn btn-default" href="/admin/menu/view/{{{$menu["Menu"]->pk_Menu}}}" role="button">View Details</a>
+    <a class="btn btn-default" href="/admin/menu/edit/{{{$menu["Menu"]->pk_Menu}}}" role="button">Edit Today's Menu</a>
 <?php
 }
 else 

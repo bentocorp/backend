@@ -74,6 +74,7 @@ foreach($menu['MenuItems'] as $inv) {
                 foreach ($invItemKeys as $invItem) { // short names
                     echo "<td><input type='text' name='{$invItem->pk_Dish}' value='";
 
+                    // If a menu item is not in driver inventory, the amount is assumed to be 0
                     if ( isset($driverDishes[$invItem->pk_Dish]) )
                       echo $driverDishes[$invItem->pk_Dish]->qty;
                     else

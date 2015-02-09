@@ -104,7 +104,7 @@
     
     <footer class="footer">
         <div class="container">
-          <p class="text-muted">&copy; Bento.</p>
+          <p class="text-muted">&copy; Bento Technology, Inc</p>
         </div>
     </footer>
       
