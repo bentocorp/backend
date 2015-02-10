@@ -1,11 +1,12 @@
 <?php
 
-namespace Bento\Core;
+namespace Bento\Auth;
+
 
 use Facebook\FacebookSession;
 
 
-class FacebookAuth {
+class FacebookAuth implements AuthInterface {
     
     
     /**
@@ -36,6 +37,14 @@ class FacebookAuth {
     }
     
     
+    public static function signup($data) {
+        
+    }
+    
+    
+    public static function signin($data) {
+        
+    }
     
     
 }

@@ -2,7 +2,7 @@
 
 namespace Bento\Ctrl;
 
-use Bento\Core\FacebookAuth;
+use Bento\Facades\FacebookAuth;
 use Validator;
 use Input;
 use Response;
@@ -13,7 +13,20 @@ use User;
 class UserCtrl extends \BaseController {
 
     
-    private $user;
+    private $sentUser;
+    private $newUser;
+    
+    
+    public function __construct(User $newUser) {
+        
+        $this->newUser = $newUser;
+    }
+    
+    
+    private function checkExists() {
+        
+        return User::exists($this->sentUser->email);
+    }
     
     
     /**
@@ -25,9 +38,10 @@ class UserCtrl extends \BaseController {
         
         // Get data
         $data = json_decode(Input::get('data'));
+        $this->sentUser = $data;
         
         // Check user doesn't already exist
-        $existingUser = User::exists($data->email);
+        $existingUser = $this->checkExists();
         
         if ($existingUser)
             return Response::json(array('error' => 'This email is already registered.'), 409);
@@ -98,10 +112,10 @@ class UserCtrl extends \BaseController {
         
         // Get data
         $data = json_decode(Input::get('data'));
-        $this->user = $data;
+        $this->sentUser = $data;
         
         // Check user doesn't already exist
-        $existingUser = User::exists($data->email);
+        $existingUser = $this->checkExists();
         
         if ($existingUser)
             return Response::json(array('error' => 'This email is already registered.'), 409);
@@ -142,7 +156,7 @@ class UserCtrl extends \BaseController {
         else {
             // Verify FB token. To validate the session:
             try {
-                $fb_token = FacebookAuth::getFbToken($data->fb_token, $this->user->fb_id);
+                $fb_token = FacebookAuth::getFbToken($data->fb_token, $this->sentUser->fb_id);
             }
             catch (\Exception $ex) {
                 // Session not valid, Graph API returned an exception with the reason. OR:
@@ -196,7 +210,7 @@ class UserCtrl extends \BaseController {
         // User found
         else { // <-- Refactor this crazy thing
             $user = $user[0];
-            $this->user = $user;
+            $this->sentUser = $user;
             
             // Good password
             if (Hash::check($data->password, $user->password)) {
@@ -235,9 +249,9 @@ class UserCtrl extends \BaseController {
             return Response::json(array('error' => "We don't have your email on file."), 404);
         // User found
         else {
-            $this->user = $user[0];
+            $this->sentUser = $user[0];
             
-            return $this->fbProcessLoginUser($this->user, $data);
+            return $this->fbProcessLoginUser($this->sentUser, $data);
         }
     }
     
@@ -259,7 +273,7 @@ class UserCtrl extends \BaseController {
             #die('bad token');
             // Last resort: Try to get a new token from FB
             try {
-              $fb_token = FacebookAuth::getFbToken($data->fb_token, $this->user->fb_id);
+              $fb_token = FacebookAuth::getFbToken($data->fb_token, $this->sentUser->fb_id);
             } catch (\Exception $ex) {
               return Response::json(array('error' => $ex->getMessage(), 'source' => 'Facebook'), 403);
             }

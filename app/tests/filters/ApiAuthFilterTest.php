@@ -11,7 +11,7 @@ class ApiAuthFilterTest extends TestCase {
         Route::enableFilters();
     }
     
-    
+        
     public function testProtectionFromPublic()
     {
         // Given a non-authenticated user

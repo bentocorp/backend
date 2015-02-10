@@ -18,12 +18,14 @@
 			"app/commands",
 			"app/controllers",
 			"app/models",
+			"app/database/migrations",
+			"app/database/seeds",
+			"app/tests/TestCase.php",
 			"app/filters",
             "app/exceptions",
             "app/core",
-			"app/database/migrations",
-			"app/database/seeds",
-			"app/tests/TestCase.php"
+            "app/facades",
+            "app/providers"
 		]
 	},
 	"scripts": {
