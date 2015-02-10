@@ -15,7 +15,7 @@ class UserCtrlTest extends TestCase {
         // Given a non-existant user
         $parameters = array(
             "data" =>
-            '{"fb_id":"10101199060609965","fb_token":"CAALQCVl1AkkBAPX13sPFYPqrcETqpARco5ZAYkoQdhjrn8NpOZCPAcR4ctblHR8TJwv57KD59sNN1RwuTbZB169Hl8mZCXVTLiEIPWZAQnjWCQcPqbx24vCggiGZC4ofyikVuWeWmcFtRZCZA9vlobVEC0hysWoJ2VoHOObUB4PZAR20B2IxxdikXuVVyoJq18gWpiEhhnD9OZAsDZC0mzushK41RULdL119taaz1cG9HKAEQZDZD","email":"idontexist@no.com"}',
+            '{"email":"idontexist@no.com"}',
         );
         
         // When I attempt to login
@@ -31,7 +31,7 @@ class UserCtrlTest extends TestCase {
         // Given a non-existant user
         $parameters = array(
             "data" =>
-            '{"fb_id":"10101199060609965","fb_token":"CAALQCVl1AkkBAPX13sPFYPqrcETqpARco5ZAYkoQdhjrn8NpOZCPAcR4ctblHR8TJwv57KD59sNN1RwuTbZB169Hl8mZCXVTLiEIPWZAQnjWCQcPqbx24vCggiGZC4ofyikVuWeWmcFtRZCZA9vlobVEC0hysWoJ2VoHOObUB4PZAR20B2IxxdikXuVVyoJq18gWpiEhhnD9OZAsDZC0mzushK41RULdL119taaz1cG9HKAEQZDZD","email":"idontexist@no.com"}',
+            '{"fb_id":"10101199060609965","fb_token":"somefbtoken","email":"idontexist@no.com"}',
         );
         
         // When I attempt to login
@@ -42,7 +42,7 @@ class UserCtrlTest extends TestCase {
     }
     
 
-    public function testAuthSignupUserExists()
+    public function testAuthSignupUserAlreadyExists()
     {
         // Given an existing user
         $parameters = array(
@@ -63,7 +63,7 @@ class UserCtrlTest extends TestCase {
     }
     
     
-    public function testFbSignupUserExists()
+    public function testFbSignupUserAlreadyExists()
     {
         // Given an existing user
         $parameters = array(
@@ -74,7 +74,7 @@ class UserCtrlTest extends TestCase {
                     "email": "vcardillo+0@gmail.com",
                     "phone": "555-123-4567",
                     "fb_id": "someid",
-                    "fb_token": "CAALQCVl1AkkBAMz3ycA3l4mkNvBqVu0y5qjh1dhZARrjqTitqyZAl62z77I80AZAqoXC8BF3E47wZBIeH2rte11QU0LRl7eOZBHk7ZAVZCNpHcbmJtIKHkzLtrL4pYkmoKW9t1cjLxZAhqNqwjZBrLgZAlkwzcU4dSut8PtlRpeafXaZBv9YUyrs30MOEW4t1Tp381A7qqUpHCu4MmZCH4qmQfan",
+                    "fb_token": "somefbtoken",
                     "fb_profile_pic": "http://profilepic.jpg",
                     "fb_age_range": "some range",
                     "fb_gender": "male"
@@ -110,7 +110,7 @@ class UserCtrlTest extends TestCase {
     }
     
     
-    public function testFbSignupWorks()
+    public function testFbSignupIntegrationWorks()
     {
         // Given a new user
         $parameters = array(
@@ -121,7 +121,7 @@ class UserCtrlTest extends TestCase {
                     "email": "vcardillo+42.1@gmail.com",
                     "phone": "555-123-4567",
                     "fb_id": "10101199060609965",
-                    "fb_token": "CAALQCVl1AkkBAJf22HHdjk7dCnj3qIEpO8QY1YkBusigQKZBZBefufpvZCEZBq7Cv1v7jPfIKO3r2ygEHa9MpuXqfuts0baceoYzIZACeF1icu3vOuF2ZBRxaIZBoZAipld6ZAlQlqmH9DjkEYSaJkeD9ElKPOZCTjPk1Nd8WWsyqWI4kIfHNbtwTXNZA0SBSqgFxAwmmQaaHLTeBEuqrN9EKn0",
+                    "fb_token": "CAALQCVl1AkkBAD3OMgwDkJ7BbmfEZBOBV2VBMKT9dIP6sZBVF0wPGZCt9IoZA4aZAqUEzJTdf9lNyg7Kwh3CznTCycSaio671oXfDEBK69yHf4vSjEiXgM11ejbU5y4ZCZC4tghdcKOunRz4cdNVDyZCMcFXHZBNgig5QTCriZAXW4nDyZAGlJnZBRBt2ZAF5VwsLTZC2OBA37L5B3HIcmpVgbSZBfH",
                     "fb_profile_pic": "http://profilepic.jpg",
                     "fb_age_range": "some range",
                     "fb_gender": "male"

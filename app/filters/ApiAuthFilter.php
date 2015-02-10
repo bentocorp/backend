@@ -20,10 +20,10 @@ class ApiAuthFilter {
             #var_dump($user->count()); die();
 
             // Return if incorrect
-            if ($user->count() != 1)
+            if ($user === NULL)
                 return Response::make('Unauthorized', 401);
             else
-                User::set($user[0]);
+                User::set($user);
         }
         // Not logged in
         else {

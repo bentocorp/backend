@@ -308,6 +308,7 @@ Coupon
       POST: /coupon/request</h3>
     
     <br>
+    <div><b>NOTE:</b> Send <code>api_token</code> if the user is logged in.</div>
     <b>Returns:</b><br>
     <ul>
       <li><code>200</code> if ok.</li>

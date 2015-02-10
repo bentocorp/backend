@@ -28,6 +28,7 @@ return array(
     'Bento\\Admin\\Model\\Misc' => $baseDir . '/app/models/admin/Misc.php',
     'Bento\\Admin\\Model\\Orders' => $baseDir . '/app/models/admin/Orders.php',
     'Bento\\Admin\\Model\\Settings' => $baseDir . '/app/models/admin/Settings.php',
+    'Bento\\Core\\FacebookAuth' => $baseDir . '/app/core/FacebookAuth.php',
     'Bento\\Ctrl\\BootstrapCtrl' => $baseDir . '/app/controllers/bootstrap/Bootstrap.php',
     'Bento\\Ctrl\\CouponCtrl' => $baseDir . '/app/controllers/CouponCtrl.php',
     'Bento\\Ctrl\\InitCtrl' => $baseDir . '/app/controllers/InitCtrl.php',

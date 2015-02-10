@@ -53,9 +53,10 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
             
             $user = self::hydrateRaw($sql, array($api_token));
             
-            #var_dump($user); die();
-                  
-            return $user;
+            if ($user->count() == 1)
+                return $user[0];
+            else
+                return NULL;
         }
         
         

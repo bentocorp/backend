@@ -33,7 +33,7 @@ class CouponCtrl extends \BaseController {
             $user = User::getUserByApiToken($api_token);
 
             // set fk
-            if (count($user) == 1)
+            if ($user !== NULL)
                 $fk_User = $user[0]->pk_User;
         }
         

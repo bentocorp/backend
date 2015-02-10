@@ -2,12 +2,12 @@
 
 namespace Bento\Ctrl;
 
+use Bento\Core\FacebookAuth;
 use Validator;
 use Input;
 use Response;
 use Hash;
 use User;
-use Facebook\FacebookSession;
 
 
 class UserCtrl extends \BaseController {
@@ -146,7 +146,7 @@ class UserCtrl extends \BaseController {
         else {
             // Verify FB token. To validate the session:
             try {
-                $fb_token = $this->getFbToken($data->fb_token);
+                $fb_token = FacebookAuth::getFbToken($data->fb_token, $this->user->fb_id);
             }
             catch (\Exception $ex) {
                 // Session not valid, Graph API returned an exception with the reason. OR:
@@ -263,7 +263,7 @@ class UserCtrl extends \BaseController {
             #die('bad token');
             // Last resort: Try to get a new token from FB
             try {
-              $fb_token = $this->getFbToken($data->fb_token);
+              $fb_token = FacebookAuth::getFbToken($data->fb_token, $this->user->fb_id);
             } catch (\Exception $ex) {
               return Response::json(array('error' => $ex->getMessage(), 'source' => 'Facebook'), 403);
             }
@@ -351,60 +351,6 @@ class UserCtrl extends \BaseController {
         return $user;
     }
     
-    /**
-     * The purpose of this function is to validate the FB access token from the
-     * mobile app, thereby returning a long-term FB token.
-     * 
-     * @param string $token The token provided by the frontend native app.
-     * @return string Long term FB token
-     * @throws Exception Throws a FacebookRequestException, or some other exception, if the token does not validate.
-     */
-    private function getFbToken($token) {
+
         
-        FacebookSession::setDefaultApplication($_ENV['FB_app_id'], $_ENV['FB_app_secret']);
-        
-        // We have an access token from the mobile app
-        $session = new FacebookSession($token);
-        
-        // This might throw an exception
-        $session->validate();
-        
-        // Check if token matches the user
-        $sessionInfo = $session->getSessionInfo();
-        
-        if ($this->user->fb_id != $sessionInfo->getId())
-            throw new \FbMismatchedIdException("The fb_id for this fb_token and the provided fb_id don't match.");
-        
-        return $session->getToken();
-    }
-    
-    
-/*
-   public function setupCommonValidtion() {
-        
-        // Get data
-        $data = json_decode(Input::get('data'));
-        $this->data = $data;
-        
-        $this->cmnValFields = 
-            array(
-                'firstname' => $data->name,
-                'lasttname' => $data->name,
-                'email' => $data->email,
-                'phone' => $data->phone,
-                'password' => $data->password,
-            );
-        
-        $this->cmnValRules =
-            array(
-                'firstname' => 'required',
-                'lastname' => 'required',
-                'email' => 'required|email|unique:User',
-                'phone' => 'required',
-                'password' => 'required|min:8',
-            );
-    }
- * 
- */
-    
 }
