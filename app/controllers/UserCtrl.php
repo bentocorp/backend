@@ -12,11 +12,7 @@ use User;
 
 class UserCtrl extends \BaseController {
 
-    // Common validtion fields and rules
-    #private $cmnValFields;
-    #private $cmnValRules;
     
-    private $facebookSession;
     private $user;
     
     
@@ -196,7 +192,7 @@ class UserCtrl extends \BaseController {
                 
         // User not found
         if ($user == NULL)
-            return Response::json('', 404);
+            return Response::json(array('error' => "We don't have your email on file."), 404);
         // User found
         else { // <-- Refactor this crazy thing
             $user = $user[0];
@@ -219,7 +215,7 @@ class UserCtrl extends \BaseController {
             }
             // Bad password
             else {
-                return Response::json('', 403);
+                return Response::json(array('error' => 'Your password is incorrect.'), 403);
             }
         }
     }
@@ -236,7 +232,7 @@ class UserCtrl extends \BaseController {
         
         // User not found
         if ($user == NULL)
-            return Response::json('', 404);
+            return Response::json(array('error' => "We don't have your email on file."), 404);
         // User found
         else {
             $this->user = $user[0];

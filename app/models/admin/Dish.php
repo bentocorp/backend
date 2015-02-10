@@ -21,6 +21,8 @@ class Dish extends \Eloquent {
         
         unset($data['_token']);
         
+        #$data['name'] = strtoupper($data['name']);
+        
         DB::table('Dish')
                     ->where('pk_Dish', $id)
                     ->update($data);
