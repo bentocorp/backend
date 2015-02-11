@@ -240,7 +240,7 @@ User
       <textarea name="data" class="form-control admin-jsonTextarea">
 {
     "email": "vincent+5@bentonow.com",
-    "password": "somepassword"
+    "password": "somepassword716*"
 }
       </textarea>
       <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">
@@ -261,6 +261,7 @@ User
 
     <form action="/user/fblogin" method="post">
       data:<br>
+      note: existing fb_token in DB = myfbtoken<br>
       <textarea name="data" class="form-control admin-jsonTextarea">
 {
     "email": "vincent+4@bentonow.com",

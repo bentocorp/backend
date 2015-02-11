@@ -1,5 +1,7 @@
 <?php
 
+use Bento\Facades\FacebookAuth;
+
 class UserCtrlTest extends TestCase {
 
 
@@ -9,6 +11,10 @@ class UserCtrlTest extends TestCase {
         Route::enableFilters();
     }
     
+    
+    /**************************************************************************
+     * Login Tests
+    /*************************************************************************/
     
     public function testAuthLoginNotFound()
     {
@@ -41,7 +47,141 @@ class UserCtrlTest extends TestCase {
         $this->assertResponseStatus(404);
     }
     
+    
+    public function testAuthUserWithNullPasswordCantLogin()
+    {
+        // Given a user with a null password
+        $parameters = array(
+            "data" =>
+            '{"email":"vcardillo+nullpass@gmail.com"}',
+        );
+        
+        // When I attempt to login
+        $crawler = $this->client->request('POST', '/user/login', $parameters);
 
+        // Then I get not found
+        $this->assertResponseStatus(404);
+    }
+    
+    
+    public function testFbUserWithNullPasswordCantLogin()
+    {
+        // Given a FB user with a null password
+        $parameters = array(
+            "data" =>
+            '{"email":"vcardillo+nullpass@gmail.com"}',
+        );
+        
+        // When I attempt to login
+        $crawler = $this->client->request('POST', '/user/fblogin', $parameters);
+
+        // Then I get not found
+        $this->assertResponseStatus(404);
+    }
+    
+    
+    public function testAuthLoginWorksWithValidCredentials() {
+        
+        // Given a valid user
+        $parameters = array(
+            "data" =>
+            '{
+                "email": "vincent+5@bentonow.com",
+                "password": "somepassword716*"
+            }'
+        );
+        
+        // When I login
+        $crawler = $this->client->request('POST', '/user/login', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+    }
+    
+    
+    /*
+     * A mismatch test case
+     */
+    public function testFbLoginFailsEvenWithValidAuthCredentials() {
+        
+        // Given a valid user
+        $parameters = array(
+            "data" =>
+            '{
+                "email": "vincent+5@bentonow.com",
+                "password": "somepassword716*"
+            }'
+        );
+        
+        // When I login
+        $crawler = $this->client->request('POST', '/user/fblogin', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(404);
+    }
+    
+    
+    public function testAuthLoginFailsWithInvalidCredentials() {
+        
+        // Given a valid user
+        $parameters = array(
+            "data" =>
+            '{
+                "email": "vincent+5@bentonow.com",
+                "password": "wrongpassword"
+            }'
+        );
+        
+        // When I login
+        $crawler = $this->client->request('POST', '/user/login', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(403);
+    }
+    
+    
+    public function testFbLoginWorksWithValidFbCredentials() {
+        
+        // Given a valid user
+        $parameters = array(
+            "data" =>
+            '{
+                "email": "vincent+4@bentonow.com",
+                "fb_token": "myfbtoken"
+            }'
+        );
+        
+        // When I login
+        $crawler = $this->client->request('POST', '/user/fblogin', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+    }
+    
+    
+    public function testFbLoginFailsWithInvalidFbCredentials() {
+        
+        // Given a valid user
+        $parameters = array(
+            "data" =>
+            '{
+                "email": "vincent+4@bentonow.com",
+                "fb_token": "myBADfbtoken"
+            }'
+        );
+        
+        // When I login
+        $crawler = $this->client->request('POST', '/user/fblogin', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(403);
+    }
+    
+
+    /**************************************************************************
+     * Signup Tests
+    /*************************************************************************/
+    
     public function testAuthSignupUserAlreadyExists()
     {
         // Given an existing user
@@ -110,6 +250,11 @@ class UserCtrlTest extends TestCase {
     }
     
     
+    /**************************************************************************
+     * Integration Tests
+    /*************************************************************************/
+    
+    /*
     public function testFbSignupIntegrationWorks()
     {
         // Given a new user
@@ -121,7 +266,7 @@ class UserCtrlTest extends TestCase {
                     "email": "vcardillo+42.1@gmail.com",
                     "phone": "555-123-4567",
                     "fb_id": "10101199060609965",
-                    "fb_token": "CAALQCVl1AkkBAD3OMgwDkJ7BbmfEZBOBV2VBMKT9dIP6sZBVF0wPGZCt9IoZA4aZAqUEzJTdf9lNyg7Kwh3CznTCycSaio671oXfDEBK69yHf4vSjEiXgM11ejbU5y4ZCZC4tghdcKOunRz4cdNVDyZCMcFXHZBNgig5QTCriZAXW4nDyZAGlJnZBRBt2ZAF5VwsLTZC2OBA37L5B3HIcmpVgbSZBfH",
+                    "fb_token": "'.$_ENV['FB_valid_token'].'",
                     "fb_profile_pic": "http://profilepic.jpg",
                     "fb_age_range": "some range",
                     "fb_gender": "male"
@@ -134,7 +279,50 @@ class UserCtrlTest extends TestCase {
         // Then I get success
         $this->assertResponseStatus(200);
     }
+    */
+    
+    public function testFbLoginIntegrationWorksWithBadDbTokenButGoodProvidedToken() {
+        
+        // Given that the provided token doesn't match the token in the database,
+        // but is still a valid FB access token
+        
+        $user = User::find(9);
+        $user->fb_token = 'badExistingToken';
+        $user->save();
+        
+        $parameters = array(
+            "data" =>
+            '{
+                "email": "vincent+3@bentonow.com",
+                "fb_token": "'.$_ENV['FB_valid_token'].'"
+            }'
+        );
+        
+        // When I attempt to login
+        $response = $this->call('POST', '/user/fblogin', $parameters);
+        
+        // Then I reach out to FB to get a new token, and still get success        
+        $this->assertResponseStatus(200);
+        
+        // And,
+        // Given the new token
+        $data = json_decode($response->getContent());
+        $newValidToken = $data->fb_token;
+        
+        $parameters2 = array(
+            "data" =>
+            '{
+                "email": "vincent+3@bentonow.com",
+                "fb_token": "'.$newValidToken.'"
+            }'
+        );
+        
+        // When I try to login subsequently with the newly provided token
+        $response2 = $this->call('POST', '/user/fblogin', $parameters2);
+        
+        // It works
+        $this->assertResponseStatus(200);
+    }
     
     
-
 }

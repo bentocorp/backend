@@ -123,6 +123,8 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 
                 'Bento\Auth\FacebookAuthServiceProvider',
+                'Bento\Auth\MainAuthServiceProvider',
+                'Bento\Payment\PaymentServiceProviders',
 	),
 
 	/*
