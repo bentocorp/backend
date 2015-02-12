@@ -19,7 +19,7 @@ Today's Menu
 Upcoming Menus
 ******************************************************************************
 -->
-<h1>Upcoming Menus</h1>
+<h1>Upcoming Menus <a class="btn btn-default" href="/admin/menu/create" role="button">+ New Menu</a></h1>
 
 @include('admin.menu.partials.list', array('menuList' => $menuUpcoming))
 <br>

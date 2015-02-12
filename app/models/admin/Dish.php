@@ -21,11 +21,29 @@ class Dish extends \Eloquent {
         
         unset($data['_token']);
         
-        #$data['name'] = strtoupper($data['name']);
-        
         DB::table('Dish')
                     ->where('pk_Dish', $id)
                     ->update($data);
+    }
+    
+    
+    public static function getDishesByMenuId($menuId) {
+        
+        $sql = "
+        select * from Menu_Item mi
+        left join Dish d on (mi.fk_item = d.pk_Dish)
+        where fk_Menu = ?
+        ";
+        
+        $results = DB::select($sql, array($menuId));
+        
+        $keyedResults = array();
+        
+        foreach ($results as $row) {
+            $keyedResults[$row->pk_Dish] = $row;
+        }
+        
+        return $keyedResults;
     }
     
         

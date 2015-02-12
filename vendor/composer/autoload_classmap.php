@@ -25,6 +25,7 @@ return array(
     'Bento\\Admin\\Model\\Dish' => $baseDir . '/app/models/admin/Dish.php',
     'Bento\\Admin\\Model\\Driver' => $baseDir . '/app/models/admin/Driver.php',
     'Bento\\Admin\\Model\\Menu' => $baseDir . '/app/models/admin/Menu.php',
+    'Bento\\Admin\\Model\\Menu_Item' => $baseDir . '/app/models/admin/Menu_Item.php',
     'Bento\\Admin\\Model\\Misc' => $baseDir . '/app/models/admin/Misc.php',
     'Bento\\Admin\\Model\\Orders' => $baseDir . '/app/models/admin/Orders.php',
     'Bento\\Admin\\Model\\Settings' => $baseDir . '/app/models/admin/Settings.php',

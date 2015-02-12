@@ -4,9 +4,10 @@
 
 
 if ($list !== NULL): ?>
-<table class="table">
+<table class="table table-hover table-striped">
     <thead>
       <tr>
+        {{ isset($checked) ? '<th>&nbsp;</th>' : '' }}
         <th>Name</th>
         <th>Short Name</th>
         <th>Type</th>
@@ -20,7 +21,15 @@ if ($list !== NULL): ?>
     <?php
     foreach ($list as $dish) {
 
-        echo "<tr>";
+        $class = '';
+        
+        if (isset($checked)) {
+            $checkbox = Form::checkbox('dish[]', $dish->pk_Dish, isset($checked[$dish->pk_Dish]), array('class'=>'f-checkbox'));
+            $class = isset($checked[$dish->pk_Dish]) ? 'class="success"' : '';
+        }
+        
+        echo "<tr $class>";
+            echo isset($checked) ? "<td>$checkbox</td>" : '';
             echo "<th><a href='/admin/dish/edit/{$dish->pk_Dish}'>$dish->name</a></th>";
             echo "<td>$dish->short_name</td>";
             echo "<td>$dish->type</td>";

@@ -2,6 +2,7 @@
 
 namespace Bento\Admin\Model;
 
+use Bento\Admin\Model\Menu_Item;
 use DB;
 use Carbon\Carbon;
 
@@ -15,6 +16,7 @@ class Menu extends \Eloquent {
      */
     protected $table = 'Menu';
     protected $primaryKey = 'pk_Menu';
+    protected $guarded = array('pk_Menu');
 
     public static function get($date) {
 
@@ -120,6 +122,47 @@ class Menu extends \Eloquent {
         $date = Carbon::now('America/Los_Angeles')->format($format);
  
         return $date;
+    }
+    
+    
+    public function scopeCreateNew($query, $data) {
+        
+        // Collect MenuItems
+        $menuItems = $this->collectMenuItems($data);
+        
+        // Insert into Menu
+        $menu = Menu::create($data);
+                
+        // Insert into MenuItems
+        Menu_Item::setDishes($menu->pk_Menu, $menuItems);
+        
+        return $menu;
+    }
+    
+    
+    public function scopeSaveChanges($query, $id, $data) {
+        
+        // Collect MenuItems
+        $menuItems = $this->collectMenuItems($data);
+        
+        // Update Menu
+        unset($data['_token']);
+        
+        DB::table('Menu')
+                    ->where('pk_Menu', $id)
+                    ->update($data);
+        
+        // Insert into MenuItems
+        Menu_Item::setDishes($id, $menuItems);
+    }
+    
+    
+    private function collectMenuItems(&$data) {
+        
+        $menuItems = isset($data['dish']) ? $data['dish'] : array();
+        unset($data['dish']);
+        
+        return $menuItems;
     }
         
         

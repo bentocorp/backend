@@ -15,7 +15,7 @@ class DishCtrl extends \BaseController {
         $data = array();
                 
         // Get dishes
-        $dishes = Dish::orderBy('name', 'asc')->get();
+        $dishes = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->get();
         #$dishes = Dish::all()->orderBy("name");
         $data['dishes'] = $dishes;
            
@@ -35,6 +35,7 @@ class DishCtrl extends \BaseController {
     public function postCreate() {
         
         $dish = Dish::create($_POST);
+        
         $id = $dish->pk_Dish;
         
         return Redirect::to("admin/dish/edit/$id")->with('msg', 
