@@ -254,7 +254,7 @@ class UserCtrlTest extends TestCase {
      * Integration Tests
     /*************************************************************************/
     
-    /*
+    
     public function testFbSignupIntegrationWorks()
     {
         // Given a new user
@@ -279,9 +279,9 @@ class UserCtrlTest extends TestCase {
         // Then I get success
         $this->assertResponseStatus(200);
     }
-    */
     
-    /*
+    
+    
     public function testFbLoginIntegrationWorksWithBadDbTokenButGoodProvidedToken() {
         
         // Given that the provided token doesn't match the token in the database,
@@ -324,6 +324,6 @@ class UserCtrlTest extends TestCase {
         // It works
         $this->assertResponseStatus(200);
     }
-    */    
+        
     
 }

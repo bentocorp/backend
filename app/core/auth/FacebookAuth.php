@@ -11,9 +11,13 @@ use User;
 
 class FacebookAuth implements AuthInterface {
     
+    private $sentUser;
     
     
     public function signup($data) {
+        
+        // Set instance vars
+        $this->sentUser = $data;
         
         // Setup validation
         $valFields = 

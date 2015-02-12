@@ -25,9 +25,9 @@ class UserCtrl extends \BaseController {
     }
     
     
-    private function checkExists() {
+    private function checkExists($user) {
         
-        return User::exists($this->sentUser->email);
+        return User::exists($user->email);
     }
     
     
@@ -43,7 +43,7 @@ class UserCtrl extends \BaseController {
         $this->sentUser = $data;
         
         // Check user doesn't already exist
-        $existingUser = $this->checkExists();
+        $existingUser = $this->checkExists($data);
         
         if ($existingUser)
             return Response::json(array('error' => 'This email is already registered.'), 409);
@@ -114,10 +114,9 @@ class UserCtrl extends \BaseController {
         
         // Get data
         $data = json_decode(Input::get('data'));
-        $this->sentUser = $data;
         
         // Check user doesn't already exist
-        $existingUser = $this->checkExists();
+        $existingUser = $this->checkExists($data);
         
         if ($existingUser)
             return Response::json(array('error' => 'This email is already registered.'), 409);
