@@ -265,7 +265,7 @@ User
       <textarea name="data" class="form-control admin-jsonTextarea">
 {
     "email": "vincent+4@bentonow.com",
-    "fb_token": "CAALQCVl1AkkBAMz3ycA3l4mkNvBqVu0y5qjh1dhZARrjqTitqyZAl62z77I80AZAqoXC8BF3E47wZBIeH2rte11QU0LRl7eOZBHk7ZAVZCNpHcbmJtIKHkzLtrL4pYkmoKW9t1cjLxZAhqNqwjZBrLgZAlkwzcU4dSut8PtlRpeafXaZBv9YUyrs30MOEW4t1Tp381A7qqUpHCu4MmZCH4qmQfan"
+    "fb_token": "myfbtoken"
 }
       </textarea>
       <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">

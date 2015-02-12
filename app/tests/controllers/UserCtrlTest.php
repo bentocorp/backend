@@ -1,6 +1,7 @@
 <?php
 
-use Bento\Facades\FacebookAuth;
+#use Bento\Facades\FacebookAuth;
+
 
 class UserCtrlTest extends TestCase {
 
@@ -104,7 +105,7 @@ class UserCtrlTest extends TestCase {
      */
     public function testFbLoginFailsEvenWithValidAuthCredentials() {
         
-        // Given a valid user
+        // Given a valid user who is using a correct password
         $parameters = array(
             "data" =>
             '{
@@ -113,10 +114,10 @@ class UserCtrlTest extends TestCase {
             }'
         );
         
-        // When I login
+        // When I attempt to login via Facebook with the API
         $crawler = $this->client->request('POST', '/user/fblogin', $parameters);
         
-        // Then I get ok
+        // Then I get an error
         $this->assertResponseStatus(404);
     }
     
@@ -152,10 +153,63 @@ class UserCtrlTest extends TestCase {
         );
         
         // When I login
-        $crawler = $this->client->request('POST', '/user/fblogin', $parameters);
+        $response = $this->call('POST', '/user/fblogin', $parameters);
         
         // Then I get ok
         $this->assertResponseStatus(200);
+        
+        // And,
+        // This user does not have a stored card
+        $data = json_decode($response->getContent());
+        $this->assertEquals($data->card, NULL);
+    }
+    
+    
+    public function testCreditCardReturnedOnValidLogin() {
+        
+        // Given a valid user
+        $parameters = array(
+            "data" =>
+            '{
+                "email": "vincent+6@bentonow.com",
+                "fb_token": "myfbtoken"
+            }'
+        );
+        
+        // When I login via Facebook
+        $response = $this->call('POST', '/user/fblogin', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+        
+        // And,
+        // This user has a stored card
+        $data = json_decode($response->getContent());
+        $this->assertEquals($data->card->brand, "Visa");
+        $this->assertEquals($data->card->last4, "4242");
+        
+        // ---
+        
+        // Given a valid user 
+        $parameters2 = array(
+            "data" =>
+            '{
+                "email": "vincent+5@bentonow.com",
+                "password": "somepassword716*"
+            }'
+        );
+        
+        // When I attempt to login via normal auth
+        $response2 = $this->call('POST', '/user/login', $parameters2);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+        
+        // And,
+        // This user has a stored card
+        $data2 = json_decode($response2->getContent());
+        $this->assertEquals($data2->card->brand, "Visa");
+        $this->assertEquals($data2->card->last4, "4242");
     }
     
     
@@ -257,7 +311,7 @@ class UserCtrlTest extends TestCase {
     
     public function testFbSignupIntegrationWorks()
     {
-        // Given a new user
+        // Given a new user with a valid FB access token
         $parameters = array(
             "data" =>
                 '{

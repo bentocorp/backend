@@ -12,6 +12,7 @@
         <th>Email</th>
         <th>First Name</th>
         <th>Last Name</th>
+        <th>Stripe Obj</th>
       </tr>
     </thead>
     
@@ -24,6 +25,12 @@
               <td>{{{ $user->email }}}</td>
               <td>{{{ $user->firstname }}}</td>
               <td>{{{ $user->lastname }}}</td>
+              <td>
+                <?php if ($user->stripe_customer_obj): ?>
+                <pre class="collapse" id="viewJson-User-stripe-{{{ $user->pk_User }}}">{{{ $user->stripe_customer_obj }}}</pre>
+                <p><a class="btn btn-default" data-toggle="collapse" data-target="#viewJson-User-stripe-{{{ $user->pk_User }}}">View &raquo;</a></p>
+                <?php else: echo "&nbsp;"; endif; ?>
+              </td>
             </tr>
             <tr>
               <td>&nbsp;</td>
