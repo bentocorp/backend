@@ -10,7 +10,7 @@ class CouponCtrlTest extends TestCase {
     }
     
     
-    public function testAuthdUserCanGetCoupon()
+    public function testAuthdUserCanApplyCoupon()
     {
         // Given an authenticated user
         $api_token = 'api_token=123';
@@ -27,7 +27,7 @@ class CouponCtrlTest extends TestCase {
     }
     
     
-    public function testPublicUserCannotGetCoupon()
+    public function testPublicUserCannotApplyCoupon()
     {
         // Given a public user (or user with a bad token)
         $api_token = 'api_token=1badtoken';
@@ -37,6 +37,45 @@ class CouponCtrlTest extends TestCase {
 
         // Then I get an error
         $this->assertResponseStatus(401);
+    }
+    
+    
+    public function testAuthdUserCanRequestCoupon() 
+    {
+        // Given an authenticated user
+        $parameters = array(
+            "data" =>
+                '{
+                    "reason":"outside of delivery zone",
+                    "email":"vcardillo@gmail.com"
+                }',
+            "api_token" => '123'
+        );
+        
+        // When I request a coupon
+        $response = $this->call('POST', '/coupon/request', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+    }
+    
+    
+    public function testPublicUserCanRequestCoupon() 
+    {
+        // Given a public user
+        $parameters = array(
+            "data" =>
+                '{
+                    "reason":"outside of delivery zone",
+                    "email":"vcardillo@gmail.com"
+                }'
+        );
+        
+        // When I request a coupon
+        $response = $this->call('POST', '/coupon/request', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
     }
 
 }

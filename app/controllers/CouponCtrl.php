@@ -34,7 +34,7 @@ class CouponCtrl extends \BaseController {
 
             // set fk
             if ($user !== NULL)
-                $fk_User = $user[0]->pk_User;
+                $fk_User = $user->pk_User;
         }
         
         // Insert into DB

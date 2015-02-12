@@ -281,6 +281,7 @@ class UserCtrlTest extends TestCase {
     }
     */
     
+    /*
     public function testFbLoginIntegrationWorksWithBadDbTokenButGoodProvidedToken() {
         
         // Given that the provided token doesn't match the token in the database,
@@ -323,6 +324,6 @@ class UserCtrlTest extends TestCase {
         // It works
         $this->assertResponseStatus(200);
     }
-    
+    */    
     
 }
