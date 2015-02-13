@@ -40,6 +40,10 @@ return array(
 	*/
 
 	'timezone' => 'UTC',
+    
+        'timezone_local_name' => 'America/Los_Angeles',
+    
+        'timezone_local_short' => 'PST',
 
 	/*
 	|--------------------------------------------------------------------------

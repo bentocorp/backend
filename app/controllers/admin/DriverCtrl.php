@@ -4,9 +4,21 @@ namespace Bento\Admin\Ctrl;
 
 use Bento\Admin\Model\Driver;
 use Redirect;
+use View;
 
 
 class DriverCtrl extends AdminBaseController {
+    
+    
+    public function getIndex() {
+        
+        // Get drivers
+        $drivers = Driver::all();
+        $data['drivers'] = $drivers;
+        
+        return View::make('admin.driver.index', $data);
+    }
+    
 
     public function postSaveInventory($pk_Driver) {
         

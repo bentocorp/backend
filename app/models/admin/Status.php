@@ -63,10 +63,10 @@ class Status {
 
         switch ($status) {
             case 'open':
-                $statusMsg = 'Restaurant Open!';
+                $statusMsg = 'Restaurant is Open!';
                 break;
             case 'closed':
-                $statusMsg = 'Restaurant Closed!';
+                $statusMsg = "Sorry, we're Closed!";
                 break;
             case 'sold out':
                 $statusMsg = "We're Sold Out!";
