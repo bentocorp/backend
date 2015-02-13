@@ -5,7 +5,6 @@ namespace Bento\Ctrl;
 use Bento\Model\Order;
 use Bento\Model\OrderStatus;
 use Bento\Model\CustomerBentoBox;
-#use Bento\Model\PendingOrder;
 use Bento\Model\LiveInventory;
 use Bento\Model\Status;
 use User;
@@ -165,8 +164,22 @@ class OrderCtrl extends \BaseController {
         
         // If the restaurant is not open, we're done!
         $status = Status::getOverall();
-        if ($status != 'open')
-            return Response::json(array("error" => "Not open."), 423);
+        
+        if ($status != 'open') {
+            
+            $errorMsg = '';
+            
+            switch ($status) {
+                case 'closed':
+                    $errorMsg = "Whoops! It looks like we've just closed down for the night.";
+                    break;
+                case 'sold out':
+                    $errorMsg = "Whoops! It looks like we've just sold out of everything! Check back soon and we might have more.";
+                    break;
+            }
+            
+            return Response::json(array("error" => $errorMsg), 423);
+        }
         
         // Vars
         $stripeCharge = false;

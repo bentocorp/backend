@@ -106,7 +106,12 @@ $statusClass = Status::getClass();
           <?php
             if (Session::has('msg')) {
                 $msg = Session::get('msg');
-                echo "<div class='alert alert-{$msg['type']}' role='alert'>{$msg['txt']}</div>";
+                echo "
+                    <div class='alert alert-{$msg['type']} alert-dismissible' role='alert'>
+                        <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                        {$msg['txt']}
+                    </div>
+                ";
             }
             ?>
           
