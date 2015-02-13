@@ -27,7 +27,7 @@ class OrderCtrl extends \BaseController {
         
         // Set your secret key: remember to change this to your live secret key in production
         // See your keys here https://dashboard.stripe.com/account
-        Stripe::setApiKey($_ENV['Stripe_sk_test']);
+        Stripe::setApiKey($_ENV['Stripe_secret_key']);
         
         // Get the user
         $this->user = User::get();

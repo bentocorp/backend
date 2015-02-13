@@ -301,6 +301,9 @@ class UserCtrlTest extends TestCase {
 
         // Then I get success
         $this->assertResponseStatus(200);
+        
+        // Clean up
+        DB::delete('delete from User where email = "vcardillo+42.0@gmail.com"');
     }
     
     
@@ -332,6 +335,9 @@ class UserCtrlTest extends TestCase {
 
         // Then I get success
         $this->assertResponseStatus(200);
+        
+        // Clean up
+        DB::delete('delete from User where email = "vcardillo+42.1@gmail.com"');
     }
     
     
