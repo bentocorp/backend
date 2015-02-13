@@ -30,14 +30,11 @@ class SettingsCtrl extends \BaseController {
     
     public function postSaveSetting() {
         
+        Settings::saveOneFromPost();
+        
         $key = Input::get('key');
-        $value = Input::get('value');
         
-        $setting = Settings::find($key);
-        $setting->value = $value;
-        $setting->save();
-        
-        return Redirect::back()->with('msg', array('type' => 'success', 'txt' => "$key updated."));
+        return Redirect::back()->with('msg', array('type' => 'success', 'txt' => "<b>$key</b> updated."));
     }
     
     

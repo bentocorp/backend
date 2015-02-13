@@ -134,6 +134,9 @@ Status
         &nbsp; { "value": "open" | "closed" | "sold out" }
       </li>
       <li><span class="label label-success">&nbsp;</span> <a href="/status/menu">/status/menu</a></li>
+      <li><span class="label label-success">&nbsp;</span> <a href="/status/all">/status/all</a><br>
+        &nbsp; { "menu": [/status/menu array], "overall": "same as /status/overall" }
+      </li>
     </ul>
     
     

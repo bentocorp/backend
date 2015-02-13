@@ -4,6 +4,8 @@ namespace Bento\Ctrl;
 
 use Bento\Model\Status;
 use Response;
+use Request;
+use Route;
 
 #use Request; use Route;
 
@@ -37,6 +39,28 @@ class StatusCtrl extends \BaseController {
         $status = Status::menu();
         
         return Response::json($status);
+    }
+    
+    
+    /**
+     * Get everything
+     * 
+     * @return json 
+     */
+    public function getAll() {
+        
+        $request = Request::create('/status/menu/', 'GET');
+        $menu = Route::dispatch($request)->getData();
+        
+        $request2 = Request::create('/status/overall/', 'GET');
+        $overall = Route::dispatch($request2)->getData();
+        
+        $return = array(
+            'menu' => $menu,
+            'overall' => $overall
+        );
+        
+        return Response::json($return);
     }
 
 }

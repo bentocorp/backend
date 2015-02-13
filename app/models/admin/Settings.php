@@ -2,6 +2,7 @@
 
 namespace Bento\Admin\Model;
 
+use Input;
 
 
 class Settings extends \Eloquent {
@@ -13,5 +14,16 @@ class Settings extends \Eloquent {
      */
     protected $table = 'settings';
     protected $primaryKey = 'key';
+    
+    
+    public static function saveOneFromPost() {
+        
+        $key = Input::get('key');
+        $value = Input::get('value');
+        
+        $setting = Settings::find($key);
+        $setting->value = $value;
+        $setting->save();
+    }
             
 }

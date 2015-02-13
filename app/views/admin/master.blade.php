@@ -1,3 +1,15 @@
+<?php
+
+use Bento\Admin\Model\Status;
+use Bento\Model\Status as ApiStatus;
+
+$status = ApiStatus::overall()->value;
+        
+$statusClass = Status::getClass();
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -53,7 +65,9 @@
     <div class="row">
         <div class="col-lg-2">
           <div id="sidebar">
-          
+                                  
+            <div class="bg-{{$statusClass}} text-{{$statusClass}} status-bar">Status: {{$status}}</div>
+            
             <ul class="nav nav-pills nav-stacked">
               <li role="presentation"><a href="/admin">Dashboard</a></li>
             </ul>

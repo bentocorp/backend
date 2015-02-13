@@ -1,9 +1,7 @@
 
 <?php
 
-#use Bento\Model\LiveInventory;
 use Bento\Admin\Model\Orders;
-
 
 ?>
 
@@ -11,6 +9,13 @@ use Bento\Admin\Model\Orders;
 
 @section('content')
 
+<div class='alert alert-{{$statusClass}}' role='alert'><b>{{$statusMsg}}</b></div>
+
+<a href="/admin/status/open" onclick="return confirm('Open things up?')" class="btn btn-success">Open Us</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="/admin/status/closed" onclick="return confirm('Shut it down, shut it all down?')" class="btn btn-danger">Shut it all down</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="/admin/status/soldout" onclick="return confirm('Food is all gone?')" class="btn btn-warning">We're sold out</a>
 
 <!--
 ******************************************************************************

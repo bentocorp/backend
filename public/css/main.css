@@ -45,6 +45,10 @@ Everything Else
     height:20px;
 }
 
+.status-bar {
+    padding: 10px;
+    font-weight: bold;
+}
 
 
 /* Sticky footer styles
