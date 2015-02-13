@@ -3,7 +3,9 @@
 
 @section('content')
 
-<h2>Users</h2>
+<h2>Drivers <a class="btn btn-default pull-right" href="/admin/driver/create" role="button">+ New Driver</a></h2>
+
+<hr>
 
 <form method="post">
 
@@ -22,9 +24,18 @@
     <tbody>
         <?php
         foreach($drivers as $driver) {
+            
+            $class = '';
+
+            if ($driver->on_shift) {
+                $class = 'success';
+            }
+            
+            $checkbox = Form::checkbox('drivers[]', $driver->pk_Driver, $driver->on_shift, array('class'=>'f-checkbox'));
+            
             ?>
-            <tr>
-              <td>{{ $driver->on_shift }}</td>
+            <tr class="{{$class}}">
+              <td>{{ $checkbox }}</td>
               <td>{{ $driver->pk_Driver }}</td>
               <td><a href="/admin/driver/edit/{{$driver->pk_Driver}}">{{ $driver->firstname }}</a></td>
               <td>{{ $driver->lastname }}</td>
