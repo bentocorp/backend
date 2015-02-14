@@ -57,5 +57,5 @@ if ($menu !== NULL) {
 <?php
 }
 else 
-    echo '<div class="alert alert-danger" role="alert">No menu defined today.</div>';
+    echo '<div class="alert alert-danger" role="alert"><b>No menu</b> defined for today!</div>';
 ?>

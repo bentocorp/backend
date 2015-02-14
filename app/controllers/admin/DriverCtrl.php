@@ -19,6 +19,17 @@ class DriverCtrl extends AdminBaseController {
         return View::make('admin.driver.index', $data);
     }
     
+    
+    public function postIndex() {
+        
+        // Save shift status
+        Driver::updateShifts($_POST);
+        
+        return Redirect::back()->with('msg', array(
+            'type' => 'success', 
+            'txt' => 'Drivers on shift updated.'));
+    }
+    
 
     public function postSaveInventory($pk_Driver) {
         

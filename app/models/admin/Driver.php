@@ -19,11 +19,11 @@ class Driver extends \Eloquent {
     public static function getCurrentDrivers() {
         
         // Get from db           
-        $sql = "
-            SELECT d.* 
-            FROM DriverInventory di
-            left join Driver d on (di.fk_Driver = d.pk_Driver)
-            group by fk_Driver
+        $sql = "select * from Driver where on_shift
+            #SELECT d.* 
+            #FROM DriverInventory di
+            #left join Driver d on (di.fk_Driver = d.pk_Driver)
+            #group by fk_Driver
         ";
         $rows = DB::select($sql, array());
         
@@ -118,6 +118,31 @@ class Driver extends \Eloquent {
         $rows = DB::select($sql, array());
         
         return $rows;
+    }
+    
+    
+    public static function updateShifts($data) {
+        
+        // Clear all
+        self::clearShifts();
+        
+        // Update
+        if (isset($data['drivers'])) 
+        {
+            $in = implode(',', $data['drivers']);
+            
+             DB::update("update Driver set on_shift = 1 where pk_Driver in ($in)", array());
+        }
+ 
+        #$queries = DB::getQueryLog();
+        #var_dump ($queries); die();
+    }
+    
+    
+    public static function clearShifts() {
+        
+        // Clear all
+        DB::update('update Driver set on_shift = 0');
     }
     
 }
