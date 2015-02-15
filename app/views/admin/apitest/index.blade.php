@@ -259,7 +259,7 @@ User
     <ul>
       <li><code>200</code> if ok.</li>
       <li><code>404</code> if email not found</li>
-      <li><code>403</code> if bad fb_id</li>
+      <li><code>403</code> if bad fb_token</li>
     </ul>
 
     <form action="/user/fblogin" method="post">

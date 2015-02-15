@@ -53,11 +53,11 @@ if (count($openOrders) > 0):
                                 ?>
                                 <tr>
                                   <th scope="row">Bento Box {{{$boxCount}}}</th>
-                                  <td>{{{$box->main_name}}}</td>
-                                  <td>{{{$box->side1_name}}}</td>
-                                  <td>{{{$box->side2_name}}}</td>
-                                  <td>{{{$box->side3_name}}}</td>
-                                  <td>{{{$box->side4_name}}}</td>
+                                  <td>{{{$box->main_name}}} - {{$box->main_label}}</td>
+                                  <td>{{{$box->side1_name}}} - {{$box->side1_label}}</td>
+                                  <td>{{{$box->side2_name}}} - {{$box->side2_label}}</td>
+                                  <td>{{{$box->side3_name}}} - {{$box->side3_label}}</td>
+                                  <td>{{{$box->side4_name}}} - {{$box->side4_label}}</td>
                                 </tr>
                                 <?php
                                 $boxCount++;

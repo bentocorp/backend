@@ -131,7 +131,14 @@ class Driver extends \Eloquent {
         {
             $in = implode(',', $data['drivers']);
             
+            // Update who is on shift
              DB::update("update Driver set on_shift = 1 where pk_Driver in ($in)", array());
+             
+             // Clear inventories of those who are not on shift
+             DB::delete("delete from DriverInventory where fk_Driver NOT in ($in)");
+             
+             // Recalculate LiveInventory
+             LiveInventory::recalculate();
         }
  
         #$queries = DB::getQueryLog();
