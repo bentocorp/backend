@@ -4,6 +4,7 @@ namespace Bento\Model;
 
 use Bento\Model\PendingOrder;
 use Bento\Admin\Model\Driver;
+use Bento\Admin\Model\Orders;
 use DB;
 use User;
 use Illuminate\Database\QueryException;
@@ -30,19 +31,7 @@ class LiveInventory extends \Eloquent {
     public static function reserve($data) {
 
         /* First calculate the totals */
-        $totals = array();
-
-        // For each CustomerBentoBox
-        foreach ($data->OrderItems as $orderItem) {
-            // Now for each thing in the box
-            foreach($orderItem->items as $item) {
-                // Increment, or init
-                $totals[$item->id] = isset($totals[$item->id]) 
-                        ? $totals[$item->id] += 1  
-                        : 1;
-            }
-        }
-        #print_r($totals); die(); #
+        $totals = Orders::calculateTotalsFromJson($data);
 
         /* Next, try to reserve the totals
          * 
