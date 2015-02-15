@@ -2,6 +2,7 @@
 
 namespace Bento\Model;
 
+use Bento\Admin\Model\Driver;
 use DB;
 
 class OrderStatus extends \Eloquent {
@@ -22,5 +23,7 @@ class OrderStatus extends \Eloquent {
                     ->where('fk_Order', $pk_Order)
                     ->update($data);
             
+            // Update driver inventories based on this new assignment
+            Driver::updateInventoryByAssignment($pk_Order, $data);
         }
 }

@@ -3,6 +3,8 @@
 namespace Bento\Admin\Model;
 
 use Bento\Model\LiveInventory;
+use Bento\Model\PendingOrder;
+use Bento\Admin\Model\Orders;
 use DB;
 
 class Driver extends \Eloquent {
@@ -152,6 +154,32 @@ class Driver extends \Eloquent {
         
         // Clear all
         DB::update('update Driver set on_shift = 0');
+    }
+    
+    
+    public static function updateInventoryByAssignment($pk_Order, $data) {
+        
+        $fk_Driver = $data['fk_Driver'];
+        
+        // Base case that represents no driver
+        if ($fk_Driver == 0)
+            return;
+        
+        $orderJson = json_decode(PendingOrder::withTrashed()->where('fk_Order', $pk_Order)->get()[0]->order_json);
+        #var_dump($data); die();
+        
+        $totals = Orders::calculateTotalsFromJson($orderJson);
+        
+        DB::transaction(function() use ($totals, $fk_Driver)
+        {
+            foreach ($totals as $itemId => $itemQty) {
+              DB::update("update DriverInventory set qty = qty - ? WHERE fk_item = ? AND fk_Driver = ?", 
+                      array($itemQty, $itemId, $fk_Driver));
+            }
+        });
+        
+        // Recalculate LiveInventory
+        LiveInventory::recalculate();  
     }
     
 }
