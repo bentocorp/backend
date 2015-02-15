@@ -136,13 +136,15 @@ class Driver extends \Eloquent {
              
              // Clear inventories of those who are not on shift
              DB::delete("delete from DriverInventory where fk_Driver NOT in ($in)");
-             
-             // Recalculate LiveInventory
-             LiveInventory::recalculate();
         }
- 
-        #$queries = DB::getQueryLog();
-        #var_dump ($queries); die();
+        else {
+            // Clear all inventories
+            
+            DB::delete("delete from DriverInventory");
+        }
+        
+        // Recalculate LiveInventory
+        LiveInventory::recalculate();
     }
     
     
