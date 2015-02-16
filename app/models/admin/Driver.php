@@ -173,7 +173,8 @@ class Driver extends \Eloquent {
         DB::transaction(function() use ($totals, $fk_Driver)
         {
             foreach ($totals as $itemId => $itemQty) {
-              DB::update("update DriverInventory set qty = qty - ? WHERE fk_item = ? AND fk_Driver = ?", 
+              DB::update("update DriverInventory set qty = qty - ?, change_reason='order_assignment' 
+                          WHERE fk_item = ? AND fk_Driver = ?", 
                       array($itemQty, $itemId, $fk_Driver));
             }
         });
