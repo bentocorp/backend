@@ -32,6 +32,12 @@ var_dump ($_REQUEST);
 echo "</pre>";
 
 
+echo '<h2>$_POST:</h2>';
+echo "<pre>";
+var_dump ($_POST);
+echo "</pre>";
+
+
 ?>
   
   

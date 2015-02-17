@@ -129,6 +129,7 @@ return array(
                 'Bento\Auth\FacebookAuthServiceProvider',
                 'Bento\Auth\MainAuthServiceProvider',
                 'Bento\Payment\PaymentServiceProviders',
+                'Bento\Tracking\TrackingServiceProviders',
 	),
 
 	/*

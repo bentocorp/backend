@@ -81,7 +81,8 @@ Order
     ],
     "OrderDetails": {
         "address": {
-            "street": "1111 Kearny st.",
+            "number": "1111",
+            "street": "Kearny st.",
             "city": "San Francisco",
             "state": "CA",
             "zip": "94133"

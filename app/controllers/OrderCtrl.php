@@ -3,10 +3,12 @@
 namespace Bento\Ctrl;
 
 use Bento\Model\Order;
+use Bento\Admin\Model\Orders;
 use Bento\Model\OrderStatus;
 use Bento\Model\CustomerBentoBox;
 use Bento\Model\LiveInventory;
 use Bento\Model\Status;
+use Bento\Tracking\Trak;
 use User;
 use Response;
 use Input;
@@ -394,7 +396,8 @@ class OrderCtrl extends \BaseController {
 
         // Insert into Order
         $order = new Order;
-                
+        
+        $order->number = $orderJson->OrderDetails->address->number;
         $order->street = $orderJson->OrderDetails->address->street;
         $order->city = $orderJson->OrderDetails->address->city;
         $order->state = $orderJson->OrderDetails->address->state;
@@ -426,8 +429,26 @@ class OrderCtrl extends \BaseController {
         // Soft-delete pending order
         $this->pendingOrder->delete();
         
-        // Dispatch the driver
-        # do stuff
+        // --- Do something stupidly expensive until we can fix it
+        $bentoBoxes = Orders::getBentoBoxesByOrder($order->pk_Order); 
+        
+        // Put into Trak
+        $response = Trak::addTask($order, $orderJson, $bentoBoxes);
+        #Trak::test();
+        
+        
+        // Send an order confirmation email
+        Mail::send('emails.transactional.order_confirmation', array(
+            'order' => $order, 
+            'orderJson' => $orderJson, 
+            'user' => $user,
+            'bentoBoxes' => $bentoBoxes,
+            ), 
+            function($message) use ($user)
+            {
+                $message->from('help@bentonow.com', 'Bento');
+                $message->to($user->email)->subject("Your Bento Order");
+            });
     }
     
         
