@@ -180,7 +180,8 @@ class Driver extends \Eloquent {
         });
         
         // Recalculate LiveInventory
-        LiveInventory::recalculate();  
+        // VJC:2-16-2015: DONT do this. Otherwise you are overwriting the live inventory!
+        #LiveInventory::recalculate();  
     }
     
 }
