@@ -8,7 +8,8 @@
 <table class="table table-striped">
     <thead>
       <tr>
-        <th>id</th>
+        <th>p. id</th>
+        <th>ord. id</th>
         <th>Created</th>
         <th>Updated</th>
         <th>Deleted</th>
@@ -28,6 +29,7 @@
             ?>
             <tr>
               <th scope="row">{{{ $row->pk_PendingOrder }}}</th>
+              <td>{{{ $row->fk_Order }}}</td>
               <td>{{{ $row->created_at }}}</td>
               <td>{{{ $row->updated_at }}}</td>
               <td>{{{ $row->deleted_at }}}</td>
