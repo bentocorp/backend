@@ -397,7 +397,10 @@ class OrderCtrl extends \BaseController {
         // Insert into Order
         $order = new Order;
         
-        #$order->number = $orderJson->OrderDetails->address->number;
+        // VJC: Because some people are on an OLD VERSION
+        try {
+            $order->number = $orderJson->OrderDetails->address->number;
+        } catch (Exception $ex) { }
         $order->street = $orderJson->OrderDetails->address->street;
         $order->city = $orderJson->OrderDetails->address->city;
         $order->state = $orderJson->OrderDetails->address->state;
