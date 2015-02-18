@@ -167,7 +167,7 @@ class OrderCtrl extends \BaseController {
         // If the restaurant is not open, we're done!
         $status = Status::getOverall();
         
-        if ($status != 'open') {
+        if ($status != 'open' && !User::get()->is_admin) {
             
             $errorMsg = '';
             
