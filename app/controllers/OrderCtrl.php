@@ -397,7 +397,7 @@ class OrderCtrl extends \BaseController {
         // Insert into Order
         $order = new Order;
         
-        $order->number = $orderJson->OrderDetails->address->number;
+        #$order->number = $orderJson->OrderDetails->address->number;
         $order->street = $orderJson->OrderDetails->address->street;
         $order->city = $orderJson->OrderDetails->address->city;
         $order->state = $orderJson->OrderDetails->address->state;
@@ -433,7 +433,7 @@ class OrderCtrl extends \BaseController {
         $bentoBoxes = Orders::getBentoBoxesByOrder($order->pk_Order); 
         
         // Put into Trak
-        $response = Trak::addTask($order, $orderJson, $bentoBoxes);
+        #$response = Trak::addTask($order, $orderJson, $bentoBoxes);
         #Trak::test();
         
         
