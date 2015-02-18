@@ -436,7 +436,7 @@ class OrderCtrl extends \BaseController {
         $bentoBoxes = Orders::getBentoBoxesByOrder($order->pk_Order); 
         
         // Put into Trak
-        #$response = Trak::addTask($order, $orderJson, $bentoBoxes);
+        $response = Trak::addTask($order, $orderJson, $bentoBoxes);
         #Trak::test();
         
         
