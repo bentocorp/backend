@@ -54,11 +54,11 @@ class TrakSvc {
         foreach ($bentoBoxes as $box) {
 
             $orderStr .= "BENTO $boxCount: \\n ===== \\n";
-            $orderStr .= "$box->main_name $box->main_label \\n";
-            $orderStr .= "$box->side1_name $box->side1_label \\n"; 
-            $orderStr .= "$box->side2_name $box->side2_label \\n";
-            $orderStr .= "$box->side3_name $box->side3_label \\n";
-            $orderStr .= "$box->side4_name $box->side4_label \\n ===== \\n";
+            $orderStr .= "$box->main_name - $box->main_label \\n";
+            $orderStr .= "$box->side1_name - $box->side1_label \\n"; 
+            $orderStr .= "$box->side2_name - $box->side2_label \\n";
+            $orderStr .= "$box->side3_name - $box->side3_label \\n";
+            $orderStr .= "$box->side4_name - $box->side4_label \\n ===== \\n";
             
             $boxCount++;
         }
