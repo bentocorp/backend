@@ -36,7 +36,8 @@ class MiscCtrl extends \BaseController {
         SET `value` = (CASE `key` ";
         
         foreach ($data as $key => $val) {
-            $sql .= " WHEN '$key' THEN \"$val\"" ;
+            $val = DB::connection()->getPdo()->quote($val);
+            $sql .= " WHEN '$key' THEN $val " ;
             $whereIn .= "'$key'";
             
             if ($i < $n)
