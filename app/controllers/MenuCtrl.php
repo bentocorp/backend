@@ -22,5 +22,16 @@ class MenuCtrl extends \BaseController {
         else
             return Response::json($menu);
     }
+    
+    
+    public function next($date) {
+                
+        $menu = Menu::getNext($date);
+        
+        if ($menu === NULL)
+            return Response::make(null, 404);
+        else
+            return Response::json($menu);
+    }
 
 }

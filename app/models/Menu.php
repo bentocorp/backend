@@ -4,6 +4,7 @@ namespace Bento\Model;
 
 use DB;
 use Cache;
+use Carbon\Carbon;
 
 class Menu extends \Eloquent {
 
@@ -15,7 +16,7 @@ class Menu extends \Eloquent {
 	protected $table = 'Menu';
         protected $primaryKey = 'pk_Menu';
         
-        public static function get($date) {
+        private static function getMenu($sql, $date) {
             
             // Create normalized cache token
             $date2 = str_replace('-', '', $date);
@@ -29,11 +30,7 @@ class Menu extends \Eloquent {
             // Otherwise, query the DB...
             
             $return = array();
-            
-            // Get the Menu            
-            $sql = 'SELECT pk_Menu, name, for_date, bgimg 
-                    FROM Menu 
-                    WHERE for_date = ? AND published';
+                        
             $menu = DB::select($sql, array($date2));
             
             // Return if empty
@@ -55,10 +52,16 @@ class Menu extends \Eloquent {
                 order by d.type ASC, d.name ASC 
             ";
             $menuItems = DB::select($sql2, array($pk_Menu));
-             
+            
+            // Setup the return
             $return['Menu'] = $menu;
             $return['MenuItems'] = $menuItems;
              
+            // Create some friendly date text
+            $carbon = new Carbon($menu->for_date);
+            $dayText = $carbon->format('l F jS');
+            $return['Menu']->day_text = $dayText;
+            
             // Now add to cache
             $return['source'] = 'cache';
             Cache::put($cacheKey, $return, 5);
@@ -67,4 +70,28 @@ class Menu extends \Eloquent {
             $return['source'] = 'db';             
             return $return;
         }
+        
+        
+        public static function get($date) {
+            
+            // Get the Menu            
+            $sql = 'SELECT pk_Menu, name, for_date, bgimg 
+                    FROM Menu 
+                    WHERE for_date = ? AND published';
+            
+            return self::getMenu($sql, $date);
+        }
+        
+        
+        public static function getNext($date) {
+            
+            // Get the NEXT Menu            
+            $sql = 'SELECT pk_Menu, name, for_date, bgimg 
+                    FROM Menu 
+                    WHERE for_date > ? AND published
+                    ORDER BY for_date ASC LIMIT 1';
+            
+            return self::getMenu($sql, $date);
+        }
+        
 }

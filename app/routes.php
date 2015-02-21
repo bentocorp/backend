@@ -40,6 +40,7 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
     
     ## /menu routes
     Route::get('menu/{date}', 'MenuCtrl@show');
+    Route::get('menu/next/{date}', 'MenuCtrl@next');
     
     ## /status routes
     Route::controller('status', 'StatusCtrl');
