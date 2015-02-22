@@ -90,5 +90,5 @@ class Orders {
         
         return $totals;
     }
-                
+                    
 }

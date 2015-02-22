@@ -17,10 +17,22 @@ class Driver extends \Eloquent {
     protected $table = 'Driver';
     protected $primaryKey = 'pk_Driver';
 
-    private $id;
+    private $pk_Driver = NULL;
     
-    public function __construct($id = NULL) {
-        $this->id = $id;
+    public function __construct($attributes = array(), $pk_Driver = NULL) 
+    {
+        if (!is_array($attributes))
+            $attributes = array();
+        
+        parent::__construct($attributes);
+        
+        if ($this->pk_Driver === NULL)
+            $this->pk_Driver = $pk_Driver;
+    }
+    
+    
+    private function id() {
+        return $this->pk_Driver;
     }
     
 
@@ -128,86 +140,7 @@ class Driver extends \Eloquent {
         return $rows;
     }
     
-    
-    /*
-    public static function updateShifts($data) {
         
-        // Clear all
-        #self::clearAllShifts();
-        
-        # if drivers are set, add those, and try to see who we can remove. Compile a list of those we can't.
-        # if drivers  are not set, try to remove all. Compile a list of those we can't.
-        
-        // Update
-        if (isset($data['drivers'])) 
-        {            
-            $in = implode(',', $data['drivers']);
-            
-            // 1. Update who is on shift
-             DB::update("update Driver set on_shift = 1 where pk_Driver in ($in)", array());
-             
-             
-            // 2. Clear inventories of those who are NOT on shift
-             
-            // First, figure out if some drivers can't be taken off shift, because they still
-            // have outstanding orders assigned to them.
-             
-            $desiredOffShiftDrivers = DB::select("select * from Driver where pk_Driver NOT in ($in) AND on_shift");
-            
-            $in2 = $in;
-            $notRemovable = array();
-            
-            foreach ($desiredOffShiftDrivers as $row) {
-                $driver = new Driver($row->pk_Driver);
-                $driverOpenOrdersCount = $driver->getOpenOrdersCount();
-                echo $driverOpenOrdersCount; die();
-            }
-             
-            // Remove drivers from shift who are safe to remove
-            DB::delete("delete from DriverInventory where fk_Driver NOT in ($in2)");
-        }
-        // Clear everything
-        else {
-            // Clear all driver inventories 
-            DB::delete("delete from DriverInventory");
-            
-            // Recalculate LiveInventory
-            LiveInventory::recalculate();
-        }
-    }
-     * 
-     */
-    
-       
-    
-    public static function updateInventoryByAssignment($pk_Order, $data) {
-        
-        $fk_Driver = $data['fk_Driver'];
-        
-        // Base case that represents no driver
-        if ($fk_Driver == 0)
-            return;
-        
-        $orderJson = json_decode(PendingOrder::withTrashed()->where('fk_Order', $pk_Order)->get()[0]->order_json);
-        #var_dump($data); die();
-        
-        $totals = Orders::calculateTotalsFromJson($orderJson);
-        
-        DB::transaction(function() use ($totals, $fk_Driver)
-        {
-            foreach ($totals as $itemId => $itemQty) {
-              DB::update("update DriverInventory set qty = qty - ?, change_reason='order_assignment' 
-                          WHERE fk_item = ? AND fk_Driver = ?", 
-                      array($itemQty, $itemId, $fk_Driver));
-            }
-        });
-        
-        // Recalculate LiveInventory
-        // VJC:2-16-2015: DONT do this. Otherwise you are overwriting the live inventory!
-        #LiveInventory::recalculate();  
-    }
-    
-    
     public function getOpenOrdersCount() {
     
         // Get from db           
@@ -217,8 +150,9 @@ class Driver extends \Eloquent {
         where fk_Driver = ? and status in ('Open', 'En Route')
         ";
         
-        $row = DB::select($sql, array($this->id));
+        $row = DB::select($sql, array($this->id()));
         
+        #var_dump($this->id()); die(); #0
         return $row[0]->count;
     }
     
@@ -226,12 +160,13 @@ class Driver extends \Eloquent {
     public function removeFromShift() {
         
         $status = $this->safeToRemoveFromShift();
+        #var_dump($status); die(); #0
         
         if ($status['ok']) {
             
-            DB::delete("delete from DriverInventory where fk_Driver = ?", array($this->id));
+            DB::delete("delete from DriverInventory where fk_Driver = ?", array($this->id()));
             
-            DB::update("update Driver set on_shift = 0 where pk_Driver = ?", array($this->id));
+            DB::update("update Driver set on_shift = 0 where pk_Driver = ?", array($this->id()));
             
             return $status;
         }
@@ -285,9 +220,83 @@ class Driver extends \Eloquent {
         // Get from db           
         $sql = "select * from DriverInventory where fk_Driver = ?";
         
-        $rows = DB::select($sql, array($this->id));
+        $rows = DB::select($sql, array($this->id()));
         
         return $rows;
+    }
+    
+    /* DEPRECATED
+    public static function updateInventoryByAssignment($pk_Order, $data) {
+        
+        #$fk_Driver = $data['fk_Driver'];
+        
+        // Base case that represents no driver
+        #if ($fk_Driver == 0)
+        #    return;
+        
+        #$orderJson = json_decode(PendingOrder::withTrashed()->where('fk_Order', $pk_Order)->get()[0]->order_json);
+        #var_dump($data); die();
+        
+        $totals = Orders::calculateTotalsFromJson($orderJson);
+        
+        DB::transaction(function() use ($totals, $fk_Driver)
+        {
+            foreach ($totals as $itemId => $itemQty) {
+              DB::update("update DriverInventory set qty = qty - ?, change_reason='order_assignment' 
+                          WHERE fk_item = ? AND fk_Driver = ?", 
+                      array($itemQty, $itemId, $fk_Driver));
+            }
+        });
+        
+        // Recalculate LiveInventory
+        // VJC:2-16-2015: DONT do this. Otherwise you are overwriting the live inventory!
+        #LiveInventory::recalculate();  
+    }
+     * 
+     */
+    
+    
+    public function addOrderToInventory($pk_Order)
+    {
+        $order = new \Bento\Model\Order(null, $pk_Order);
+        
+        $orderJsonObj = $order->getOrderJsonObj();
+        
+        $totals = Orders::calculateTotalsFromJson($orderJsonObj);
+        
+        $id = $this->id();
+        
+        // Subtract
+        DB::transaction(function() use ($totals, $id)
+        {
+            foreach ($totals as $itemId => $itemQty) {
+              DB::update("update DriverInventory set qty = qty + ?, change_reason='order_assignment' 
+                          WHERE fk_item = ? AND fk_Driver = ?", 
+                      array($itemQty, $itemId, $id));
+            }
+        });
+    }
+    
+    
+    public function subtractOrderFromInventory($pk_Order)
+    {
+        $order = new \Bento\Model\Order(null, $pk_Order);
+        
+        $orderJsonObj = $order->getOrderJsonObj();
+        
+        $totals = Orders::calculateTotalsFromJson($orderJsonObj);
+        
+        $id = $this->id();
+        
+        // Subtract
+        DB::transaction(function() use ($totals, $id)
+        {
+            foreach ($totals as $itemId => $itemQty) {
+              DB::update("update DriverInventory set qty = qty - ?, change_reason='order_assignment' 
+                          WHERE fk_item = ? AND fk_Driver = ?", 
+                      array($itemQty, $itemId, $id));
+            }
+        });
     }
     
 }

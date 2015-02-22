@@ -35,14 +35,14 @@ class DriverMgrSvc {
         }
         // Remove everyone
         else {
-            $this->removeAll();
+            $this->shift_removeAllDrivers();
         }
                 
         return $this->cantRemove;
     }
     
         
-    private function removeAll() {
+    private function shift_removeAllDrivers() {
 
         // 1. Get everyone
         $desiredOffShiftDrivers = DB::select("select * from Driver");
@@ -69,7 +69,7 @@ class DriverMgrSvc {
         
         foreach ($desiredOffShiftDrivers as $row) {
 
-            $driver = new Driver($row->pk_Driver);
+            $driver = new Driver(null, $row->pk_Driver);
             $result = $driver->removeFromShift();
 
             $success = $result['ok'];
@@ -89,6 +89,36 @@ class DriverMgrSvc {
         }
         
         $this->cantRemove[ $result['reason'] ]['rows'][$row->pk_Driver] = "$row->firstname  $row->lastname";
+    }
+    
+    
+    /**
+     * Change the assigned driver to this order
+     * 
+     * @param pk_Driver $from
+     * @param pk_Driver $to
+     * @param int $pk_Order
+     */
+    public function setOrderDriver($from, $to, $pk_Order) {
+        
+        // No Change
+        if ($from == $to)
+            return;
+        
+        // Something has changed
+        
+        // If the prior selection wasn't blank, add it back in
+        if ($from > 0) {
+            $fromDriver = new Driver(null, $from);
+            $fromDriver->addOrderToInventory($pk_Order);
+        }
+        
+        // If the new selection isn't blank, subtract it
+        if ($to > 0) {
+            $toDriver = new Driver(null, $to);
+            $toDriver->subtractOrderFromInventory($pk_Order);
+        }
+            
     }
         
 }
