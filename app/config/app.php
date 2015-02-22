@@ -130,6 +130,8 @@ return array(
                 'Bento\Auth\MainAuthServiceProvider',
                 'Bento\Payment\PaymentServiceProviders',
                 'Bento\Tracking\TrackingServiceProviders',
+            
+                'Bento\Providers\OtherServiceProviders',
 	),
 
 	/*

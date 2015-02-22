@@ -3,6 +3,7 @@
 namespace Bento\Admin\Ctrl;
 
 use Bento\Admin\Model\Driver;
+use Bento\Drivers\DriverMgr;
 use Redirect;
 use View;
 
@@ -23,11 +24,28 @@ class DriverCtrl extends AdminBaseController {
     public function postIndex() {
         
         // Save shift status
-        Driver::updateShifts($_POST);
+        $errors = DriverMgr::updateShifts($_POST);
         
-        return Redirect::back()->with('msg', array(
-            'type' => 'success', 
-            'txt' => 'Drivers on shift updated.'));
+        // If some drivers still have outstanding orders, they can't be taken off shift yet
+        if (count($errors) !== 0) {
+            
+            $str = '<b>Errors:</b><br>';
+            
+            foreach ($errors as $error) {
+                $str .= "<b>{$error['msg']}:</b> ";
+                $str .= implode($error['rows'], ', ');
+                $str .= '<br>';
+            }
+            
+            return Redirect::back()->with('msg', array(
+                'type' => 'danger', 
+                'txt' => $str));
+        }
+        else {
+            return Redirect::back()->with('msg', array(
+                'type' => 'success', 
+                'txt' => 'Drivers on shift updated.'));
+        }
     }
     
 

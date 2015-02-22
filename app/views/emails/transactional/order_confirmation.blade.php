@@ -31,7 +31,7 @@ foreach ($bentoBoxes as $box) {
 
 <h4>Total</h4>
 
-<div>Sub total: ${{$order->amount - $order->tax - $order->tip}}</div>
-<div>Tax: ${{$order->tax}}</div>
-<div>Tip: ${{$order->tip}}</div>
-<div><b>Total: ${{$order->amount}}</b></div>
+<div>Sub total: ${{number_format($order->amount - $order->tax - $order->tip , 2)}}</div>
+<div>Tax: ${{number_format($order->tax, 2)}}</div>
+<div>Tip: ${{number_format($order->tip, 2)}}</div>
+<div><b>Total: ${{number_format($order->amount, 2)}}</b></div>

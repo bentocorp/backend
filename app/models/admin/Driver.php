@@ -17,6 +17,12 @@ class Driver extends \Eloquent {
     protected $table = 'Driver';
     protected $primaryKey = 'pk_Driver';
 
+    private $id;
+    
+    public function __construct($id = NULL) {
+        $this->id = $id;
+    }
+    
 
     public static function getCurrentDrivers() {
         
@@ -123,39 +129,56 @@ class Driver extends \Eloquent {
     }
     
     
+    /*
     public static function updateShifts($data) {
         
         // Clear all
-        self::clearShifts();
+        #self::clearAllShifts();
+        
+        # if drivers are set, add those, and try to see who we can remove. Compile a list of those we can't.
+        # if drivers  are not set, try to remove all. Compile a list of those we can't.
         
         // Update
         if (isset($data['drivers'])) 
-        {
+        {            
             $in = implode(',', $data['drivers']);
             
-            // Update who is on shift
+            // 1. Update who is on shift
              DB::update("update Driver set on_shift = 1 where pk_Driver in ($in)", array());
              
-             // Clear inventories of those who are not on shift
-             DB::delete("delete from DriverInventory where fk_Driver NOT in ($in)");
-        }
-        else {
-            // Clear all inventories
+             
+            // 2. Clear inventories of those who are NOT on shift
+             
+            // First, figure out if some drivers can't be taken off shift, because they still
+            // have outstanding orders assigned to them.
+             
+            $desiredOffShiftDrivers = DB::select("select * from Driver where pk_Driver NOT in ($in) AND on_shift");
             
-            DB::delete("delete from DriverInventory");
+            $in2 = $in;
+            $notRemovable = array();
+            
+            foreach ($desiredOffShiftDrivers as $row) {
+                $driver = new Driver($row->pk_Driver);
+                $driverOpenOrdersCount = $driver->getOpenOrdersCount();
+                echo $driverOpenOrdersCount; die();
+            }
+             
+            // Remove drivers from shift who are safe to remove
+            DB::delete("delete from DriverInventory where fk_Driver NOT in ($in2)");
         }
-        
-        // Recalculate LiveInventory
-        LiveInventory::recalculate();
+        // Clear everything
+        else {
+            // Clear all driver inventories 
+            DB::delete("delete from DriverInventory");
+            
+            // Recalculate LiveInventory
+            LiveInventory::recalculate();
+        }
     }
+     * 
+     */
     
-    
-    public static function clearShifts() {
-        
-        // Clear all
-        DB::update('update Driver set on_shift = 0');
-    }
-    
+       
     
     public static function updateInventoryByAssignment($pk_Order, $data) {
         
@@ -182,6 +205,89 @@ class Driver extends \Eloquent {
         // Recalculate LiveInventory
         // VJC:2-16-2015: DONT do this. Otherwise you are overwriting the live inventory!
         #LiveInventory::recalculate();  
+    }
+    
+    
+    public function getOpenOrdersCount() {
+    
+        // Get from db           
+        $sql = "
+        select count(*) count 
+        from OrderStatus 
+        where fk_Driver = ? and status in ('Open', 'En Route')
+        ";
+        
+        $row = DB::select($sql, array($this->id));
+        
+        return $row[0]->count;
+    }
+    
+    
+    public function removeFromShift() {
+        
+        $status = $this->safeToRemoveFromShift();
+        
+        if ($status['ok']) {
+            
+            DB::delete("delete from DriverInventory where fk_Driver = ?", array($this->id));
+            
+            DB::update("update Driver set on_shift = 0 where pk_Driver = ?", array($this->id));
+            
+            return $status;
+        }
+        else
+            return $status;
+    }
+    
+    
+    private function safeToRemoveFromShift() {
+        
+        // Open orders?
+        if ($this->getOpenOrdersCount() > 0)
+            return array('ok' => false, 'reason' => 'hasOpenOrders', 'desc' => 'Drivers with assigned orders');
+        
+        // Will removing this driver make it impossible to complete an open order?
+        // This should be done last, since after this, LiveInventory is deducted
+        if (!$this->removeInventoryFromLiveInventory())
+            return array('ok' => false, 'reason' => 'cantCompleteOrders', 'desc' => 'Removing results in incompletable orders');
+        
+        // If we're here, all good
+        return array('ok' => true, 'reason' => '');
+    }
+    
+    
+    private function removeInventoryFromLiveInventory() {
+        
+        // Try to deduct it. If it throws an exception, it means that the LiveInventory
+        // is trying to go to negative, which means that it if we take this driver off shift,
+        // some order cannot be completed.
+        try {
+            
+            $invRows = $this->getInventory();
+                        
+            DB::transaction(function() use ($invRows)
+            {
+                foreach ($invRows as $inv) {
+                  DB::update("update LiveInventory set qty = qty - ? WHERE fk_item = ?", array($inv->qty, $inv->fk_item));
+                }
+            });
+            
+            return true;
+        } 
+        catch (\Exception $ex) {
+            return false;
+        }
+    }
+    
+    
+    private function getInventory() {
+        
+        // Get from db           
+        $sql = "select * from DriverInventory where fk_Driver = ?";
+        
+        $rows = DB::select($sql, array($this->id));
+        
+        return $rows;
     }
     
 }
