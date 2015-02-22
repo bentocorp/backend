@@ -16,11 +16,11 @@ class Menu extends \Eloquent {
 	protected $table = 'Menu';
         protected $primaryKey = 'pk_Menu';
         
-        private static function getMenu($sql, $date) {
+        private static function getMenu($sql, $date, $type) {
             
             // Create normalized cache token
             $date2 = str_replace('-', '', $date);
-            $cacheKey = "Menu-SF-$date2";
+            $cacheKey = "Menu-SF-$date2-$type";
 
             // Check the cache first
             if (Cache::has($cacheKey)) {
@@ -79,7 +79,7 @@ class Menu extends \Eloquent {
                     FROM Menu 
                     WHERE for_date = ? AND published';
             
-            return self::getMenu($sql, $date);
+            return self::getMenu($sql, $date, 'menu');
         }
         
         
@@ -91,7 +91,7 @@ class Menu extends \Eloquent {
                     WHERE for_date > ? AND published
                     ORDER BY for_date ASC LIMIT 1';
             
-            return self::getMenu($sql, $date);
+            return self::getMenu($sql, $date, 'next');
         }
         
 }
