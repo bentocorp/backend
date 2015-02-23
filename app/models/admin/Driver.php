@@ -3,8 +3,7 @@
 namespace Bento\Admin\Model;
 
 use Bento\Model\LiveInventory;
-use Bento\Model\PendingOrder;
-use Bento\Admin\Model\Orders;
+use Bento\Model\CustomerBentoBox;
 use DB;
 
 class Driver extends \Eloquent {
@@ -56,7 +55,7 @@ class Driver extends \Eloquent {
         $drivers = self::getCurrentDrivers();
         $dropdown = array();
         
-        $dropdown[0] = '';
+        #$dropdown[0] = '';
         
         foreach($drivers as $driver) {
             $dropdown[$driver->pk_Driver] = "$driver->firstname $driver->lastname";
@@ -225,44 +224,14 @@ class Driver extends \Eloquent {
         return $rows;
     }
     
-    /* DEPRECATED
-    public static function updateInventoryByAssignment($pk_Order, $data) {
         
-        #$fk_Driver = $data['fk_Driver'];
-        
-        // Base case that represents no driver
-        #if ($fk_Driver == 0)
-        #    return;
-        
-        #$orderJson = json_decode(PendingOrder::withTrashed()->where('fk_Order', $pk_Order)->get()[0]->order_json);
-        #var_dump($data); die();
-        
-        $totals = Orders::calculateTotalsFromJson($orderJson);
-        
-        DB::transaction(function() use ($totals, $fk_Driver)
-        {
-            foreach ($totals as $itemId => $itemQty) {
-              DB::update("update DriverInventory set qty = qty - ?, change_reason='order_assignment' 
-                          WHERE fk_item = ? AND fk_Driver = ?", 
-                      array($itemQty, $itemId, $fk_Driver));
-            }
-        });
-        
-        // Recalculate LiveInventory
-        // VJC:2-16-2015: DONT do this. Otherwise you are overwriting the live inventory!
-        #LiveInventory::recalculate();  
-    }
-     * 
-     */
-    
-    
     public function addOrderToInventory($pk_Order)
     {
         $order = new \Bento\Model\Order(null, $pk_Order);
         
         $orderJsonObj = $order->getOrderJsonObj();
         
-        $totals = Orders::calculateTotalsFromJson($orderJsonObj);
+        $totals = CustomerBentoBox::calculateTotalsFromJson($orderJsonObj);
         
         $id = $this->id();
         
@@ -284,7 +253,7 @@ class Driver extends \Eloquent {
         
         $orderJsonObj = $order->getOrderJsonObj();
         
-        $totals = Orders::calculateTotalsFromJson($orderJsonObj);
+        $totals = CustomerBentoBox::calculateTotalsFromJson($orderJsonObj);
         
         $id = $this->id();
         

@@ -1,5 +1,6 @@
 <?php
 use Bento\Admin\Model\Orders;
+use Bento\Model\Order;
 ?>
 
 <h1>Open Orders</h1>
@@ -28,6 +29,9 @@ if (count($openOrders) > 0):
             
             $bentoBoxes = Orders::getBentoBoxesByOrder($row->pk_Order);
             
+            $order = new Order(null, $row->pk_Order);
+            $groupedDriversDropdown = $order->getDriversDropdown($driversDropdown);
+            
             ?>
             <tr class="info">
               <form action="/admin/order/save-status/{{{$row->pk_Order}}}" method="post">
@@ -36,7 +40,7 @@ if (count($openOrders) > 0):
                 <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}</td>
                 <td>{{{ $row->user_phone }}}</td>
                 <td>{{{ $row->order_created_at }}}</td>
-                <td><?php echo Form::select('pk_Driver[new]', $driversDropdown, $row->pk_Driver); echo Form::hidden('pk_Driver[current]', $row->pk_Driver)?></td>
+                <td><?php echo Form::select('pk_Driver[new]', $groupedDriversDropdown, $row->pk_Driver); echo Form::hidden('pk_Driver[current]', $row->pk_Driver)?></td>
                 <td><?php echo Form::select('status', $orderStatusDropdown, $row->status)?></td>
                 <td><button title="Save" type="submit" class="btn btn-default"><span class="glyphicon glyphicon-save"></span></button></td>
               </form>

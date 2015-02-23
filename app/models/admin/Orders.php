@@ -72,23 +72,5 @@ class Orders {
         return $enum;
     }
     
-    
-    public static function calculateTotalsFromJson($json) {
-        
-        $totals = array();
-
-        // For each CustomerBentoBox
-        foreach ($json->OrderItems as $orderItem) {
-            // Now for each thing in the box
-            foreach($orderItem->items as $item) {
-                // Increment, or init
-                $totals[$item->id] = isset($totals[$item->id]) 
-                        ? $totals[$item->id] += 1  
-                        : 1;
-            }
-        }
-        
-        return $totals;
-    }
-                    
+                        
 }
