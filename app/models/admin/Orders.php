@@ -19,7 +19,7 @@ class Orders {
                 o.number, o.street, o.city, o.state, o.zip,
                 os.`status`,
                 concat(u.firstname, ' ', u.lastname) as user_name,
-                u.phone as user_phone,
+                u.phone as user_phone, u.email as user_email,
                 concat(d.firstname, ' ', d.lastname) as driver_name,
                 d.pk_Driver
             from `Order` o

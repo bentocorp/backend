@@ -32,12 +32,14 @@ if (count($openOrders) > 0):
             $order = new Order(null, $row->pk_Order);
             $groupedDriversDropdown = $order->getDriversDropdown($driversDropdown);
             
+            $tableClass = count($groupedDriversDropdown['Possible Drivers']) > 1 ? 'info' : 'warning' ;
+            
             ?>
-            <tr class="info">
+            <tr class="{{$tableClass}}">
               <form action="/admin/order/save-status/{{{$row->pk_Order}}}" method="post">
                 <th scope="row">{{{ $row->pk_Order }}}</th>
                 <td>{{{ $row->user_name }}}</td>
-                <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}</td>
+                <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}<br><small>{{ $row->user_email }}</small></td>
                 <td>{{{ $row->user_phone }}}</td>
                 <td>{{{ $row->order_created_at }}}</td>
                 <td><?php echo Form::select('pk_Driver[new]', $groupedDriversDropdown, $row->pk_Driver); echo Form::hidden('pk_Driver[current]', $row->pk_Driver)?></td>
@@ -46,7 +48,7 @@ if (count($openOrders) > 0):
               </form>
             </tr>
             <tr>
-                <td colspan='6'>
+                <td colspan='8'>
                   
                     <table class="table table-condensed">
                       
@@ -70,7 +72,7 @@ if (count($openOrders) > 0):
                         </tbody>
                     </table>
                 </td>
-                <td></td><td></td>
+                <!-- <td></td><td></td> -->
             </tr>
             <?php
         }
