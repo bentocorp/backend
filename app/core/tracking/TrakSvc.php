@@ -50,10 +50,12 @@ class TrakSvc {
         $orderStr = '';
         
         $boxCount = 1;
+        
+        $n = count($bentoBoxes);
 
         foreach ($bentoBoxes as $box) {
 
-            $orderStr .= "BENTO $boxCount: \\n ===== \\n";
+            $orderStr .= "BENTO $boxCount of $n: \\n ===== \\n";
             $orderStr .= "$box->main_name - $box->main_label \\n";
             $orderStr .= "$box->side1_name - $box->side1_label \\n"; 
             $orderStr .= "$box->side2_name - $box->side2_label \\n";
@@ -69,7 +71,7 @@ class TrakSvc {
                 "executor": "'.$this->organization.'",
                 "destination": "'.$destinationId.'",
                 "recipients": ['.$recipString.'],
-                "notes": "Order '.$order->pk_Order.': \\n'."$orderStr".'"
+                "notes": "Order #'.$order->pk_Order.': \\n'."$orderStr".'"
             }
         ';
         #echo $payload; #
