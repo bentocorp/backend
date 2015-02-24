@@ -123,7 +123,10 @@ $statusClass = Status::getClass();
     
     <footer class="footer">
         <div class="container">
-          <p class="text-muted">&copy; Bento Technology, Inc</p>
+          <p class="text-muted">
+            &copy; Bento Technology, Inc<br>
+            <small>v 1.0</small>
+          </p>
         </div>
     </footer>
       

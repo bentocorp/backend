@@ -8,6 +8,9 @@ role :app, %w{bento-dev-api1 bento-dev-api2}
 #role :web, %w{some-other-thing}
 #role :db,  %w{deploy@example.com}
 
+# Set Branch
+set :branch, 'dev'
+
 #require custom config
 require './config/myconfig.rb'
 
