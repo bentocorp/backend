@@ -30,6 +30,11 @@ $env = $app->detectEnvironment(array(
             'homestead', 
             'jupiter',
         ),
+    
+	'dev' => array(
+            'bento-dev-api1', 
+            'bento-dev-api2',
+        ),
 
 ));
 
