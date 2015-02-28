@@ -3,6 +3,8 @@
 namespace Bento\Model;
 
 use Bento\Drivers\DriverMgr;
+use Bento\Admin\Model\Driver;
+use Bento\Model\Order;
 use DB;
 
 class OrderStatus extends \Eloquent {
@@ -17,9 +19,10 @@ class OrderStatus extends \Eloquent {
         protected $primaryKey = 'pk_OrderStatus';
     
         
-        public static function saveStatus($pk_Order, $data) {
-            
-            #var_dump($data); die();
+        public static function setStatus($pk_Order, $data) {
+               
+            $from = $data['pk_Driver']['current'];
+            $to = $data['pk_Driver']['new'];
             
             $update = array(
                 'fk_Driver' => $data['pk_Driver']['new'],
@@ -31,7 +34,19 @@ class OrderStatus extends \Eloquent {
                     ->update($update);
             
             // Update driver inventories based on this new assignment (if any)
-            #Driver::updateInventoryByAssignment($pk_Order, $data);
-            DriverMgr::setOrderDriver($data['pk_Driver']['current'], $data['pk_Driver']['new'], $pk_Order);
+            DriverMgr::setOrderDriver($from, $to, $pk_Order);
+            
+            // Undo the count if the order is cancelled
+            if ($data['status'] == 'Cancelled') {
+                
+                $order = new Order(null, $pk_Order);
+                $order->rollback();
+                
+                // If the prior selection wasn't blank, add it back in
+                if ($to > 0) {
+                    $toDriver = new Driver(null, $to);
+                    $toDriver->addOrderToInventory($pk_Order);
+                }
+            }
         }
 }

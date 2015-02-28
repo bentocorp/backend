@@ -224,7 +224,7 @@ class Driver extends \Eloquent {
         return $rows;
     }
     
-        
+    
     public function addOrderToInventory($pk_Order)
     {
         $order = new \Bento\Model\Order(null, $pk_Order);

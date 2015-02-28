@@ -239,6 +239,12 @@ class OrderCtrl extends \BaseController {
         }
         // Payment Failure
         else {
+            // Order inventory rollback
+            // This is a bit of a hack until we remove the PendingOrder architecture
+            // that isn't really needed in the first place. But it's fine for now.
+            $order = new Order(null, $this->pendingOrder->pk_PendingOrder);
+            $order->rollback(true); // True denotes we're rolling back a PendingOrder instead of an Order
+            
             return Response::json(array("error" => $stripeCharge['body']['message']), 406);
         }
         
@@ -398,9 +404,9 @@ class OrderCtrl extends \BaseController {
         $order = new Order;
         
         // VJC: Because some people are on an OLD VERSION
-        try {
-            $order->number = $orderJson->OrderDetails->address->number;
-        } catch (\Exception $ex) { }
+        #try {
+        $order->number = $orderJson->OrderDetails->address->number;
+        #} catch (\Exception $ex) { }
         $order->street = $orderJson->OrderDetails->address->street;
         $order->city = $orderJson->OrderDetails->address->city;
         $order->state = $orderJson->OrderDetails->address->state;

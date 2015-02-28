@@ -35,7 +35,7 @@ class OrderCtrl extends \BaseController {
         #if ($data === NULL)
         $data = $_POST;
         
-        OrderStatus::saveStatus($pk_Order, $data);
+        OrderStatus::setStatus($pk_Order, $data);
         
         return Redirect::back()->with('msg', 
             array('type' => 'success', 'txt' => 'Order status updated.'));

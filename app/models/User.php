@@ -130,7 +130,12 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
          *********************************************************************/
         
         public function getStripeCustomerObjAttribute($value) {
-            return unserialize(base64_decode($value));
+            try {
+                return unserialize(base64_decode($value));
+            }   catch (\Exception $e) {
+                return $value;
+            }
+            #return base64_decode($value);
         }
         
         

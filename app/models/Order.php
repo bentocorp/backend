@@ -21,23 +21,34 @@ class Order extends \Eloquent {
     
     public function __construct($attributes = array(), $pk_Order = NULL) 
     {
+        // So I can pass a less verbose NULL into the constructor
         if (!is_array($attributes))
             $attributes = array();
         
+        // Make sure the parent is called
         parent::__construct($attributes);
         
+        // Set the pk if the parent constructor hasn't yet
         if ($this->pk_Order === NULL)
             $this->pk_Order = $pk_Order;
     }
     
+    /*
+     * Less verbose than the member name, and can be standard in any model
+     */
     private function id() {
         return $this->pk_Order;
     }
     
     
-    public function getOrderJsonObj() {
+    public function getOrderJsonObj($pending = false) {
         
-        return json_decode(PendingOrder::withTrashed()->where('fk_Order', $this->id())->get()[0]->order_json);
+        if ($pending)
+            $key = 'pk_PendingOrder';
+        else
+            $key = 'fk_Order';
+        
+        return json_decode(PendingOrder::withTrashed()->where($key, $this->id())->get()[0]->order_json);
     }
     
     
@@ -110,6 +121,24 @@ class Order extends \Eloquent {
         ";
         
         return DB::select($sql);
+    }
+    
+    
+    public function rollback($pending = false) 
+    {
+        // 1. Rollback the LiveInventory
+        
+        $totals = CustomerBentoBox::calculateTotalsFromJson($this->getOrderJsonObj($pending));
+                
+        // Add back in
+        DB::transaction(function() use ($totals)
+        {
+            foreach ($totals as $itemId => $itemQty) {
+              DB::update("update LiveInventory set qty = qty + ?, change_reason='admin_update' 
+                          WHERE fk_item = ?", 
+                      array($itemQty, $itemId));
+            }
+        });
     }
     
    
