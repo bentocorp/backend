@@ -19,9 +19,9 @@
             <div class="container">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">Download Now</a></li>
+                    <li><a href="https://itunes.apple.com/us/app/bento-asian-food-delivered/id963634117?ls=1&mt=8">Download Now</a></li>
                     <li class="twitter"><a href="https://twitter.com/share" class="twitter-share-button" data-via="sortino">Tweet</a></li>
-                    <li class="facebook"><div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-layout="standard" data-action="like" data-show-faces="true" data-share="false"></div></li>
+                    <li class="facebook"><div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div></li>
                 </ul>
             </div>
         </nav>
@@ -33,7 +33,7 @@
                     Build your Bento for only $12.
                     </h1>
                     <div class="app-store-btn">
-                        <a href="#" class="btn btn-default btn-download">Download in App Store</a>
+                        <a href="https://itunes.apple.com/us/app/bento-asian-food-delivered/id963634117?ls=1&mt=8" class="btn btn-default btn-download">Download in App Store</a>
                     </div>
                     <form class="form-phone">
                         <div class="linkTexting_oq3j39q0">
@@ -75,7 +75,7 @@
                 <div class="col-sm-12 col-md-4 step">
                     <div class="step-number"><span>Step</span><br/> 3</div>
                     <h1>Enter your address. Done!</h1>
-                    <p>Delicious food will be delivered to your curbside in just minutes!</p>
+                    <p>Delicious, hot food will be delivered to your curbside in just minutes!</p>
                 </div>
             </div>
         </div>
@@ -109,7 +109,7 @@
                     <img src="/site/img/bento-logo.png" alt="Bento Logo" class="logo">
                 </div>
                 <div class="links">
-                    <a href="#">
+                    <a href="https://itunes.apple.com/us/app/bento-asian-food-delivered/id963634117?ls=1&mt=8">
                         <img src="/site/img/app-store-button.png" alt="Download from App Store" class="app-button">
                     </a>
                 </div>
@@ -121,7 +121,7 @@
                 <ul class="footer-nav">
                     <li><a href="#">Home</a></li>
                     <li><a href="#">Terms &amp; Conditions</a></li>
-                    <li><a href="#">Download Now</a></li>
+                    <li><a href="https://itunes.apple.com/us/app/bento-asian-food-delivered/id963634117?ls=1&mt=8">Download Now</a></li>
                     <li>415.300.1332</li>
                     <li><a href="mailto:help@bentonow.com">help@bentonow.com</a></li>
                 </ul>
@@ -131,18 +131,18 @@
 
 
     <script src="//bootstrapformhelpers.com/assets/js/jquery-1.10.2.min.js"></script>
-    <script src="/site/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="//d3q6uu7asevdsg.cloudfront.net/1.2/js/link_texting.min.js"></script>
+    <!-- <script src="/site/js/bootstrap.min.js"></script> -->
+    <!-- <script type="text/javascript" src="//d3q6uu7asevdsg.cloudfront.net/1.2/js/link_texting.min.js"></script> -->
     <script src="/site/js/bootstrap-formhelpers.js"></script>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&appId=488961274512887&version=v2.0";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=791688527544905&version=v2.0";
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
     </script>
 </body>
