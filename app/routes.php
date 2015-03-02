@@ -13,8 +13,8 @@
 
 // Index
 Route::get('/', function() {
-    #return View::make('hello');
-    return Redirect::away('http://signup.bentonow.com');
+    return View::make('homepage.index');
+    #return Redirect::away('http://signup.bentonow.com');
 });
 
 // AWS Health check
