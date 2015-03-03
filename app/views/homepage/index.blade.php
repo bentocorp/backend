@@ -21,7 +21,7 @@
                     <li class="active"><a href="#">Home</a></li>
                     <li><a href="https://itunes.apple.com/us/app/bento-asian-food-delivered/id963634117?ls=1&mt=8">Download Now</a></li>
                     <li class="twitter"><a href="https://twitter.com/share" class="twitter-share-button" data-via="sortino">Tweet</a></li>
-                    <li class="facebook"><div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div></li>
+                    <li class="facebook"><div class="fb-like" data-href="https://bentonow.com" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div></li>
                 </ul>
             </div>
         </nav>
