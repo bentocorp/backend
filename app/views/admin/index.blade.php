@@ -45,9 +45,9 @@ Edit some important copy on the dashboard
             <input type="text" class="form-control" name="ioscopy[{{{$row->key}}}]" value="{{{$row->value}}}">
             <?php
             if ($row->key == 'sale_price')
-                echo "<i>(normal price: $price)</i>";
+                echo "<i>(normal price: $price)</i><br>";
             
-            echo '<br><br>';
+            echo '<br>';
         }
     }
     ?>
