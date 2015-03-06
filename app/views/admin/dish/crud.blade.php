@@ -10,7 +10,7 @@
 CRUD Dish
 ******************************************************************************
 -->
-<h1>{{{$title}}}</h1>
+<h1>{{{$title}}} <?php if ($mode != 'create'):?> <a class="btn btn-default pull-right" href="/admin/dish/create" role="button">+ New Dish</a> <?php endif; ?></h1>
 <br>
 
 <!-- Show the form -->

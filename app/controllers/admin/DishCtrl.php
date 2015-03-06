@@ -25,8 +25,8 @@ class DishCtrl extends \BaseController {
     
     public function getCreate() {
         
-        $data['mode'] = 'Create New Dish';
-        $data['title'] = $data['mode'];
+        $data['mode'] = 'create';
+        $data['title'] = 'Create New Dish';
         
         return View::make('admin.dish.crud', $data);
     }
