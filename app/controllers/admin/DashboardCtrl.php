@@ -7,6 +7,7 @@ use Bento\Admin\Model\Orders;
 use Bento\Admin\Model\Driver;
 use Bento\Model\LiveInventory;
 use Bento\Admin\Model\Status;
+use DB;
 use View;
 
 
@@ -48,6 +49,11 @@ class DashboardCtrl extends \BaseController {
         $statusMsg = Status::getMsg();
         $data['statusClass'] = $statusClass;
         $data['statusMsg'] = $statusMsg;
+        
+        // Get some copy to edit on the dashboard
+        $in = "'closed-text', 'sold-out-text', 'sale_price', 'price'";
+        $iosCopy = DB::select("SELECT * FROM admin_ios_copy WHERE `key` IN ($in) order by `key` asc", array());
+        $data['iosCopy'] = $iosCopy;
            
         return View::make('admin.index', $data);
     }
