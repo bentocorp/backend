@@ -30,19 +30,31 @@ Route::get('/healthcheck', function() {
 
 
 /****************************************************************************
+ * REDIRECT Routes
+ ****************************************************************************
+ */
+
+// Service Map
+Route::get('/service', function() {
+    return Redirect::away(' http://cdn.bentonow.com/images/bento-error-invalid-address-map.png');
+});
+
+
+
+/****************************************************************************
  * API: Public Routes
  ****************************************************************************
  */
 Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
-    ## /init routes
+    ## PUBLIC /init routes
     Route::controller('init', 'InitCtrl');
     
-    ## /menu routes
+    ## PUBLIC /menu routes
     Route::get('menu/{date}', 'MenuCtrl@show');
     Route::get('menu/next/{date}', 'MenuCtrl@next');
     
-    ## /status routes
+    ## PUBLIC /status routes
     Route::controller('status', 'StatusCtrl');
     
     ## PUBLIC /user routes
@@ -54,9 +66,12 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
     ## PUBLIC /coupon routes
     Route::post('coupon/request', 'CouponCtrl@postRequest');
     
-    ## /misc routes
+    ## PUBLIC /misc routes
     Route::get('/ioscopy', 'MiscCtrl@getIoscopy');
     Route::get('/servicearea', 'MiscCtrl@getServicearea');
+    
+    ## PUBLIC /password routes
+    Route::controller('password', 'RemindersController');
 });
 
 
@@ -83,7 +98,7 @@ Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), functio
 
 
 /****************************************************************************
- * Admins Only Routes
+ * ADMIN: Admins Only Routes
  ****************************************************************************
  * 
  * prefix => admin: All routes accessed through /admin/{...}
