@@ -71,7 +71,7 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
     Route::get('/servicearea', 'MiscCtrl@getServicearea');
     
     ## PUBLIC /password routes
-    Route::controller('password', 'RemindersController');
+    #Route::controller('password', 'RemindersController');
 });
 
 
