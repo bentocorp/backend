@@ -17,7 +17,7 @@ class Order extends \Eloquent {
     protected $table = 'Order';
     protected $primaryKey = 'pk_Order';
         
-    private $pk_Order = NULL;
+    #private $pk_Order = NULL;
     
     public function __construct($attributes = array(), $pk_Order = NULL) 
     {
@@ -29,7 +29,7 @@ class Order extends \Eloquent {
         parent::__construct($attributes);
         
         // Set the pk if the parent constructor hasn't yet
-        if ($this->pk_Order === NULL)
+        if (!isset($this->pk_Order))
             $this->pk_Order = $pk_Order;
     }
     

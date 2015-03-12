@@ -10,9 +10,29 @@ class CouponCtrlTest extends TestCase {
     }
     
     
+    public function testPublicUserCannotApplyCoupon()
+    {
+        // Given a public user (or user with a bad token)
+        $api_token = 'api_token=1badtoken';
+        
+        // When I attempt to apply a valid coupon
+        $response = $this->call('GET', "/coupon/apply/1121113370998kkk7?$api_token");
+
+        // Then I get unathorized
+        $this->assertResponseStatus(401);
+        
+        // Given an explicit public user
+        $response = $this->call('GET', "/coupon/apply/1121113370998kkk7");
+
+        // Then I get unauthorized
+        $this->assertResponseStatus(401);
+    }
+    
+    
     public function testAuthdUserCanApplyCoupon()
     {
-        // Given an authenticated user
+        // Given an authenticated user who hasn't redeemed
+        DB::delete('delete from CouponRedemption where fk_User = ?', array(6));
         $api_token = 'api_token=123';
         
         // When I attempt to apply a valid coupon
@@ -24,21 +44,31 @@ class CouponCtrlTest extends TestCase {
         // And the amount for this test coupon is 12.00
         $json = json_decode($response->getContent());
         $this->assertEquals('12.00', $json->amountOff);
+        
+        // And if I try again
+        $response2 = $this->call('GET', "/coupon/apply/1121113370998kkk7?$api_token");
+        
+        // Then I get an error
+        $this->assertResponseStatus(400);
+        
+        // Reset
+        DB::delete('delete from CouponRedemption where fk_User = ?', array(6));
     }
     
     
-    public function testPublicUserCannotApplyCoupon()
+    public function testBadCouponCode()
     {
-        // Given a public user (or user with a bad token)
-        $api_token = 'api_token=1badtoken';
+        // Given an authenticated user
+        $api_token = 'api_token=123';
         
-        // When I attempt to apply a valid coupon
-        $response = $this->call('GET', "/coupon/apply/1121113370998kkk7?$api_token");
+        // When I attempt to apply a non-existant coupon code
+        $response = $this->call('GET', "/coupon/apply/someBadCouponCode?$api_token");
 
         // Then I get an error
-        $this->assertResponseStatus(401);
+        $this->assertResponseStatus(400);
     }
     
+        
     
     public function testAuthdUserCanRequestCoupon() 
     {

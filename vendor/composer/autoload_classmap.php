@@ -54,6 +54,8 @@ return array(
     'Bento\\Filter\\ApiAuthFilter' => $baseDir . '/app/filters/ApiAuthFilter.php',
     'Bento\\Lib\\Lib' => $baseDir . '/app/models/lib/Lib.php',
     'Bento\\Model\\BaseModel' => $baseDir . '/app/models/BaseModel.php',
+    'Bento\\Model\\Coupon' => $baseDir . '/app/models/Coupon.php',
+    'Bento\\Model\\CouponRedemption' => $baseDir . '/app/models/CouponRedemption.php',
     'Bento\\Model\\CouponRequest' => $baseDir . '/app/models/CouponRequest.php',
     'Bento\\Model\\CustomerBentoBox' => $baseDir . '/app/models/CustomerBentoBox.php',
     'Bento\\Model\\LiveInventory' => $baseDir . '/app/models/LiveInventory.php',

@@ -16,7 +16,7 @@ class Driver extends \Eloquent {
     protected $table = 'Driver';
     protected $primaryKey = 'pk_Driver';
 
-    private $pk_Driver = NULL;
+    #private $pk_Driver = NULL;
     
     public function __construct($attributes = array(), $pk_Driver = NULL) 
     {
@@ -25,7 +25,7 @@ class Driver extends \Eloquent {
         
         parent::__construct($attributes);
         
-        if ($this->pk_Driver === NULL)
+        if (!isset($this->pk_Driver))
             $this->pk_Driver = $pk_Driver;
     }
     

@@ -3,6 +3,7 @@
 namespace Bento\Ctrl;
 
 use Bento\Model\CouponRequest;
+use Bento\Model\Coupon;
 use Response;
 use Input;
 use User;
@@ -13,10 +14,32 @@ class CouponCtrl extends \BaseController {
     
     public function getApply($code) {
         
+        /*
         if ($code == '1121113370998kkk7') 
-            return Response::json(array('amountOff' => '12.00'), 200); 
+            return Response::json(array('amountOff' => '12.00'), 200);
         else
-            return Response::json(array('error' => 'Invalid coupon.'), 400); 
+            return Response::json(array('error' => 'Invalid coupon.'), 400);
+         * 
+         */
+        
+        $coupon = Coupon::find($code);
+        
+        // If this coupon doesn't exist, we're done
+        if ($coupon === NULL)
+            return Response::json(array('error' => 'Invalid coupon.'), 400);
+        
+        // So it's at least a valid code... Is it valid for this user?
+        
+        // If the code is valid for the user, return the amount off
+        if ($coupon->isValid()) {
+            
+            $coupon->redeem();
+            
+            return Response::json(array('amountOff' => $coupon->give_amount), 200);
+        }
+        // if the code isn't valid for the user, return an error
+        else
+            return Response::json(array('error' => 'Invalid coupon.'), 400);
     }
     
     
