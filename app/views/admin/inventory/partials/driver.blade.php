@@ -44,7 +44,7 @@ if (count($currentDrivers) > 0):
             <th>Email</th>
             <?php
             foreach($invItemKeys as $item) {
-                echo "<th><span title='$item->name'>$item->short_name</span></th>";
+                echo "<th><span title='$item->name'>$item->label</span></th>";
             }
             ?>
             <th>&nbsp;</th>

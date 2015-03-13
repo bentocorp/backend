@@ -77,7 +77,7 @@ class LiveInventory extends \Eloquent {
         select 
             li.fk_item, li.item_type,
             d.`type`,
-            d.`name`, d.short_name
+            d.`name`, d.short_name, d.label
         from LiveInventory li 
         left join Dish d on (li.fk_item = d.pk_Dish)
         order by type asc, d.`name` asc
@@ -92,7 +92,7 @@ class LiveInventory extends \Eloquent {
         
         $sql = "
         # count stuff in the LiveInventory
-        SELECT li.fk_item, d.`name`, d.short_name, li.qty as lqty, d.type,
+        SELECT li.fk_item, d.`name`, d.label, li.qty as lqty, d.type,
                         (select sum(di.qty) from DriverInventory di where di.fk_item = li.fk_item group by fk_item) as dqty
         FROM bento.LiveInventory li
         left join Dish d on (li.fk_item = d.pk_Dish)
@@ -100,7 +100,7 @@ class LiveInventory extends \Eloquent {
         union
         
         # for Drivers, roll into items that are NOT in the LiveInventory
-        select di.fk_item, d.`name`, d.short_name, li.qty as lqty, d.type,
+        select di.fk_item, d.`name`, d.label, li.qty as lqty, d.type,
                 sum(di.qty) as dqty
         from DriverInventory di
         left join Dish d on (di.fk_item = d.pk_Dish)

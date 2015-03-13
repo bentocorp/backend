@@ -42,7 +42,7 @@ if ($menu !== NULL) {
                 echo "<tr>";
                     echo "<td>$row->type</td>";
                     echo "<td><span title='pk: $row->pk_Dish'>$row->name</span></td>";
-                    echo "<td>$row->short_name</td>";
+                    echo "<td>$row->label &nbsp;</td>";
                     echo "<td>$hasDriverInventory</td>";
                 echo "</tr>";
             }

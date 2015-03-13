@@ -33,7 +33,7 @@
         echo "<tr>";
             echo "<td>$row->type</td>";
             echo "<td><span title='pk: $row->fk_item'>$row->name</span></td>";
-            echo "<td>$row->short_name</td>";
+            echo "<td>$row->label</td>";
             echo "<td>$row->lqty</td>";
             echo "<td>$row->dqty</td>";
             echo "<td class='$isMatchClass'>$isMatch</td>";

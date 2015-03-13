@@ -9,9 +9,8 @@ if ($list !== NULL): ?>
       <tr>
         {{ isset($checked) ? '<th>&nbsp;</th>' : '' }}
         <th>Name</th>
-        <th>Short Name</th>
-        <th>Type</th>
         <th>Label</th>
+        <th>Type</th>
         <th>Temp</th>
         <th>Max Per Order</th>
       </tr>
@@ -31,9 +30,8 @@ if ($list !== NULL): ?>
         echo "<tr $class>";
             echo isset($checked) ? "<td>$checkbox</td>" : '';
             echo "<th><a href='/admin/dish/edit/{$dish->pk_Dish}'>$dish->name</a></th>";
-            echo "<td>$dish->short_name</td>";
-            echo "<td>$dish->type</td>";
             echo "<td>$dish->label</td>";
+            echo "<td>$dish->type</td>";
             echo "<td>$dish->temp</td>";
             echo "<td>$dish->max_per_order</td>";
         echo "</tr>";

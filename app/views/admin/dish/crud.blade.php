@@ -31,9 +31,16 @@ CRUD Dish
         <div class="col-sm-5">{{ Form::text('name', null, array('class'=>'form-control')) }}</div>
     </div>
     
+    <!--
     <div class="form-group">
         {{ Form::label('short_name', 'Short Name', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::text('short_name', null, array('class' => 'form-control')) }}</div>
+    </div>
+    -->
+    
+    <div class="form-group">
+        {{ Form::label('label', 'Label', array('class' => 'col-sm-2 control-label')) }}
+        <div class="col-sm-5">{{ Form::text('label', null, array('class' => 'form-control')) }}</div>
     </div>
     
     <div class="form-group">
@@ -55,12 +62,7 @@ CRUD Dish
         {{ Form::label('max_per_order', 'Max Per Bento', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::text('max_per_order', 99, array('class' => 'form-control')) }}</div>
     </div>
-    
-    <div class="form-group">
-        {{ Form::label('label', 'Label', array('class' => 'col-sm-2 control-label')) }}
-        <div class="col-sm-5">{{ Form::text('label', null, array('class' => 'form-control')) }}</div>
-    </div>
-    
+        
     <div class="form-group">
         {{ Form::label('i_notes', 'Internal Notes', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::textarea('i_notes', null, array('class' => 'form-control')) }}</div>
