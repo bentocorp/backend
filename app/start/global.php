@@ -57,7 +57,7 @@ App::error(function(Exception $exception, $code)
         function($message)
         {
             $env = App::environment();
-            $message->to('engalert@bentonow.com', 'Bento App')->subject("[App.{$env}.err]: Uncaught Exception");
+            $message->to($_ENV['Mail_EngAlert'], 'Bento App')->subject("[App.{$env}.err]: Uncaught Exception");
         });
 });
 
