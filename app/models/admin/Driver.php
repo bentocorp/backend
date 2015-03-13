@@ -177,8 +177,9 @@ class Driver extends \Eloquent {
     private function safeToRemoveFromShift() {
         
         // Open orders?
-        if ($this->getOpenOrdersCount() > 0)
-            return array('ok' => false, 'reason' => 'hasOpenOrders', 'desc' => 'Drivers with assigned orders');
+        // VJC 3/13/2015: Removing for Asana 26535038097950/29248148753131
+        #if ($this->getOpenOrdersCount() > 0)
+            #return array('ok' => false, 'reason' => 'hasOpenOrders', 'desc' => 'Drivers with assigned orders');
         
         // Will removing this driver make it impossible to complete an open order?
         // This should be done last, since after this, LiveInventory is deducted

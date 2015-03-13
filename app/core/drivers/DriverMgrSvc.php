@@ -18,7 +18,7 @@ class DriverMgrSvc {
     public function updateShifts($data) {
         
         # if drivers are set, add those, and try to see who we can remove. Compile a list of those we can't.
-        # if drivers  are not set, try to remove all. Compile a list of those we can't.
+        # if drivers are not set, try to remove all. Compile a list of those we can't.
                 
         // Update
         if (isset($data['drivers'])) 
