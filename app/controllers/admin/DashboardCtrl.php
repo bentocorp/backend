@@ -5,8 +5,9 @@ namespace Bento\Admin\Ctrl;
 use Bento\Admin\Model\Menu;
 use Bento\Admin\Model\Orders;
 use Bento\Admin\Model\Driver;
-use Bento\Model\LiveInventory;
 use Bento\Admin\Model\Status;
+use Bento\Model\LiveInventory;
+use Bento\Model\Status as ApiStatus;
 use DB;
 use View;
 
@@ -49,6 +50,7 @@ class DashboardCtrl extends \BaseController {
         $statusMsg = Status::getMsg();
         $data['statusClass'] = $statusClass;
         $data['statusMsg'] = $statusMsg;
+        $data['status'] = ApiStatus::overall()->value;
         
         // Get some copy to edit on the dashboard
         $in = "'closed-text', 'closed-text-latenight', 'sold-out-text', 'sale_price', 'price'";

@@ -1,8 +1,4 @@
 
-<?php
-
-?>
-
 @extends('admin.master')
 
 @section('content')
@@ -16,6 +12,13 @@
 <a href="/admin/status/soldout" onclick="return confirm('Food is all gone?')" class="btn btn-warning">We're sold out</a>
 
 <hr>
+
+<?php if ($status == 'closed'): ?>
+<a href="/admin/status/reset" onclick="return confirm('Clear all drivers, and close all orders?')" class="btn btn-danger">Clear everything out</a>
+
+<hr>
+<?php endif; ?>
+
 <!--
 ******************************************************************************
 Edit some important copy on the dashboard
