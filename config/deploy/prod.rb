@@ -15,15 +15,18 @@ require './config/myconfig.rb'
 
 namespace :deploy do
 
-  desc 'Restart Prod Application'
-  task :restart do
-    on roles(:app), in: :sequence, wait: 2 do
-      # Your restart mechanism here, for example:
-      #execute "cd #{release_path}/build_scripts && phing devtest"
+  desc 'Get stuff ready prior to symlinking'
+  task :compile_assets do
+    on roles(:app), in: :sequence, wait: 1 do
       execute "cp #{deploy_to}/../components/.env.php #{release_path}"
-      #execute "cp -r #{deploy_to}/../components/vendor #{release_path}"
+      #execute "pwd"
+      #within release_path do
+      #  execute "cd ./build_scripts"
+      #end
     end
   end
+  
+  after :updated, :compile_assets
 
 end
 
