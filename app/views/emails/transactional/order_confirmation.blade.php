@@ -4,7 +4,7 @@ use Bento\Admin\Model\Orders;
 
 
 <p>Thanks for ordering from Bento! Once your order is en route, we'll send you a text message. 
-  Enjoy your meal, and please feel to reply directly to this email with any feedback you may have.</p>
+  Enjoy your meal, and please feel free to reply directly to this email with any feedback you may have.</p>
 
 
 <h4>Order</h4>
