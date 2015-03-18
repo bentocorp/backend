@@ -45,14 +45,33 @@ class CouponCtrlTest extends TestCase {
         $json = json_decode($response->getContent());
         $this->assertEquals('12.00', $json->amountOff);
         
-        // And if I try again
+        // And when I try again with the same coupon
         $response2 = $this->call('GET', "/coupon/apply/1121113370998kkk7?$api_token");
         
         // Then I get an error
         $this->assertResponseStatus(400);
         
+        // And when I try another valid coupon
+        $response3 = $this->call('GET', "/coupon/apply/test_vincent?$api_token");
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+                
         // Reset
         DB::delete('delete from CouponRedemption where fk_User = ?', array(6));
+    }
+    
+    
+    public function testCantApplyExpiredCoupon()
+    {
+        // Given an authenticated user 
+        $api_token = 'api_token=123';
+        
+        // When I try an expired coupon
+        $response = $this->call('GET', "/coupon/apply/test_vincent_expired?$api_token");
+        
+        // Then I get an error
+        $this->assertResponseStatus(400);     
     }
     
     

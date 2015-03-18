@@ -41,17 +41,29 @@ class Coupon extends \Eloquent {
     }
     
     
+    public static function find2($code) {
+        
+        $coupon = self::where('pk_Coupon', '=' , $code)->where('is_expired', '!=', '1')->get();
+        
+        if ($coupon->count() == 0)
+            return NULL;
+        else
+            return $coupon[0];
+    }
+    
+        
     /**
      * Determine if a coupon code is valid. Right now we are just doing something very simple.
      * No give/get coupons currently.
      * 
      * @return boolean
      */
-    public function isValid() {
+    public function isValidForUser() {
         
         $user = User::get();
         
-        $results = DB::select('select * from CouponRedemption where fk_User = ?', array($user->pk_User));
+        $results = DB::select('select * from CouponRedemption where fk_User = ? AND fk_Coupon = ?', 
+                array( $user->pk_User, $this->id() ));
         #var_dump($results); die(); #0
         
         if (count($results) == 0)

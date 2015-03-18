@@ -13,16 +13,8 @@ class CouponCtrl extends \BaseController {
     
     
     public function getApply($code) {
-        
-        /*
-        if ($code == '1121113370998kkk7') 
-            return Response::json(array('amountOff' => '12.00'), 200);
-        else
-            return Response::json(array('error' => 'Invalid coupon.'), 400);
-         * 
-         */
-        
-        $coupon = Coupon::find($code);
+                
+        $coupon = Coupon::find2($code);
         
         // If this coupon doesn't exist, we're done
         if ($coupon === NULL)
@@ -31,7 +23,7 @@ class CouponCtrl extends \BaseController {
         // So it's at least a valid code... Is it valid for this user?
         
         // If the code is valid for the user, return the amount off
-        if ($coupon->isValid()) {
+        if ($coupon->isValidForUser()) {
             
             $coupon->redeem();
             
@@ -39,7 +31,7 @@ class CouponCtrl extends \BaseController {
         }
         // if the code isn't valid for the user, return an error
         else
-            return Response::json(array('error' => 'Invalid coupon.'), 400);
+            return Response::json(array('error' => 'Invalid coupon for you.'), 400);
     }
     
     
