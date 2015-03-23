@@ -80,12 +80,23 @@ class UserCtrl extends \BaseController {
             // Make their secret token
             $api_token = MainAuth::makeApiToken($data->email);
             
+            
+            // Get the name
+            $name = trim($data->name);
+            
             // Slice apart the single `name` field
-            // Assume that the last chunk is their last name
-            $name = $data->name;
             $nameAr = explode(' ', $name);
-            $lastname = array_pop($nameAr);
-            $firstname = implode(' ', $nameAr);
+            
+            if ( count($nameAr) > 1 ) {
+            // Assume that the last chunk is their last name
+                $lastname = array_pop($nameAr);
+                $firstname = implode(' ', $nameAr);
+            }
+            else {
+            // Otherwise there's only one thing typed, and assume it as their first name
+                $firstname = $name;
+                $lastname = '';
+            }
             
             
             // Put user into DB
