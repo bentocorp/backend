@@ -1,4 +1,4 @@
-
+hi
 @extends('admin.master')
 
 @section('content')
