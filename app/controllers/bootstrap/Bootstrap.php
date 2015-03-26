@@ -8,10 +8,10 @@ Use Crypt;
 class BootstrapCtrl extends \BaseController {
 
 
-    public function do1_2() {
+    public function do1() {
         
-        #$password = Hash::make('pass');
-        $password = Crypt::encrypt('myfbtoken');
+        $password = Hash::make('mypass');
+        #$password = Crypt::encrypt('myfbtoken');
         echo $password;
         
         /*
@@ -24,7 +24,7 @@ class BootstrapCtrl extends \BaseController {
     }
     
     
-    public function do1() {
+    public function do2() {
         
 $obj = <<<obj
 {

@@ -61,4 +61,46 @@ class DriverCtrl extends AdminBaseController {
             'txt' => 'Driver inventory <b>AND</b> Live Inventory updated.'));
     }
     
+    
+    public function getCreate() {
+        
+        $data['mode'] = 'create';
+        $data['title'] = 'Add New Driver';
+        
+        return View::make('admin.driver.crud', $data);
+    }
+    
+    
+    public function postCreate() {
+        
+        $record = Driver::create($_POST);
+        
+        $id = $record->pk_Driver;
+        
+        return Redirect::to("admin/driver/edit/$id")->with('msg', 
+            array('type' => 'success', 'txt' => "New driver <b>$record->firstname $record->lastname</b> created."));
+    }
+    
+    
+    public function getEdit($id) {
+        
+        $record = Driver::find($id);
+        $data['record'] = $record;
+        $data['mode'] = 'Editing';
+        $data['title'] = $data['mode'].': '. "$record->firstname $record->lastname";
+        
+        return View::make('admin.driver.crud', $data);
+    }
+    
+    
+    public function postEdit($id) {
+        
+        $data = $_POST;
+        
+        Driver::saveChanges($id, $data);
+        
+        return Redirect::back()->with('msg', 
+            array('type' => 'success', 'txt' => 'Driver Saved.'));
+    }
+    
 }

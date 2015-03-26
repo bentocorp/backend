@@ -15,6 +15,7 @@ class Driver extends \Eloquent {
      */
     protected $table = 'Driver';
     protected $primaryKey = 'pk_Driver';
+    protected $guarded = array('pk_Driver');
 
     #private $pk_Driver = NULL;
     
@@ -138,6 +139,21 @@ class Driver extends \Eloquent {
         
         return $rows;
     }
+    
+    
+    public static function saveChanges($id, $data) {
+        
+        unset($data['_token']);
+        
+        DB::table('Driver')
+                    ->where('pk_Driver', $id)
+                    ->update($data);
+    }
+    
+    
+    /*
+     * Member Functions:
+     */
     
         
     public function getOpenOrdersCount() {
