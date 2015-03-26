@@ -6,6 +6,7 @@ use Bento\Admin\Model\Menu;
 use Bento\Admin\Model\Driver;
 use Bento\Model\LiveInventory;
 use View;
+use Redirect;
 
 
 
@@ -29,6 +30,15 @@ class InventoryCtrl extends \BaseController {
         $data['liveInventory'] = $liveInventory;
            
         return View::make('admin.inventory.index', $data);
+    }
+    
+    
+    public function getSoldout($mode, $fk_item) {
+        
+        LiveInventory::sellOut($mode, $fk_item);
+        
+        return Redirect::back()->with('msg', 
+            array('type' => 'success', 'txt' => '<b>Item Banished (sold out)!</b>'));
     }
     
     

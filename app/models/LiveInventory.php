@@ -92,15 +92,25 @@ class LiveInventory extends \Eloquent {
         
         $sql = "
         # count stuff in the LiveInventory
-        SELECT li.fk_item, d.`name`, d.label, li.qty as lqty, d.type,
-                        (select sum(di.qty) from DriverInventory di where di.fk_item = li.fk_item group by fk_item) as dqty
+        SELECT 
+            li.pk_LiveInventory, 
+            li.fk_item, d.`name`,  
+            li.qty as lqty,
+            li.item_type,
+            li.qty_saved,
+            li.sold_out,
+            d.label,
+            d.type, 
+            (select sum(di.qty) from DriverInventory di where di.fk_item = li.fk_item group by fk_item) as dqty
         FROM bento.LiveInventory li
         left join Dish d on (li.fk_item = d.pk_Dish)
+        ";
 
+        /* VJC 26-03-2015: Removing this, because it's causing issues, and is an extreme edge case for the UI
         union
         
         # for Drivers, roll into items that are NOT in the LiveInventory
-        select di.fk_item, d.`name`, d.label, li.qty as lqty, d.type,
+        SELECT di.fk_item, d.`name`, d.label, li.qty as lqty, d.type, di.item_type,
                 sum(di.qty) as dqty
         from DriverInventory di
         left join Dish d on (di.fk_item = d.pk_Dish)
@@ -110,6 +120,7 @@ class LiveInventory extends \Eloquent {
 
         order by type asc, name asc
         ";
+         */
         
         $rows = self::hydrateRaw($sql, array());
         
@@ -132,6 +143,28 @@ class LiveInventory extends \Eloquent {
                 DB::insert($sql, array($row->fk_item, $row->dqty, 'admin_update'));
             }
         });
+    }
+    
+    
+    public static function sellOut($mode, $fk_item) {
+        
+        // Mark something as sold out
+        if ($mode == 'on') {
+            
+            DB::transaction(function() use ($fk_item)
+            {
+                DB::update('update LiveInventory set `qty_saved` = `qty`, sold_out = 1 where fk_item = ?', array($fk_item));
+                DB::update('update LiveInventory set `qty` = 0 where fk_item = ?', array($fk_item));
+            });
+        }
+        // Resurrect a sold out item
+        else if ($mode == 'off') {
+            
+            DB::transaction(function() use ($fk_item)
+            {
+                DB::update('update LiveInventory set `qty` = `qty_saved`, sold_out = 0 where fk_item = ?', array($fk_item));
+            });
+        }
     }
     
 }
