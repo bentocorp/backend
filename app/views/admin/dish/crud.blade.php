@@ -59,8 +59,9 @@ CRUD Dish
     </div>
     
     <div class="form-group">
+        <?php $default = $dish->max_per_order ? $dish->max_per_order : 99 ?>
         {{ Form::label('max_per_order', 'Max Per Bento', array('class' => 'col-sm-2 control-label')) }}
-        <div class="col-sm-5">{{ Form::text('max_per_order', 99, array('class' => 'form-control')) }}</div>
+        <div class="col-sm-5">{{ Form::text('max_per_order', $default, array('class' => 'form-control')) }}</div>
     </div>
         
     <div class="form-group">
