@@ -22,10 +22,10 @@ Route::get('/healthcheck', function() {
     return Response::make('ok', 200);
 });
 
-// Boostrapping (comment out when done)
-#Route::group(array('namespace' => 'Bento\Ctrl'), function() {
-#    Route::get('bs/do3', 'BootstrapCtrl@do3');
-#});
+// Boostrapping (!!! COMMENT OUT WHEN DONE !!!)
+Route::group(array('namespace' => 'Bento\Ctrl'), function() {
+    Route::get('bs/do1', 'BootstrapCtrl@migrateUserCoupons');
+});
 
 
 

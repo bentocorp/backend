@@ -62,6 +62,45 @@ class CouponCtrlTest extends TestCase {
     }
     
     
+    public function testAuthdUserCanApplyUserCoupon()
+    {
+        // Given an authenticated user who hasn't redeemed a user's coupon
+        DB::delete('delete from CouponRedemption where fk_User = ?', array(6));
+        $api_token = 'api_token=123';
+        
+        // When I attempt to apply a valid coupon
+        $response = $this->call('GET', "/coupon/apply/vincent2?$api_token");
+
+        // Then I get ok
+        $this->assertTrue($this->client->getResponse()->isOk());
+        
+        // And the amount for this coupon is 5.00
+        $json = json_decode($response->getContent());
+        $this->assertEquals('5.00', $json->amountOff);
+        
+        // And when I try again with the same coupon
+        $response2 = $this->call('GET', "/coupon/apply/vincent2?$api_token");
+        
+        // Then I get an error
+        $this->assertResponseStatus(400);
+        
+        // And when I try another valid coupon
+        $response3 = $this->call('GET', "/coupon/apply/jason1?$api_token");
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+        
+        // And when I try my own coupon (for API token 123)
+        $response3 = $this->call('GET', "/coupon/apply/vincentt21?$api_token");
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+                 
+        // Reset
+        DB::delete('delete from CouponRedemption where fk_User = ?', array(6));
+    }
+    
+    
     public function testCantApplyExpiredCoupon()
     {
         // Given an authenticated user 

@@ -1,5 +1,7 @@
 <?php
 
+Use Bento\Model\CouponUserHash;
+
 use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
@@ -125,10 +127,44 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
     }
     
     
+    /*************************************************************************
+     * Member Functions
+     *************************************************************************
+     */
+    
     public function makeCouponCode() {
         
-        $id = $this->pk_User;
+        // Create the base
+        $cleanName = preg_replace('/[^a-zA-Z0-9]+/', '', $this->firstname);
+        $baseName = strtolower( substr($cleanName, 0, 10) );
         
+        $baseNum = null;
+        
+        DB::transaction(function() use ($baseName, & $baseNum)
+        {
+            $row = CouponUserHash::find($baseName);
+            
+            // It's the first one
+            if ($row === NULL) {
+                $baseNum = 1;
+                
+                $couponUserHash = new CouponUserHash;
+                $couponUserHash->pk_CouponUserHash = $baseName;
+                $couponUserHash->count = $baseNum;
+                $couponUserHash->save();
+            }
+            // There's already something there
+            else {
+                $baseNum = $row->count + 1;
+                
+                $row->count = $baseNum;
+                $row->save();
+            }
+        });
+        
+        $userCouponCode = $baseName.$baseNum;
+        
+        return $userCouponCode;
     }
 
 

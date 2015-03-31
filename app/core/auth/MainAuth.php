@@ -74,6 +74,7 @@ class MainAuth implements AuthInterface {
             $user->password     = Hash::make($data->password);
             $user->save();
             
+            // Good candidate for async queue
             $user->coupon_code  = $user->makeCouponCode();
             $user->save();
             

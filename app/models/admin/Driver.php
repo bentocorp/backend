@@ -21,11 +21,14 @@ class Driver extends \Eloquent {
     
     public function __construct($attributes = array(), $pk_Driver = NULL) 
     {
+        // So I can pass a less verbose NULL into the constructor
         if (!is_array($attributes))
             $attributes = array();
         
+        // Make sure the parent is called
         parent::__construct($attributes);
         
+        // Set the pk if the parent constructor hasn't yet
         if (!isset($this->pk_Driver))
             $this->pk_Driver = $pk_Driver;
     }

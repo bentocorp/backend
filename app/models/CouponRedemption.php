@@ -27,7 +27,7 @@ class CouponRedemption extends \Eloquent {
         parent::__construct($attributes);
         
         // Set the pk if the parent constructor hasn't yet
-        if ($this->pk_CouponRedemption === NULL)
+        if (!isset($this->pk_CouponRedemption))
             $this->pk_CouponRedemption = $pk_CouponRedemption;
     }
     

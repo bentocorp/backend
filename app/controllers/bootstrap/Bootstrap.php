@@ -2,8 +2,10 @@
 
 namespace Bento\Ctrl;
 
-Use Hash;
-Use Crypt;
+use Hash;
+use Crypt;
+use DB;
+use User;
 
 class BootstrapCtrl extends \BaseController {
 
@@ -94,12 +96,13 @@ obj;
     
     public function do3() {
         
-        $string = '!@_#john ń Æ ._ 8!';
+        $string = '!@_#johnny APPleseed ń Æ ._ 8!';
         
         #$str2 = preg_replace('~[^\p{L}\p{N}]++~u', '', $string);
         $userCouponCode = preg_replace('/[^a-zA-Z0-9]+/', '', $string);
+        $userCouponCode = strtolower( substr($userCouponCode, 0, 10) );
         
-        $length = strlen($userCouponCode);
+        #$length = strlen($userCouponCode);
         
         /*
          * Ld = length desired, La = length actual
@@ -107,6 +110,7 @@ obj;
          * max: 1 * 10^(Ld-La) -1 
          * e.g.: 1*10^0 to 1*(10^1) - 1, gives us 1-9.
          */
+        /*
         if ($length < 6) {
             // This many more numbers
             $min = 1 * 10**(6 - $length - 1);
@@ -116,8 +120,24 @@ obj;
             
             $userCouponCode .= "b$r";
         }
+        */
         
         echo $userCouponCode;
+    }
+    
+    
+    public function migrateUserCoupons() {
+        
+        $users = User::all();
+        
+        foreach ($users as $user) {
+            
+            if ($user->coupon_code !== NULL)
+                continue;
+            
+            $user->coupon_code  = $user->makeCouponCode();
+            $user->save();
+        }
     }
 
 }

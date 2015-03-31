@@ -84,6 +84,10 @@ class FacebookAuth implements AuthInterface {
             $user->fb_gender        = $data->fb_gender;
             $user->save();
             
+            // Good candidate for async queue
+            $user->coupon_code  = $user->makeCouponCode();
+            $user->save();
+            
             $response = array(
                 'api_token' => $api_token,
                 'fb_token'  => $fb_token,
