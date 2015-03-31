@@ -12,7 +12,9 @@ ALTER TABLE `bento`.`CouponUserHash`
 ADD COLUMN `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `count`,
 ADD COLUMN `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP AFTER `created_at`;
 
-# Run the Bootstrap migration
+# NOTE: Run the Bootstrap migration!
 
+ALTER TABLE `bento`.`CouponRedemption` 
+ADD COLUMN `type` ENUM('Coupon', 'UserCoupon') NULL DEFAULT 'Coupon' AFTER `updated_at`;
 
 
