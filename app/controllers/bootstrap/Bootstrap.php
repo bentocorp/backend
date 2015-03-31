@@ -90,5 +90,34 @@ obj;
     #print_r( unserialize(base64_decode($encoded)) );
         
     }
+    
+    
+    public function do3() {
+        
+        $string = '!@_#john ń Æ ._ 8!';
+        
+        #$str2 = preg_replace('~[^\p{L}\p{N}]++~u', '', $string);
+        $userCouponCode = preg_replace('/[^a-zA-Z0-9]+/', '', $string);
+        
+        $length = strlen($userCouponCode);
+        
+        /*
+         * Ld = length desired, La = length actual
+         * min: 1 * 10^(Ld-La-1)
+         * max: 1 * 10^(Ld-La) -1 
+         * e.g.: 1*10^0 to 1*(10^1) - 1, gives us 1-9.
+         */
+        if ($length < 6) {
+            // This many more numbers
+            $min = 1 * 10**(6 - $length - 1);
+            $max = 10**(6 - $length);
+            
+            $r = rand($min, $max);
+            
+            $userCouponCode .= "b$r";
+        }
+        
+        echo $userCouponCode;
+    }
 
 }

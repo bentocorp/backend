@@ -24,7 +24,7 @@ Route::get('/healthcheck', function() {
 
 // Boostrapping (comment out when done)
 #Route::group(array('namespace' => 'Bento\Ctrl'), function() {
-#    Route::get('bs/do1', 'BootstrapCtrl@do1');
+#    Route::get('bs/do3', 'BootstrapCtrl@do3');
 #});
 
 

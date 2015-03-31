@@ -2,7 +2,7 @@
 namespace Bento\Auth;
 
 use Bento\Facades\StripeMgr;
-use Bento\Facades\MainAuth;
+use Bento\Facades\MainAuth as MainAuthFcd;
 use Facebook\FacebookSession;
 use Validator;
 use Response;
@@ -67,7 +67,7 @@ class FacebookAuth implements AuthInterface {
             // Everything good, save FB user to DB
             
             // Make their secret token
-            $api_token = MainAuth::makeApiToken($data->email);
+            $api_token = MainAuthFcd::makeApiToken($data->email);
             
             // Put user into DB
             $user = new User;
@@ -192,7 +192,7 @@ class FacebookAuth implements AuthInterface {
         unset($user->pk_User, $user->fb_id, $user->fb_token);
 
         // Set new api_token
-        $api_token = MainAuth::makeApiToken($user->email);
+        $api_token = MainAuthFcd::makeApiToken($user->email);
         User::setNewApiToken($api_token, $user->email); // set to db
         $user->api_token = $api_token; // set to return object
 
