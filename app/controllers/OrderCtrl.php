@@ -453,7 +453,7 @@ class OrderCtrl extends \BaseController {
         // Soft-delete pending order
         $this->pendingOrder->delete();
         
-        // --- Do something stupidly expensive until we can fix it
+        // --- Do something stupidly expensive until we can fix it (for conf. email)
         $bentoBoxes = Orders::getBentoBoxesByOrder($order->pk_Order); 
         
         // Put into Trak

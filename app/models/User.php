@@ -136,7 +136,7 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
         
         // Create the base
         $cleanName = preg_replace('/[^a-zA-Z0-9]+/', '', $this->firstname);
-        $baseName = strtolower( substr($cleanName, 0, 10) );
+        $baseName = strtoupper( substr($cleanName, 0, 10) );
         
         $baseNum = null;
         

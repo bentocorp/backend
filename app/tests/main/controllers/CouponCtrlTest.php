@@ -51,8 +51,8 @@ class CouponCtrlTest extends TestCase {
         // Then I get an error
         $this->assertResponseStatus(400);
         
-        // And when I try another valid coupon
-        $response3 = $this->call('GET', "/coupon/apply/test_vincent?$api_token");
+        // And when I try another valid coupon in ALL CAPS
+        $response3 = $this->call('GET', "/coupon/apply/TEST_VINCENT?$api_token");
         
         // Then I get ok
         $this->assertResponseStatus(200);
@@ -84,8 +84,8 @@ class CouponCtrlTest extends TestCase {
         // Then I get an error
         $this->assertResponseStatus(400);
         
-        // And when I try another valid coupon
-        $response3 = $this->call('GET', "/coupon/apply/jason1?$api_token");
+        // And when I try another valid coupon in CAPS
+        $response3 = $this->call('GET', "/coupon/apply/JASON1?$api_token");
         
         // Then I get ok
         $this->assertResponseStatus(200);
