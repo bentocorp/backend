@@ -221,13 +221,23 @@ class OrderCtrl extends \BaseController {
         
         // ** Process payment
         
-        // A card token takes priority. This way a user can always 
-        // change their card on file. And at this point in execution, we know they have one
-        // or the other.
-        if ($this->hasStripeToken($data))
-            $stripeCharge = $this->stripeChargeFromToken($data);
-        else
-            $stripeCharge = $this->stripeChargeFromSaved($data);
+        // Only process if > than 50 cents, otherwise Stripe denies the charge (you cheapo)
+        if ($data->OrderDetails->total_cents > .50) {
+            
+            // A card token takes priority. This way a user can always 
+            // change their card on file. And at this point in execution, we know they have one
+            // or the other.
+            if ($this->hasStripeToken($data))
+                $stripeCharge = $this->stripeChargeFromToken($data);
+            else
+                $stripeCharge = $this->stripeChargeFromSaved($data);
+        }
+        // Otherwise, just simulate success
+        else {
+            $stripeCharge = array();
+            $stripeCharge['status'] = true;
+            $stripeCharge['body'] = NULL; // Set to NULL so that no Stripe info is attempted to be saved into the DB
+        }
         
         
         // Payment Success
@@ -243,7 +253,7 @@ class OrderCtrl extends \BaseController {
             // This is a bit of a hack until we remove the PendingOrder architecture
             // that isn't really needed in the first place. But it's fine for now.
             $order = new Order(null, $this->pendingOrder->pk_PendingOrder);
-            $order->rollback(true); // True denotes we're rolling back a PendingOrder instead of an Order
+            $order->rollback(true); // TRUE denotes we're rolling back a PendingOrder instead of an Order
             
             return Response::json(array("error" => $stripeCharge['body']['message']), 406);
         }
@@ -418,8 +428,13 @@ class OrderCtrl extends \BaseController {
         $order->amount = $orderJson->OrderDetails->total_cents / 100;
         $order->tax = $orderJson->OrderDetails->tax_cents / 100;
         $order->tip = $orderJson->OrderDetails->tip_cents / 100;
-        $order->stripe_charge_id = $stripeCharge->id;
         $order->fk_PendingOrder = $this->pendingOrder->pk_PendingOrder;
+        
+        // Save Stripe things only if a Stripe charge was made.
+        // This happens when a coupon is used for a free bento, since in that case we don't send $0 to Stripe
+        if ($stripeCharge !== NULL) {
+            $order->stripe_charge_id = $stripeCharge->id;
+        }
         
         $order->save();
         

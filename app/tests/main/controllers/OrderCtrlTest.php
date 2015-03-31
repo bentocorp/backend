@@ -162,6 +162,11 @@ class OrderCtrlTest extends TestCase {
     }
     
     
+    /**************************************************************************
+     * Success Scenarios
+     *************************************************************************/
+    
+    
     public function testStripeOrderIntegrationWithUserCardSavedInDb() 
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
