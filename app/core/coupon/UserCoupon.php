@@ -25,7 +25,7 @@ class UserCoupon implements CouponInterface {
         
     public function getGiveAmount() {
         
-        return 5.00;
+        return "5.00";
     }
 
     
