@@ -36,7 +36,12 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
 // Service Map
 Route::get('/service', function() {
-    return Redirect::away(' http://cdn.bentonow.com/images/bento-error-invalid-address-map.png');
+    return Redirect::away('http://cdn.bentonow.com/images/bento-error-invalid-address-map.png');
+});
+
+// Lyft/Uber Driver Signup
+Route::get('/driversignup', function() {
+    return Redirect::away('https://docs.google.com/a/bentonow.com/forms/d/1B_zunAaTdTE8MrynmkHclyQ9EJNRIyQFpaXMB_-8avQ/viewform');
 });
 
 
