@@ -23,9 +23,9 @@ Route::get('/healthcheck', function() {
 });
 
 // Boostrapping (!!! COMMENT OUT WHEN DONE !!!)
-Route::group(array('namespace' => 'Bento\Ctrl'), function() {
-    Route::get('bs/do1', 'BootstrapCtrl@migrateUserCoupons');
-});
+#Route::group(array('namespace' => 'Bento\Ctrl'), function() {
+#    Route::get('bs/do1', 'BootstrapCtrl@migrateUserCoupons');
+#});
 
 
 
