@@ -6,7 +6,7 @@ use Bento\Admin\Model\Orders;
   Hi {{$user->firstname}}. Thanks for ordering from Bento! Once your order is en route, we'll send you a text message. 
   Enjoy your meal, and please feel free to reply directly to this email with any feedback you may have.<br>
   <br>
-  Give your friends $5 off their next Bento! Use your code: <b>{{$user->coupon_code}}</b>
+  Give your friends $5 off their next Bento! Use your code: <b>{{$user->coupon_code}}</b>. It works once for you too.
 </p>
 
 

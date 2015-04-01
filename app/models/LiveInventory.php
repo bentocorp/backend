@@ -104,6 +104,8 @@ class LiveInventory extends \Eloquent {
             (select sum(di.qty) from DriverInventory di where di.fk_item = li.fk_item group by fk_item) as dqty
         FROM bento.LiveInventory li
         left join Dish d on (li.fk_item = d.pk_Dish)
+        
+        order by type asc, name asc
         ";
 
         /* VJC 26-03-2015: Removing this, because it's causing issues, and is an extreme edge case for the UI
