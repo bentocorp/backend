@@ -2,7 +2,7 @@
 lock '3.3.5'
 
 set :application, 'bento-backend'
-set :repo_url, 'git@github.com:demant/bento-backend.git'
+set :repo_url, 'git@github.com:bentocorp/backend.git'
 
 # Set up a strategy to deploy only a project directory (not the whole repo)
 #set :git_strategy, RemoteCacheWithProjectRootStrategy
