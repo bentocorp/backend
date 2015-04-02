@@ -39,6 +39,7 @@ class TrakSvc {
         
         // Add destination first
         $destinationId = $this->addDestination($order);
+        #$destinationId = '';
         
         // Create recipient
         $recip = $this->createRecipient();
@@ -85,7 +86,7 @@ class TrakSvc {
         
         $response = curl_exec($ch);
         curl_close($ch);
-        #echo $response; die(); #
+        #echo $response; die(); #0
         
         return $response;
     }
@@ -109,6 +110,7 @@ class TrakSvc {
         ';
         
         $ch = curl_init($url);
+        #curl_setopt($ch, CURLOPT_HEADER, 1); #0
         curl_setopt($ch, CURLOPT_USERPWD, $this->apiKey . ":" . '');
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -116,12 +118,14 @@ class TrakSvc {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         
         $response = curl_exec($ch);
+        $info = curl_getinfo($ch); #0
         curl_close($ch);
         
-        $response2 = json_decode($response);
-        #var_dump($response); die(); #
+        $jsonObj = json_decode($response);
+        $code = $info['http_code'];
+        #var_dump($info); print_r($response); die(); #0
         
-        return $response2->id;
+        return $jsonObj->id;
     }
     
     
@@ -132,7 +136,7 @@ class TrakSvc {
         $url = $this->apiUrl . '/recipients';
         
         $phone = $user->phone;
-        #$phone = '(310) 433 - 0839'; #
+        #$phone = '(310) 433 - 0839'; #0
         
         $payload = '
             {
@@ -140,7 +144,7 @@ class TrakSvc {
                 "phone": "'.$phone.'"
             }
         ';
-        #var_dump($payload); die(); #
+        #var_dump($payload); die(); #0
         
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_USERPWD, $this->apiKey . ":" . '');
@@ -156,7 +160,7 @@ class TrakSvc {
         
         $response2 = json_decode($response);
         $code = $info['http_code'];
-        #var_dump($info); var_dump($response2); #
+        #var_dump($info); var_dump($response2); #0
         
         // Malformed phone number
         if ($code == 500) 

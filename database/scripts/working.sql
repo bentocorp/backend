@@ -63,11 +63,12 @@ truncate table CustomerBentoBox;
 # get orders for survey
 select 
 	o.pk_Order, o.created_at, u.email, 
-	d1.`name` as main_name,  d1.label as main_label, 
-	d2.`name` as side1_name, d2.label as side1_label, 
-	d3.`name` as side2_name, d3.label as side2_label, 
-	d4.`name` as side3_name, d4.label as side3_label, 
-	d5.`name` as side4_name, d5.label as side4_label
+	d1.`name` as main_name,
+	d2.`name` as side1_name,
+	d3.`name` as side2_name,
+	d4.`name` as side3_name,
+	d5.`name` as side4_name,
+    os.`status`
 from CustomerBentoBox cbb
 left join Dish d1 on (cbb.fk_main = d1.pk_Dish)
 left join Dish d2 on (cbb.fk_side1 = d2.pk_Dish)
@@ -75,8 +76,10 @@ left join Dish d3 on (cbb.fk_side2 = d3.pk_Dish)
 left join Dish d4 on (cbb.fk_side3 = d4.pk_Dish)
 left join Dish d5 on (cbb.fk_side4 = d5.pk_Dish)
 left join `Order` o on (o.pk_Order = cbb.fk_Order)
+left join OrderStatus os on (o.pk_Order = os.fk_Order)
 left join User u on (u.pk_User = o.fk_User)
-where cbb.created_at like '%2015-02-17%'
+where cbb.created_at like '%2015-03-13%'
+	AND status != 'Cancelled'
 ;
 
 
