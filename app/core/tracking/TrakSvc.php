@@ -96,6 +96,44 @@ class TrakSvc {
         
         $url = $this->apiUrl . '/destinations';
         
+        /*
+         * We are sending BOTH the user-entered address, AND the lat/long. Why? See below.
+         * 
+         * Email with Trak (Onfleet)
+         * Subject: Onfleet Support Request Updated Re: Problem with geocoding
+         * 
+         * Trak:
+            Regarding your other questions:
+
+            Something must indeed still be provided for the required address fields 
+            (Street, Number, City, etc.) but it can be anything if you provide a lat/lng 
+            alongside it, as we would use that as the authority. In that case, we 
+            don't try to geocode the address.
+
+            We don't geocode if both are provided - we simply trust the lat/lng 
+            you provide and use the address fields in the frontend only (the strings 
+            will still show up in the driver app and dashboard as they are entered by the user).
+
+            Hope this helps clarify! Let me know if any of this is unclear.
+         
+         * Me: 
+            So, just to be clear, in that case (2), you'll use the lat/long as the 
+            coordinates for the driver's destination. The user-entered address becomes for display only.
+          
+         * Trak:
+            Precisely.
+
+            One thing to note, however, is that when we pass the coordinates from 
+            the driver app into Google Maps, or whichever navigation app your driver 
+            is using, the app will reverse geocode to determine the address so it
+            won't display the address you provided as the task destination, but 
+            rather whatever their own reverse geocode comes up with. As such, 
+            it's recommended that you just inform your drivers to go by the 
+            address in the Onfleet driver app as the authority, but their navigation 
+            app will direct them to the coordinate you provide.
+
+
+         */
         $payload = '
             {
                 "address": {
@@ -105,7 +143,8 @@ class TrakSvc {
                     "city":"'.$order->city.'",
                     "state":"'.$order->state.'",
                     "country":"USA"
-                }
+                },
+                "location": ['.$order->long.', '.$order->lat.']
             }
         ';
         
