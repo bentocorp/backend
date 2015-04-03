@@ -1,6 +1,6 @@
 <?php
 
-Use Bento\Model\CouponUserHash;
+use Bento\Model\CouponUserHash;
 
 use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
@@ -140,31 +140,57 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
         
         $baseNum = null;
         
-        DB::transaction(function() use ($baseName, & $baseNum)
-        {
-            $row = CouponUserHash::find($baseName);
-            
-            // It's the first one
-            if ($row === NULL) {
-                $baseNum = 1;
-                
-                $couponUserHash = new CouponUserHash;
-                $couponUserHash->pk_CouponUserHash = $baseName;
-                $couponUserHash->count = $baseNum;
-                $couponUserHash->save();
-            }
-            // There's already something there
-            else {
-                $baseNum = $row->count + 1;
-                
-                $row->count = $baseNum;
-                $row->save();
-            }
-        });
+        // DB Pattern Reference: https://dev.mysql.com/doc/refman/5.0/en/innodb-locking-reads.html
+        
+        $row = CouponUserHash::find($baseName);
+        
+        // It's the first one
+        if ($row === NULL) {
+            $baseNum = $this->createCouponUserHashCount($baseName);
+        }
+        // There's already something there
+        else {
+            $baseNum = $this->updateCouponUserHashCount($baseName);
+        }
         
         $userCouponCode = $baseName.$baseNum;
         
         return $userCouponCode;
+    }
+    
+    
+    private function updateCouponUserHashCount($baseName) {
+        
+            // Updates are transactions by default, so this is safe.
+        
+            DB::update('UPDATE CouponUserHash SET `count` = LAST_INSERT_ID(`count` + 1) WHERE pk_CouponUserHash = ?', 
+                    array($baseName));
+            
+            $baseNum = DB::select('SELECT LAST_INSERT_ID() as LAST_INSERT_ID');
+            
+            return $baseNum[0]->LAST_INSERT_ID;
+    }
+    
+    
+    private function createCouponUserHashCount($baseName) {
+        
+        /* Theoretically, two concurrent users (or more) with the exact same first name hash 
+         * could read that there is not yet an entry, and attempt to create one
+         * at the same time. One request wins, the rest fail.
+         */
+        try {
+            $baseNum = 1;
+
+            $couponUserHash = new CouponUserHash;
+            $couponUserHash->pk_CouponUserHash = $baseName;
+            $couponUserHash->count = $baseNum;
+            $couponUserHash->save();
+        } 
+        catch (\Exception $ex) {
+            $baseNum = $this->updateCouponUserHashCount($baseName);
+        }
+
+        return $baseNum;
     }
 
 
