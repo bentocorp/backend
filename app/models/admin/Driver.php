@@ -95,6 +95,7 @@ class Driver extends \Eloquent {
         
         DB::transaction(function() use ($pk_Driver, $data)
         {
+            /* This is already done with a DB Trigger
             // First copy inventory to the Log
 
             $sql = "
@@ -103,6 +104,8 @@ class Driver extends \Eloquent {
             ";
 
             DB::insert($sql, array($pk_Driver));
+             * 
+             */
 
             // Now delete
 
@@ -245,6 +248,11 @@ class Driver extends \Eloquent {
     }
     
     
+    /**
+     * Add an order back into a Driver's inventory
+     * 
+     * @param int $pk_Order
+     */
     public function addOrderToInventory($pk_Order)
     {
         $order = new \Bento\Model\Order(null, $pk_Order);
@@ -267,6 +275,11 @@ class Driver extends \Eloquent {
     }
     
     
+    /**
+     * Subtract an order from a Driver's inventory
+     * 
+     * @param int $pk_Order
+     */
     public function subtractOrderFromInventory($pk_Order)
     {
         $order = new \Bento\Model\Order(null, $pk_Order);
