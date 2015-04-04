@@ -53,8 +53,18 @@ Route::filter('auth.basic', function()
 });
 
 
+/*
+|--------------------------------------------------------------------------
+| Custom Filters
+|--------------------------------------------------------------------------
+|
+| Our custom application filters.
+|
+*/
+
 Route::filter('admin', 'Bento\Filter\AdminFilter');
 Route::filter('api_auth', 'Bento\Filter\ApiAuthFilter');
+Route::filter('ext_api', 'Bento\Filter\ExtApiFilter');
 
 
 /*

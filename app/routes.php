@@ -86,7 +86,6 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
  ****************************************************************************
  */
 Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), function() {
-#Route::group(array('namespace' => 'Bento\Ctrl'), function() {
         
     ## /order routes
     #Route::post('order/phase1', 'OrderCtrl@phase1');
@@ -152,3 +151,20 @@ Route::get('admin/login', function() {
 
 Route::controller('admin', 'Bento\Admin\Ctrl\AdminUserCtrl');
 /** /End Admin Routes */
+
+
+
+/****************************************************************************
+ * EXTERNAL API: A secured API for vendors, etc.
+ ****************************************************************************
+ * 
+ * prefix => extapi: All routes accessed through /extapi/{...}
+ * before => ext_api: Calling the external API filter on all routes.
+ */
+Route::group(array('prefix' => 'extapi', 'before' => 'ext_api', 'namespace' => 'Bento\ExtApi\Ctrl'), function() {
+    
+    Route::get('dish/{id}', 'DishCtrl@getIndex');
+    
+    Route::controller('dish', 'DishCtrl');
+    
+}); // /End protected admin rotes
