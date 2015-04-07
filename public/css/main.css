@@ -50,6 +50,10 @@ Everything Else
     font-weight: bold;
 }
 
+hr.hr-bento {
+    border-top: 1px solid #B1BB40;
+}
+
 
 /* Sticky footer styles
 -------------------------------------------------- */

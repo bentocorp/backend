@@ -24,7 +24,17 @@ CRUD Dish
         {{ Form::label('image1', 'CDN Image URL', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::text('image1', null, array('class' => 'form-control')) }}</div>
     </div>
+    <div>CDN Image:</div>
     <div class="form-group"><img src="{{{@$dish->image1}}}"></div>
+    
+    <hr class="hr-bento">
+    
+    <div class="form-group">
+        {{ Form::label('email_image1', 'CDN Email Image URL', array('class' => 'col-sm-2 control-label')) }}
+        <div class="col-sm-5">{{ Form::text('email_image1', null, array('class' => 'form-control')) }}</div>
+    </div>
+    <div>CDN Email Image:</div>
+    <div class="form-group"><img src="{{{@$dish->email_image1}}}"></div>
     
     <div class="form-group">
         {{ Form::label('name', 'Dish Name', array('class' => 'col-sm-2 control-label')) }}
