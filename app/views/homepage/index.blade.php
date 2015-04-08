@@ -11,6 +11,7 @@
     <!-- <link rel="icon" type="image/png" href="favicon.png"> -->
     <link rel="stylesheet" href="//d3q6uu7asevdsg.cloudfront.net/1.2/css/link_texting.min.css">
     <link rel="stylesheet" href="/site/css/bootstrap.css">
+    <link rel="stylesheet" href="/site/css/main.css">
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,700,600,400' rel='stylesheet' type='text/css'>
 
     <!-- Facebook Conversion Code for Key Page Views - Bento Ad Account 1 -->
@@ -39,7 +40,10 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#">Home</a></li>
                     <li><a href="https://itunes.apple.com/us/app/bento-asian-food-delivered/id963634117?ls=1&mt=8">Download Now</a></li>
-                    <li class="twitter"><a href="https://twitter.com/share" class="twitter-share-button" data-via="sortino">Tweet</a></li>
+                    <li class="twitter">
+                        <a href="https://twitter.com/bento" class="twitter-follow-button" data-show-count="false">Follow @bento</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                    </li>
                     <li class="facebook"><div class="fb-like" data-href="https://www.facebook.com/mybentonow/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div></li>
                 </ul>
             </div>
@@ -153,7 +157,6 @@
     <!-- <script src="/site/js/bootstrap.min.js"></script> -->
     <!-- <script type="text/javascript" src="//d3q6uu7asevdsg.cloudfront.net/1.2/js/link_texting.min.js"></script> -->
     <script src="/site/js/bootstrap-formhelpers.js"></script>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
     <div id="fb-root"></div>
     
