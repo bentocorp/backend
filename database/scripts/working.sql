@@ -128,5 +128,57 @@ select count(*) from CustomerBentoBox where fk_Order in (
 select count(*) from CustomerBentoBox where created_at >= '2015-03-23';
 
 
+# -----
+# how hard is it to see if anyone who used the 'thanksbento646' code ordered again?
+select count(*) from CouponRedemption where fk_Coupon = 'thanksbento646';
+select o.fk_User, u.firstname, u.lastname
+	,count(*) as num # remove to count orders
+from `Order` o
+left join User u on (u.pk_User = o.fk_User)
+where fk_User in (select fk_User from CouponRedemption where fk_Coupon = 'thanksbento646')
+group by fk_User # remove to count orders
+order by num desc
+;
+
+
+# ------------------------------------------------------ 
+# Customer Loyalty Reports
+
+
+# -- Find the customers
+select u.*,
+	(select count(*) from `Order` o where o.fk_User = u.pk_User) as num_orders
+from User u
+where (select count(*) from `Order` o where o.fk_User = u.pk_User) > 1
+;
+
+# Get the percent
+select (select count(*) from (
+	select u.*,
+		(select count(*) from `Order` o where o.fk_User = u.pk_User) as num_orders
+	from User u
+	where (select count(*) from `Order` o where o.fk_User = u.pk_User) > 1
+) t) / (select count(*) from User) * 100 
+as percent_users_repeat_order
+;
+
+# Get volume counts
+select 
+	(select count(*) from `Order` o where o.fk_User = u.pk_User) as num_orders,
+    count(*) as count
+from User u
+where (select count(*) from `Order` o where o.fk_User = u.pk_User) > 1
+group by num_orders
+;
+
+
+## -- Find the orders
+
+
+
+
+
+
+
 
 

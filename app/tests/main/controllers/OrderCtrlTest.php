@@ -46,14 +46,39 @@ class OrderCtrlTest extends TestCase {
         // Given an order from an authorized user, with no payment specified and none on file,
         $parameters = array(
             "data" =>
-                '"OrderItems": [
-                    {
-                        "item_type": "CustomerBentoBox",
-                        "items": [
-                            {"id": 1,  "type": "main"}, 
-                            {"id": 2,  "type": "side1"},
-                        ]
-                    }',
+                '{
+                    "OrderItems": [
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "items": [
+                                {
+                                    "id": 1,
+                                    "type": "main"
+                                },
+                                {
+                                    "id": 2,
+                                    "type": "side1"
+                                }
+                            ]
+                        }
+                    ],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "1111",
+                            "street": "Kearny st.",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94133"
+                        },
+                        "coords": {
+                            "lat": "37.798220",
+                            "long": "-122.405606"
+                        },
+                        "tax_cents": 137,
+                        "tip_cents": 200,
+                        "total_cents": "50"
+                    }
+                }',
             "api_token" => "456"
         );
                         
@@ -86,7 +111,23 @@ class OrderCtrlTest extends TestCase {
                                 {"id": 2, "type": "side1"}
                             ]
                         }
-                    ]
+                    ],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "1111",
+                            "street": "Kearny st.",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94133"
+                        },
+                        "coords": {
+                            "lat": "37.798220",
+                            "long": "-122.405606"
+                        },
+                        "tax_cents": 137,
+                        "tip_cents": 200,
+                        "total_cents": "50"
+                    }
                 }'
                 ,
             "api_token" => "123"
@@ -334,7 +375,7 @@ class OrderCtrlTest extends TestCase {
     }
     
     
-    public function testCanOrderWithZeroAmount() 
+    public function testUserWithSavedStripeInfoCanOrderWithZeroAmount() 
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
         $parameters = array(
@@ -383,6 +424,105 @@ class OrderCtrlTest extends TestCase {
         
         // Then I get ok
         $this->assertResponseStatus(200);
+    }
+    
+    
+    public function testUserWithoutSavedStripeInfoCanOrderWithZeroAmount() 
+    {
+        // Given an order from an authorized user who does NOT have a Stripe card on file with us,
+        $parameters = array(
+            "data" =>
+                '{
+                    "OrderItems": [
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        }
+                    ],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "1111",
+                            "street": "Kearny st.",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94133"
+                        },
+                        "coords": {
+                            "lat": "37.798220",
+                            "long": "-122.405606"
+                        },
+                        "tax_cents": 137,
+                        "tip_cents": 200,
+                        "total_cents": "000"
+                    },
+                    "Stripe": {
+                        "stripeToken": NULL
+                    }
+                }'
+                ,
+            "api_token" => "789"
+        );
+        
+        // and enough inventory for the order,
+        DB::table('LiveInventory')->truncate();
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(1, 100));
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(2, 100));
+                
+        // When I attempt to order
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+    }
+    
+    
+    public function testCantOrderWithUnder50Cents() 
+    {
+        // Given an order from an authorized user who does NOT have a Stripe card on file with us,
+        $parameters = array(
+            "data" =>
+                '{
+                    "OrderItems": [
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        }
+                    ],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "1111",
+                            "street": "Kearny st.",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94133"
+                        },
+                        "coords": {
+                            "lat": "37.798220",
+                            "long": "-122.405606"
+                        },
+                        "tax_cents": 000,
+                        "tip_cents": 000,
+                        "total_cents": "049"
+                    },
+                    "Stripe": {
+                        "stripeToken": NULL
+                    }
+                }'
+                ,
+            "api_token" => "789"
+        );
+                        
+        // When I attempt to order
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get an error
+        $this->assertResponseStatus(400);
     }
 
     

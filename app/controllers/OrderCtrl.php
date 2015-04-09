@@ -192,9 +192,20 @@ class OrderCtrl extends \BaseController {
         // Get the User
         $user = $this->user;
         
+        $processPayment = true;
+                
+        // Reject API call if amount is less than 50 cents, otherwise Stripe denies the charge.
+        if ($data->OrderDetails->total_cents > 0 && $data->OrderDetails->total_cents < 50)
+            return Response::json(
+                    array("error" => "The amount must be at least $0.50."), 
+                    400);
+
+        // Don't process a $0 payment in the backend / with Stripe
+        if ($data->OrderDetails->total_cents == 0)
+            $processPayment = false;
         
         // If no Stripe token, AND no saved User data, error.
-        if ($user->stripe_customer_obj == NULL && !$this->hasStripeToken($data)) {
+        if ($user->stripe_customer_obj == NULL && !$this->hasStripeToken($data) && $processPayment) {
             return Response::json(
                     array("error" => "No payment specified, and no payment on file."), 
                     402);
@@ -221,8 +232,8 @@ class OrderCtrl extends \BaseController {
         
         // ** Process payment
         
-        // Only process if > than 50 cents, otherwise Stripe denies the charge (you cheapo)
-        if ($data->OrderDetails->total_cents > .50) {
+        // Only process if > than 50 cents
+        if ($processPayment) {
             
             // A card token takes priority. This way a user can always 
             // change their card on file. And at this point in execution, we know they have one
