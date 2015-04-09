@@ -127,10 +127,11 @@ select count(*) from CustomerBentoBox where fk_Order in (
 # Count bento boxes by day 2
 select count(*) from CustomerBentoBox where created_at >= '2015-03-23';
 
+# count redemptions of a coupon
+select count(*) from CouponRedemption where fk_Coupon = 'thanksbento646';
 
 # -----
 # how hard is it to see if anyone who used the 'thanksbento646' code ordered again?
-select count(*) from CouponRedemption where fk_Coupon = 'thanksbento646';
 select o.fk_User, u.firstname, u.lastname
 	,count(*) as num # remove to count orders
 from `Order` o
