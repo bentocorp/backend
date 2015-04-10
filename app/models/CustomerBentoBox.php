@@ -41,11 +41,11 @@ class CustomerBentoBox extends \Eloquent {
         $sql = "
             select 
                o.pk_Order, o.created_at, u.email, 
-               d1.`name` as main_name,
-               d2.`name` as side1_name,
-               d3.`name` as side2_name,
-               d4.`name` as side3_name,
-               d5.`name` as side4_name
+               d1.`name` as main_name,  d1.pk_Dish as main_id,
+               d2.`name` as side1_name, d2.pk_Dish as side1_id,
+               d3.`name` as side2_name, d3.pk_Dish as side2_id,
+               d4.`name` as side3_name, d4.pk_Dish as side3_id,
+               d5.`name` as side4_name,  d5.pk_Dish as side4_id
             from CustomerBentoBox cbb
             left join Dish d1 on (cbb.fk_main = d1.pk_Dish)
             left join Dish d2 on (cbb.fk_side1 = d2.pk_Dish)
