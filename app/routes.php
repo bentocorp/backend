@@ -167,4 +167,6 @@ Route::group(array('prefix' => 'extapi', 'before' => 'ext_api', 'namespace' => '
     
     Route::controller('dish', 'DishCtrl');
     
+    Route::controller('reports/survey', 'Reports\SurveyCtrl');
+    
 }); // /End protected admin rotes

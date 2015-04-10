@@ -142,9 +142,9 @@ order by num desc
 ;
 
 
-# ------------------------------------------------------ 
+# ------------------------------------------------------------------------------------------- 
 # Customer Loyalty Reports
-
+# ------------------------------------------------------------------------------------------- 
 
 # -- Find the customers
 select u.*,
@@ -174,6 +174,30 @@ group by num_orders
 
 
 ## -- Find the orders
+
+# ------------------------------------------------------------------------------------------- 
+# ORDER REPORTS
+# ------------------------------------------------------------------------------------------- 
+
+# 1. Order Details
+call bento.Report_OrderDetails();
+
+# 2. Order Summary
+select
+	o.pk_Order, o.fk_User as 'Customer Id',
+    concat(u.firstname, ' ', u.lastname) as 'Customer Name',
+    u.email,
+	o.created_at as order_created_at,
+	o.street, o.city, o.state, o.zip,
+	os.`status`,
+    o.tax,
+    o.tip,
+    o.amount as 'Total'
+from `Order` o
+left join OrderStatus os on (o.pk_Order = os.fk_Order)
+left join User u on (o.fk_User = u.pk_User)
+ORDER BY order_created_at ASC;
+
 
 
 

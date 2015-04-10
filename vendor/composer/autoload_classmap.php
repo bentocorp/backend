@@ -52,6 +52,7 @@ return array(
     'Bento\\Drivers\\DriverMgr' => $baseDir . '/app/core/drivers/DriverMgr.php',
     'Bento\\Drivers\\DriverMgrSvc' => $baseDir . '/app/core/drivers/DriverMgrSvc.php',
     'Bento\\ExtApi\\Ctrl\\DishCtrl' => $baseDir . '/app/controllers/extapi/DishCtrl.php',
+    'Bento\\ExtApi\\Ctrl\\Reports\\SurveyCtrl' => $baseDir . '/app/controllers/extapi/reports/SurveyCtrl.php',
     'Bento\\Facades\\FacebookAuth' => $baseDir . '/app/facades/FacebookAuthFacade.php',
     'Bento\\Facades\\MainAuth' => $baseDir . '/app/facades/MainAuthFacade.php',
     'Bento\\Facades\\StripeMgr' => $baseDir . '/app/facades/StripeMgrFacade.php',
