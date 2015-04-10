@@ -134,14 +134,20 @@ class TrakSvc {
 
 
          */
+        
+        $number = $order->number ? $order->number : '0';
+        $street = $order->street ? $order->street : '0';
+        $city = $order->city ? $order->city : '0';
+        $state = $order->state ? $order->state : '0';
+        
         $payload = '
             {
                 "address": {
-                    "number":"'.$order->number.'",
-                    "street":"'.$order->street.'",
+                    "number":"'.$number.'",
+                    "street":"'.$street.'",
                     "apartment":"",
-                    "city":"'.$order->city.'",
-                    "state":"'.$order->state.'",
+                    "city":"'.$city.'",
+                    "state":"'.$state.'",
                     "country":"USA"
                 },
                 "location": ['.$order->long.', '.$order->lat.']
