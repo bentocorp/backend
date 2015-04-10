@@ -358,8 +358,9 @@ class OrderCtrl extends \BaseController {
                 // Create a Customer
                 $customer = Stripe_Customer::create(array(
                   "card" => $token,
-                  "description" => $user->email)
-                );
+                  "description" => $user->email,
+                  "email" => $user->email
+                ));
 
                 // If ok (no exception thrown), Save the customer ID in our database so we can use it later
                 $user->stripe_customer_obj = $customer;
