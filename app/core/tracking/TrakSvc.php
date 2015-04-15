@@ -12,6 +12,7 @@ class TrakSvc {
     
     
     public function __construct() {
+        
         $this->apiUrl = $_ENV['Trak_API'];
         $this->apiKey = $_ENV['Trak_key'];
         $this->organization = $_ENV['Trak_organization'];
@@ -57,7 +58,7 @@ class TrakSvc {
         foreach ($bentoBoxes as $box) {
 
             $orderStr .= "BENTO $boxCount of $n: \\n ===== \\n";
-            $orderStr .= "$box->main_name - $box->main_label \\n";
+            $orderStr .= "$box->main_name  - $box->main_label \\n";
             $orderStr .= "$box->side1_name - $box->side1_label \\n"; 
             $orderStr .= "$box->side2_name - $box->side2_label \\n";
             $orderStr .= "$box->side3_name - $box->side3_label \\n";
@@ -79,16 +80,20 @@ class TrakSvc {
         
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_USERPWD, $this->apiKey . ":" . '');
-        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        #curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         
         $response = curl_exec($ch);
+        $info = curl_getinfo($ch);
         curl_close($ch);
         #echo $response; die(); #0
         
-        return $response;
+        $responseAr = array('response' => $response, 'info' => $info, 'payload' => $payload);
+        
+        return $responseAr;
     }
     
     
@@ -157,7 +162,7 @@ class TrakSvc {
         $ch = curl_init($url);
         #curl_setopt($ch, CURLOPT_HEADER, 1); #0
         curl_setopt($ch, CURLOPT_USERPWD, $this->apiKey . ":" . '');
-        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -194,7 +199,7 @@ class TrakSvc {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_USERPWD, $this->apiKey . ":" . '');
         #curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -232,7 +237,7 @@ class TrakSvc {
                 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_USERPWD, $this->apiKey . ":" . '');
-        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         
         $response = curl_exec($ch);
@@ -244,6 +249,7 @@ class TrakSvc {
         #var_dump($response); die();
         
         return $response2;
+        #return NULL; #0
     }
         
 }

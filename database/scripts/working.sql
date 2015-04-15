@@ -201,6 +201,19 @@ ORDER BY order_created_at ASC;
 
 
 
+#tmp 1
+ALTER TABLE `bento`.`OrderStatus` 
+ADD COLUMN `trak_status` VARCHAR(10) NULL AFTER `status`,
+ADD COLUMN `trak_error_response` TEXT NULL AFTER `trak_status`;
+
+ALTER TABLE `bento`.`OrderStatusLog` 
+CHANGE COLUMN `pk_OrderStatusEvent` `pk_OrderStatusLog` INT(11) NOT NULL AUTO_INCREMENT ,
+ADD COLUMN `trak_status` VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT NULL AFTER `status`,
+ADD COLUMN `trak_error_payload` TEXT NULL AFTER `trak_status`,
+ADD COLUMN `trak_error_response` TEXT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT NULL AFTER `trak_error_payload`;
+
+ALTER TABLE `bento`.`OrderStatus` 
+ADD COLUMN `trak_error_payload` TEXT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT NULL AFTER `trak_status`;
 
 
 

@@ -465,15 +465,43 @@ class OrderCtrl extends \BaseController {
         // Soft-delete pending order
         $this->pendingOrder->delete();
         
-        // --- Do something stupidly expensive until we can fix it (for conf. email)
+        // --- Do something stupidly expensive until we can fix it 
+        /* The issue was that we didn't have the *name* of the item, so we had
+         * to then perform yet another DB lookup. This was subsequently fixed in the order API
+         * request sent by Ri, on request of Vincent. However, the fix has not been implemented in the code yet.
+         * 
+         * Given the fact that we HAVE to do this lookup in order to get the `label` 
+         * (as that can't be sent through to the API, [unless we send it as part of the dish info]),
+         * I thought that it made sense to wait to fix this until it becomes a problem due to scale, as
+         * at that point, we might as well just switch to an async queue architecture rather than wasting
+         * time with this sort of micro-optimization.
+         */
         $bentoBoxes = Orders::getBentoBoxesByOrder($order->pk_Order); 
-        
+                
         // Put into Trak
-        $response = Trak::addTask($order, $orderJson, $bentoBoxes);
-        #Trak::test();
+        $trkResponse = Trak::addTask($order, $orderJson, $bentoBoxes);
+        #Trak::test(); #0
+        #print_r($trkResponse); die(); #0
         
+        // Log the Trak (Onfleet) response, if it was bad
+        $trkStatus = $trkResponse['info']['http_code'];
+        
+        // Trak worked, it's ok
+        if ($trkStatus == 200) {
+            $orderStatus->trak_status = 200;
+            $orderStatus->save();
+        }
+        // Trak failed, log some errors
+        else {
+            $orderStatus->trak_status = $trkStatus;
+            $orderStatus->trak_error_payload = $trkResponse['payload'];
+            $orderStatus->trak_error_response = $trkResponse['response'];
+            $orderStatus->save();
+        }
+       
         
         // Send an order confirmation email
+        
         Mail::send('emails.transactional.order_confirmation', array(
             'order' => $order, 
             'orderJson' => $orderJson, 
