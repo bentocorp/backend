@@ -18,7 +18,7 @@ use Bento\Admin\Model\Orders;
  
   <ol style="padding-left:0; margin-left:5px;">
     <li>Take a photo of the inside of your Bento when it arrives.</li>
-    <li>Share it on social media. Tag @Bento on Twitter and Facebook or @mybentonow on Instagram + use the hashtag #BentoBrag.</li>
+    <li>Share it on social media. Tag @Bento on Twitter, @mybentonow on Instagram, or post to our wall on Facebook. Be sure to use the hashtag #BentoBrag!</li>
     <li>We'll contact you through social media to give you your code!</li>
   </ol>
   
