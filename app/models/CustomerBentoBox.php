@@ -40,7 +40,7 @@ class CustomerBentoBox extends \Eloquent {
         
         $sql = "
             select 
-               o.pk_Order, o.created_at, u.email, 
+               o.pk_Order, cbb.pk_CustomerBentoBox, o.created_at, u.email, 
                d1.`name` as main_name,  d1.pk_Dish as main_id,
                d2.`name` as side1_name, d2.pk_Dish as side1_id,
                d3.`name` as side2_name, d3.pk_Dish as side2_id,

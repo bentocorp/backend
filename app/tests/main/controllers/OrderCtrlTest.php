@@ -318,39 +318,42 @@ class OrderCtrlTest extends TestCase {
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
         // AND an address with missing information
+        
+        $data = <<<DATA
+{
+    "OrderItems": [
+        {
+            "item_type": "CustomerBentoBox",
+            "items": [
+                {"id": 1, "type": "main", "name":"Soba Noodles with \"Chick'n\""},
+                {"id": 2, "type": "side1", "name":"Soba Noodles with \"Chick'n\""}
+            ]
+        }
+    ],
+    "OrderDetails": {
+        "address": {
+            "number": "",
+            "street": "Kearny st.",
+            "city": "",
+            "state": "CA",
+            "zip": "94199"
+        },
+        "coords": {
+            "lat": "37.798220",
+            "long": "-122.405606"
+        },
+        "tax_cents": 137,
+        "tip_cents": 200,
+        "total_cents": "1537"
+    },
+    "Stripe": {
+        "stripeToken": NULL
+    }
+}      
+DATA;
+        
         $parameters = array(
-            "data" =>
-                '{
-                    "OrderItems": [
-                        {
-                            "item_type": "CustomerBentoBox",
-                            "items": [
-                                {"id": 1, "type": "main"},
-                                {"id": 2, "type": "side1"}
-                            ]
-                        }
-                    ],
-                    "OrderDetails": {
-                        "address": {
-                            "number": "",
-                            "street": "Kearny st.",
-                            "city": "",
-                            "state": "CA",
-                            "zip": "94199"
-                        },
-                        "coords": {
-                            "lat": "37.798220",
-                            "long": "-122.405606"
-                        },
-                        "tax_cents": 137,
-                        "tip_cents": 200,
-                        "total_cents": "1537"
-                    },
-                    "Stripe": {
-                        "stripeToken": NULL
-                    }
-                }'
-                ,
+            "data" => $data,
             "api_token" => "123"
         );
         
