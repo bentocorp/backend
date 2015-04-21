@@ -36,6 +36,23 @@ class TrakSvc {
     }
     
     
+    /**
+     * Encode a string for Trak
+     * @param string $str
+     * @return string Encoded string.
+     */
+    private function encodeStr($str) {
+        
+        // "Eggplant" results in "\"Eggplant\""
+        $str2 = json_encode($str);
+        
+        // Remove the outer quotes
+        $n = strlen($str2);
+        
+        return substr($str2, 1, $n-2);
+    }
+    
+    
     public function addTask($order, $orderJson, $bentoBoxes) {
         
         // Add destination first
@@ -57,12 +74,14 @@ class TrakSvc {
 
         foreach ($bentoBoxes as $box) {
 
+            $main_name = $this->encodeStr($box->main_name);
+            
             $orderStr .= "BENTO $boxCount of $n: \\n ===== \\n";
-            $orderStr .= "$box->main_name  - $box->main_label \\n";
-            $orderStr .= "$box->side1_name - $box->side1_label \\n"; 
-            $orderStr .= "$box->side2_name - $box->side2_label \\n";
-            $orderStr .= "$box->side3_name - $box->side3_label \\n";
-            $orderStr .= "$box->side4_name - $box->side4_label \\n ===== \\n";
+            $orderStr .= "$box->main_label - $main_name \\n";
+            $orderStr .= "$box->side1_label - $box->side1_name \\n"; 
+            $orderStr .= "$box->side2_label - $box->side2_name \\n";
+            $orderStr .= "$box->side3_label - $box->side3_name \\n";
+            $orderStr .= "$box->side4_label - $box->side4_name \\n ===== \\n";
             
             $boxCount++;
         }
