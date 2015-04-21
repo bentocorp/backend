@@ -14,17 +14,7 @@ use Bento\Admin\Model\Orders;
   Enjoy your meal, and please feel free to reply directly to this email with any feedback you may have.<br>
   <br>
   =======<br>
-  Want 50% off your next Bento? Tonight and tomorrow ONLY:<br>
- 
-  <ol style="padding-left:0; margin-left:5px;">
-    <li>Take a photo of the inside of your Bento when it arrives.</li>
-    <li>Share it on social media. Tag @Bento on Twitter, @mybentonow on Instagram, or post to our wall on Facebook. Be sure to use the hashtag #BentoBrag!</li>
-    <li>We'll contact you through social media to give you your code!</li>
-  </ol>
-  
-  ------ <br>
-  <br>
-  Give your friends $5 off their next Bento! Use your code: <b>{{$user->coupon_code}}</b>.<br>
+  Give your friends $5 off their next Bento! Use your code: <b>{{$user->coupon_code}}</b>. It works once for you too.<br>
   =======
 </p>
 
