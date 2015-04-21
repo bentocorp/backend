@@ -12,7 +12,7 @@ class FacebookAuthServiceProvider extends ServiceProvider {
     {
         $this->app->singleton('FacebookAuth', function()
         {
-            return new FacebookAuth;
+            return new FacebookAuthSvc;
         });
     }
 

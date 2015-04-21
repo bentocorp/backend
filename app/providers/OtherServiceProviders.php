@@ -14,6 +14,11 @@ class OtherServiceProviders extends ServiceProvider {
         {
             return new \Bento\Drivers\DriverMgrSvc;
         });
+        
+        $this->app->singleton('Bento', function()
+        {
+            return new \Bento\BentoSvc;
+        });
     }
 
 }

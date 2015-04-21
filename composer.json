@@ -24,7 +24,6 @@
 			"app/filters",
             "app/exceptions",
             "app/core",
-            "app/facades",
             "app/providers"
 		]
 	},

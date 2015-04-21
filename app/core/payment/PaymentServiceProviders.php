@@ -12,7 +12,7 @@ class PaymentServiceProviders extends ServiceProvider {
     {
         $this->app->singleton('StripeMgr', function()
         {
-            return new StripeMgr;
+            return new StripeMgrSvc;
         });
     }
 

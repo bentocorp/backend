@@ -1,7 +1,5 @@
 <?php
 
-#use Bento\Facades\FacebookAuth;
-
 
 class UserCtrlTest extends TestCase {
 

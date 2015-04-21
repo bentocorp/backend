@@ -12,7 +12,7 @@ class MainAuthServiceProvider extends ServiceProvider {
     {
         $this->app->singleton('MainAuth', function()
         {
-            return new MainAuth;
+            return new MainAuthSvc;
         });
     }
 

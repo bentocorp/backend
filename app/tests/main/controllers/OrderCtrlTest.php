@@ -633,6 +633,46 @@ DATA;
         // Then I get an error
         $this->assertResponseStatus(400);
     }
+    
+    
+    public function testOrderFilteringOnBadInput() 
+    {
+        // Given an order from an authorized user who has a Stripe card on file with us,
+        // AND some bad input (a blank order)
+        $parameters = array(
+            "data" =>
+                '{
+                    "OrderItems": [],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "706",
+                            "street": "Buchanan Street",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94102"
+                        },
+                        "coords": {
+                            "lat": "37.798220",
+                            "long": "-122.405606"
+                        },
+                        "tax_cents": 137,
+                        "tip_cents": 200,
+                        "total_cents": "1537"
+                    },
+                    "Stripe": {
+                        "stripeToken": NULL
+                    }
+                }'
+                ,
+            "api_token" => "123"
+        );
+
+        // When I attempt to order
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get an error
+        $this->assertResponseStatus(400);
+    }
 
     
     

@@ -1,5 +1,5 @@
-<?php
-namespace Bento\Tracking;
+<?php namespace Bento\Tracking;
+
 
 use User;
 

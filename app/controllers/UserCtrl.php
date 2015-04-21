@@ -2,13 +2,10 @@
 
 namespace Bento\Ctrl;
 
-use Bento\Facades\FacebookAuth;
-use Bento\Facades\MainAuth;
-use Bento\Facades\StripeMgr;
-use Validator;
+use Bento\Auth\FacebookAuth;
+use Bento\Auth\MainAuth;
 use Input;
 use Response;
-use Hash;
 use User;
 
 
