@@ -43,6 +43,9 @@ class TrakSvc {
      */
     private function encodeStr($str) {
         
+        if ($str === NULL || $str == '')
+            return $str;
+        
         // "Eggplant" results in "\"Eggplant\""
         $str2 = json_encode($str);
         
@@ -75,13 +78,17 @@ class TrakSvc {
         foreach ($bentoBoxes as $box) {
 
             $main_name = $this->encodeStr($box->main_name);
+            $side1_name = $this->encodeStr($box->side1_name);
+            $side2_name = $this->encodeStr($box->side2_name);
+            $side3_name = $this->encodeStr($box->side3_name);
+            $side4_name = $this->encodeStr($box->side4_name);
             
             $orderStr .= "BENTO $boxCount of $n: \\n ===== \\n";
             $orderStr .= "$box->main_label - $main_name \\n";
-            $orderStr .= "$box->side1_label - $box->side1_name \\n"; 
-            $orderStr .= "$box->side2_label - $box->side2_name \\n";
-            $orderStr .= "$box->side3_label - $box->side3_name \\n";
-            $orderStr .= "$box->side4_label - $box->side4_name \\n ===== \\n";
+            $orderStr .= "$box->side1_label - $side1_name \\n"; 
+            $orderStr .= "$box->side2_label - $side2_name \\n";
+            $orderStr .= "$box->side3_label - $side3_name \\n";
+            $orderStr .= "$box->side4_label - $side4_name \\n ===== \\n";
             
             $boxCount++;
         }
