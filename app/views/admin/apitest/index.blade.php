@@ -286,6 +286,12 @@ User
         <code>404</code> if api_token not found <br>
         <code>403</code> if no api_token given <br>
       </li>
+      
+      <li><span class="label label-primary">&nbsp;</span> <a href="/user/info">/user/info</a><br>
+        Returns the user's info. You must include the <code>api_token</code> as per usual.<br>
+        <b>return:</b> <br>
+        <code>200</code> if ok <br>
+      </li>
     </ul>
     
     
