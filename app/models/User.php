@@ -73,7 +73,8 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
 
     public static function getUserForLogin($email) {
 
-        $sql = "SELECT pk_User, email, phone, api_token, password, is_admin, stripe_customer_obj
+        $sql = "SELECT pk_User, firstname, lastname, email, phone, coupon_code,
+                    api_token, password, is_admin, stripe_customer_obj
                 FROM User WHERE email = ? AND email IS NOT NULL 
                     and password IS NOT NULL";
 

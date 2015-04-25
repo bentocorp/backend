@@ -102,5 +102,22 @@ class UserCtrl extends \BaseController {
         return Response::json('', 200);
     }
     
+    
+    public function getInfo() {
+        
+        // As this is an authenticated route, if we're here, we already have the user in memory
+        $user = User::get();
+        
+        $return = array(
+            "firstname" => $user->firstname,
+            "lastname" => $user->lastname,
+            "email" => $user->email,
+            "phone" => $user->phone,
+            "coupon_code" => $user->coupon_code,
+        );
+        
+        return Response::json($return, 200);
+    }
+    
         
 }

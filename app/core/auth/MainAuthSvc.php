@@ -101,8 +101,8 @@ class MainAuthSvc implements AuthInterface {
             
             // Good password
             if (Hash::check($data->password, $user->password)) {
-                // Remove password from the return!
-                unset($user->password);
+                // Remove things from the return!
+                unset($user->password, $user->pk_User);
                 
                 // Set new api_token
                 $api_token = $this->makeApiToken($user->email);

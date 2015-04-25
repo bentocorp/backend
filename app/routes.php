@@ -47,7 +47,7 @@ Route::get('/driversignup', function() {
 
 
 /****************************************************************************
- * API: Public Routes
+ * API: [PUBLIC] Routes
  ****************************************************************************
  */
 Route::group(array('namespace' => 'Bento\Ctrl'), function() {
@@ -82,7 +82,7 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
 
 /****************************************************************************
- * API: Authenticated Users Only Routes
+ * API: [PRIVATE] Authenticated Users Only Routes
  ****************************************************************************
  */
 Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), function() {
@@ -94,6 +94,7 @@ Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), functio
     
     ## /user auth routes
     Route::get('user/logout', 'UserCtrl@getLogout');
+    Route::get('user/info', 'UserCtrl@getInfo');
     
     ## /coupon routes
     Route::controller('coupon', 'CouponCtrl');
@@ -155,7 +156,7 @@ Route::controller('admin', 'Bento\Admin\Ctrl\AdminUserCtrl');
 
 
 /****************************************************************************
- * EXTERNAL API: A secured API for vendors, etc.
+ * EXTERNAL API: [PRIVATE] A secured API for vendors, etc.
  ****************************************************************************
  * 
  * prefix => extapi: All routes accessed through /extapi/{...}
