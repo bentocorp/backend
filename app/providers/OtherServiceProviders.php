@@ -17,7 +17,7 @@ class OtherServiceProviders extends ServiceProvider {
         
         $this->app->singleton('Bento', function()
         {
-            return new \Bento\BentoSvc;
+            return new \Bento\app\BentoSvc;
         });
     }
 

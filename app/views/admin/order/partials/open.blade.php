@@ -1,6 +1,9 @@
 <?php
 use Bento\Admin\Model\Orders;
 use Bento\Model\Order;
+use Bento\app\Bento;
+
+try {
 ?>
 
 <h1>Open Orders</h1>
@@ -84,4 +87,13 @@ if (count($openOrders) > 0):
 else:
     echo '<div class="alert alert-info" role="alert">All clear sir. No open orders.</div>';
 endif;
+
+}
+catch(\Exception $e) {
+    Bento::alert($e, '[CRITICAL] DASHBOARD MAIN IS DOWN', '70367898-ef11-40f7-a81c-ad3e3ea8a0ed');
+    echo '<div class="alert alert-danger" role="alert">'
+    . '<b>[CRITICAL ERROR]</b> '
+    . 'The dashboard has encountered an Exception. It may be partially broken. The Admin has been paged!</div>';
+}
+
 ?>

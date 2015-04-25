@@ -111,7 +111,7 @@ Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), functio
 Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
 #Route::group(array('prefix' => 'admin'), function() {
 
-    View::share('user', Session::get('adminUser'));
+    View::share('adminUser', Session::get('adminUser'));
     
     // Admin index
     Route::get('/', function() {

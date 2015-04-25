@@ -8,6 +8,7 @@ use Bento\Model\CustomerBentoBox;
 use Bento\Model\LiveInventory;
 use Bento\Model\Status;
 use Bento\Tracking\Trak;
+use Bento\app\Bento;
 use User;
 use Response;
 use Input;
@@ -77,7 +78,7 @@ class OrderCtrl extends \BaseController {
             $orderItemsLength = count($data->OrderItems);
             
             if ($orderItemsLength <= 0) {
-                #Bento::alert($e);
+                Bento::alert(null, 'OrderItems[] was empty', '14c309c2-1cc6-47e5-93ba-51cddfdd52f1');
                 return Response::json(
                         array("error" => "Something has gone wrong with your order. Bento has been notified."), 
                         400);
@@ -102,7 +103,7 @@ class OrderCtrl extends \BaseController {
             }
         }
         catch(\Exception $e) {
-            #Bento::alert($e);
+            Bento::alert($e, 'Order Data Validation Error', 'd1f8330b-789e-4a6b-86c7-6c027340d8d2');
             return Response::json(array("error" => "Something has gone wrong. Bento has been notified."), 460);
         }
         // -- END DATA VALIDATIONS -- 

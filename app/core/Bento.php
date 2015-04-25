@@ -1,6 +1,6 @@
 <?php
 
-namespace Bento\Bento;
+namespace Bento\app;
 
 
 use Illuminate\Support\Facades\Facade;

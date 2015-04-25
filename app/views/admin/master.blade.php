@@ -45,7 +45,7 @@ $statusClass = Status::getClass();
               <a class="navbar-brand" href="/admin">Bento Admin</a>
             </div>
             <div class="collapse navbar-collapse">
-              <p class="navbar-text navbar-right">{{{ $user->name }}} 
+              <p class="navbar-text navbar-right">{{{ $adminUser->name }}} 
                 (<a href="/admin/logout" class="navbar-link">Logout</a>) 
                 <?php
                   if (Session::has('api_token')) {

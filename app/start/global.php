@@ -1,5 +1,7 @@
 <?php
 
+use Bento\app\Bento;
+
 /*
 |--------------------------------------------------------------------------
 | Register The Laravel Class Loader
@@ -51,14 +53,9 @@ Log::useDailyFiles(storage_path().'/logs/'.$logFile);
 App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
-        
+
         // Send some error emails
-        Mail::send('emails.admin.error_exception', array('e' => $exception, 'user' => User::get()), 
-        function($message)
-        {
-            $env = App::environment();
-            $message->to($_ENV['Mail_EngAlert'], 'Bento App')->subject("[App.{$env}.err]: Uncaught Exception");
-        });
+        Bento::alert($exception);
 });
 
 
