@@ -53,7 +53,7 @@ Route::get('/driversignup', function() {
 Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
     ## PUBLIC /init routes
-    Route::controller('init', 'InitCtrl');
+    Route::get('init/{date?}', 'InitCtrl@getIndex');
     
     ## PUBLIC /menu routes
     Route::get('menu/{date}', 'MenuCtrl@show');

@@ -18,21 +18,33 @@ Status
 <h1>Init & Status</h1>
 
     <h3>GET:</h3>
-    <ul>
-      <li><span class="label label-success">&nbsp;</span> <a href="/init">/init</a><br>
-        &nbsp; Includes calls: 
-            <code>/status/overall</code>,
-            <code>/status/all</code>,
-            <code>/ioscopy</code>, 
-            and <code>/servicearea</code>. Includes other data as well.
-      <li><span class="label label-success">&nbsp;</span> <a href="/status/overall">/status/overall</a><br>
-        &nbsp; { "value": "open" | "closed" | "sold out" }
-      </li>
-      <li><span class="label label-success">&nbsp;</span> <a href="/status/menu">/status/menu</a></li>
-      <li><span class="label label-success">&nbsp;</span> <a href="/status/all">/status/all</a><br>
-        &nbsp; { "menu": [/status/menu array], "overall": "same as /status/overall" }
-      </li>
-    </ul>
+    
+    <p>
+        <span class="label label-success">&nbsp;</span> <a href="/init">/init/{date?}</a><br>
+
+        Includes calls:
+        <ul>
+            <li><code>/status/overall</code>,
+            <li><code>/status/all</code>,
+            <li><code>/ioscopy</code>, 
+            <li>and <code>/servicearea</code>.<br>
+            <li>IF {date} is included, then the keys <code>/menu/{date}</code> and <code>/menu/next/{date}</code> 
+                are added, with calls made to the supplied date. If there is no menu for a call, the value is <code>null</code>.<br>
+            <li>Includes other data as well.
+        </ul>
+    </p>
+    
+    <p>
+      <span class="label label-success">&nbsp;</span> <a href="/status/overall">/status/overall</a><br>
+      &nbsp; { "value": "open" | "closed" | "sold out" }
+    </p>
+
+    <p><span class="label label-success">&nbsp;</span> <a href="/status/menu">/status/menu</a></p>
+      
+    <p>
+      <span class="label label-success">&nbsp;</span> <a href="/status/all">/status/all</a><br>
+      &nbsp; { "menu": [/status/menu array], "overall": "same as /status/overall" }
+    </p>
     
     
 <!--

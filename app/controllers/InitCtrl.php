@@ -13,7 +13,7 @@ class InitCtrl extends \BaseController {
      * 
      * @return json 
      */
-    public function getIndex() {
+    public function getIndex($date = NULL) {
         
         $return = array();
         
@@ -36,6 +36,19 @@ class InitCtrl extends \BaseController {
         $request = Request::create('/servicearea', 'GET');
         $instance = json_decode(Route::dispatch($request)->getContent());
         $return['/servicearea'] = $instance;
+        
+        ## /menu Calls
+        if ($date !== NULL) {
+            // /menu/{date}
+            $request = Request::create("/menu/$date", 'GET');
+            $instance = json_decode(Route::dispatch($request)->getContent());
+            $return['/menu/{date}'] = $instance;
+            
+            // /menu/next/{date}
+            $request = Request::create("/menu/next/$date", 'GET');
+            $instance = json_decode(Route::dispatch($request)->getContent());
+            $return['/menu/next/{date}'] = $instance;
+        }
         
         ## App versions
         $return['ios_min_version'] = '1.0';
