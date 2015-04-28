@@ -95,7 +95,7 @@ $statusClass = Status::getClass();
 
             <h4>Dev</h4>
             <ul class="nav nav-pills nav-stacked">
-              <li role="presentation"><a href="/admin/apitest">API Tests</a></li>
+              <li role="presentation"><a href="/admin/apitest">API Docs/Tests</a></li>
               <li role="presentation"><a href="/admin/misc/ioscopy">iOS Copy</a></li>
               <li role="presentation"><a href="/admin/settings">Settings</a></li>
             </ul>

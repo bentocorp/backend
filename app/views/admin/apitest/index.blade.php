@@ -11,6 +11,32 @@ api_token: {{{Session::get('api_token')}}}
 
 <!--
 ******************************************************************************
+Status
+******************************************************************************
+-->
+<hr>
+<h1>Init & Status</h1>
+
+    <h3>GET:</h3>
+    <ul>
+      <li><span class="label label-success">&nbsp;</span> <a href="/init">/init</a><br>
+        &nbsp; Includes calls: 
+            <code>/status/overall</code>,
+            <code>/status/all</code>,
+            <code>/ioscopy</code>, 
+            and <code>/servicearea</code>. Includes other data as well.
+      <li><span class="label label-success">&nbsp;</span> <a href="/status/overall">/status/overall</a><br>
+        &nbsp; { "value": "open" | "closed" | "sold out" }
+      </li>
+      <li><span class="label label-success">&nbsp;</span> <a href="/status/menu">/status/menu</a></li>
+      <li><span class="label label-success">&nbsp;</span> <a href="/status/all">/status/all</a><br>
+        &nbsp; { "menu": [/status/menu array], "overall": "same as /status/overall" }
+      </li>
+    </ul>
+    
+    
+<!--
+******************************************************************************
 Order
 ******************************************************************************
 -->
@@ -27,7 +53,7 @@ Order
     </p>
     -->
     
-    <br>
+
 
     <!-- <div class="admin-jsonForm"> -->
     <h3><span class="label label-primary">&nbsp;</span> 
@@ -120,27 +146,7 @@ Menu
         return: 200 | 404</li>
     </ul>
 
-    
-<!--
-******************************************************************************
-Status
-******************************************************************************
--->
-<hr>
-<h1>Status</h1>
-
-    <h3>GET:</h3>
-    <ul>
-      <li><span class="label label-success">&nbsp;</span> <a href="/status/overall">/status/overall</a><br>
-        &nbsp; { "value": "open" | "closed" | "sold out" }
-      </li>
-      <li><span class="label label-success">&nbsp;</span> <a href="/status/menu">/status/menu</a></li>
-      <li><span class="label label-success">&nbsp;</span> <a href="/status/all">/status/all</a><br>
-        &nbsp; { "menu": [/status/menu array], "overall": "same as /status/overall" }
-      </li>
-    </ul>
-    
-    
+        
 <!--
 ******************************************************************************
 Misc
