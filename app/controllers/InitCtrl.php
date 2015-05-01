@@ -54,6 +54,24 @@ class InitCtrl extends \BaseController {
         $return['ios_min_version'] = '1.0';
         $return['android_min_version'] = '1.0';
         
+        ## Menu (Breakfast/Lunch/Dinner) Times
+        $times = array(
+            "tzName" => "America/Los_Angeles",
+            
+            "2" => array(
+                "key" => "2",
+                "name" => "lunch",
+                "startTime" => "11:30:00",
+                ),
+            
+            "3" => array(
+                "key" => "3",
+                "name" => "dinner",
+                "startTime" => "16:30:00",
+                ),
+        );
+        $return['times'] = $times;
+        
         return Response::json($return);
     }
     
