@@ -14,7 +14,7 @@
 // Index
 Route::get('/', function() {
     #return View::make('homepage.index');
-    return Redirect::away('https://bentonow2.com');
+    return Redirect::away('https://bentonow.com');
 });
 
 // AWS Health check
