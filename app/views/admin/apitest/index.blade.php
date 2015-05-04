@@ -27,7 +27,7 @@ Status
             <li><code>/status/overall</code>,
             <li><code>/status/all</code>,
             <li><code>/ioscopy</code>, 
-            <li>and <code>/servicearea</code>.<br>
+            <li>and <a href="/servicearea"><code>/servicearea</code></a>.<br>
             <li>IF {date} is included, then the keys <code>/menu/{date}</code> and <code>/menu/next/{date}</code> 
                 are added, with calls made to the supplied date. If there is no menu for a call, the value is <code>null</code>.<br>
             <li>Includes other data as well.

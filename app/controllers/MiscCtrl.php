@@ -5,7 +5,7 @@ namespace Bento\Ctrl;
 #use Bento\Admin\Model\Misc;
 use DB;
 use Response;
-use Bento\Admin\Model\Settings;
+#use Bento\Admin\Model\Settings;
 
 
 class MiscCtrl extends \BaseController {
@@ -20,9 +20,15 @@ class MiscCtrl extends \BaseController {
     
     public function getServicearea() {
         
-        $serviceArea = Settings::find('serviceArea');
+        $serviceArea = DB::select('select * from settings where `key` in (?,?)', array('serviceArea_lunch', 'serviceArea_dinner'));
         
-        return Response::json($serviceArea);
+        $serviceAreaAr = array();
+        
+        foreach ($serviceArea as $row) {
+            $serviceAreaAr[$row->key] = $row;
+        }
+        
+        return Response::json($serviceAreaAr);
     }
     
     
