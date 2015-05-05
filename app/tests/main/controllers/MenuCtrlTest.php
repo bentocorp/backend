@@ -13,20 +13,21 @@ class MenuCtrlTest extends TestCase {
     public function testGetMenuThatExists()
     {
         // Given a menu that exists
-        $menuDate = '/menu/20150127';
+        $menuDate = '/menu/20140127';
         
         // When I call it
         $crawler = $this->client->request('GET', $menuDate);
 
         // Then I get ok
         $this->assertTrue($this->client->getResponse()->isOk());
+        $this->assertResponseStatus(200);
     }
     
     
     public function testGetMenuThatDoesNotExist()
     {
         // Given a menu that does not exist
-        $menuDate = '/menu/20120101';
+        $menuDate = '/menu/1999-01-01';
         
         // When I call it
         $crawler = $this->client->request('GET', $menuDate);
@@ -36,10 +37,10 @@ class MenuCtrlTest extends TestCase {
     }
     
     
-    public function testGetNextMenu() {
+    public function testGetNextSingleMenu() {
         
         // Given a date
-        $menuDate = '/menu/next/2015-01-08';
+        $menuDate = '/menu/next/2014-01-08';
         
         // When I ask for the next menu
         $response = $this->call('GET', $menuDate);
@@ -49,7 +50,26 @@ class MenuCtrlTest extends TestCase {
         
         // And I get the correct next menu
         $json = json_decode($response->getContent());
-        $this->assertEquals('2015-01-27', $json->Menu->for_date);
+        $this->assertEquals('2014-01-27', $json->dinner->Menu->for_date);
+    }
+    
+    
+    public function testGetNextMultiMenu() {
+        
+        // Given a date
+        $menuDate = '/menu/next/2014-05-04';
+        
+        // When I ask for the next menu
+        $response = $this->call('GET', $menuDate);
+
+        // Then I get ok, 
+        $this->assertResponseStatus(200);
+        
+        // And I get the correct next menu
+        $json = json_decode($response->getContent());
+        
+        $this->assertEquals('2014-05-09', $json->lunch->Menu->for_date);
+        $this->assertEquals('2014-05-09', $json->dinner->Menu->for_date);
     }
 
 }
