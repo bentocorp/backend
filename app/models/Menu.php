@@ -101,8 +101,8 @@ class Menu extends \Eloquent {
         FROM Menu m
         LEFT JOIN MealType mt ON (mt.pk_MealType = m.fk_MealType)
         WHERE m.for_date = (
-                        select for_date from Menu where for_date > ? AND m.published ORDER BY m.for_date ASC LIMIT 1
-            )                 
+                select for_date from Menu m2 where m2.for_date > ? AND m2.published ORDER BY m2.for_date ASC LIMIT 1
+            )               
 SQL;
         
         return self::getMenu($sql, $date, 'next');

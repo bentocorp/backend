@@ -1,3 +1,8 @@
+
+## ##
+## Lunch DB Migrations
+## ##
+
 # MealType table
 CREATE TABLE `MealType` (
   `pk_MealType` int(11) NOT NULL AUTO_INCREMENT,
@@ -9,9 +14,9 @@ CREATE TABLE `MealType` (
 
 
 # Insert MealType data
-INSERT INTO `MealType` (`pk_MealType`,`name`,`order`) VALUES (1,'brunch',1);
-INSERT INTO `MealType` (`pk_MealType`,`name`,`order`) VALUES (2,'lunch',2);
-INSERT INTO `MealType` (`pk_MealType`,`name`,`order`) VALUES (3,'dinner',3);
+INSERT INTO `MealType` (`pk_MealType`,`name`,`order`,`startTime`) VALUES (1,'brunch',1,NULL);
+INSERT INTO `MealType` (`pk_MealType`,`name`,`order`,`startTime`) VALUES (2,'lunch',2,'11:30:00');
+INSERT INTO `MealType` (`pk_MealType`,`name`,`order`,`startTime`) VALUES (3,'dinner',3,'16:30:00');
 
 ## Menu table
 
