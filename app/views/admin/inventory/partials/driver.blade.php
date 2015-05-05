@@ -39,9 +39,8 @@ if (count($currentDrivers) > 0):
         <thead>
           <tr>
             <th>id</th>
-            <th>Name</th>
+            <th>Name / Email</th>
             <th>Phone</th>
-            <th>Email</th>
             <?php
             foreach($invItemKeys as $item) {
                 echo "<th><span title='$item->name'>$item->label</span></th>";
@@ -69,14 +68,13 @@ if (count($currentDrivers) > 0):
                 <tr>
                   <form action="/admin/driver/save-inventory/{{{$row->pk_Driver}}}" method="post">
                     <th scope="row">{{{ $row->pk_Driver }}}</th>
-                    <td>{{{ $row->firstname }}} {{{ $row->lastname }}}</td>
+                    <td>{{{ $row->firstname }}} {{{ $row->lastname }}}<br><small>{{{ $row->email }}}</small></td>
                     <td>{{{ $row->mobile_phone }}}</td>
-                    <td>{{{ $row->email }}}</td>
                     <?php
                     // Now dynamically generate columns for the driver inventory, that we can conveniently
                     // use the same hash order for from the <th> section (so everything lines up).
                     foreach ($invItemKeys as $invItem) { // short names
-                        echo "<td><input type='text' name='{$invItem->pk_Dish}' value='";
+                        echo "<td><input type='number' min='0' name='{$invItem->pk_Dish}' value='";
 
                         // If a menu item is not in driver inventory, the amount is assumed to be 0
                         if ( isset($driverDishes[$invItem->pk_Dish]) )
