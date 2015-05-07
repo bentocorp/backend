@@ -108,7 +108,7 @@ class MenuCtrl extends \BaseController {
         }
         
         return Redirect::back()->with('msg', 
-            array('type' => 'success', 'txt' => "Menu for <b>{$data['for_date']}</b> saved.!"));
+            array('type' => 'success', 'txt' => "Menu for <b>{$data['for_date']}</b> saved."));
     }
     
     
