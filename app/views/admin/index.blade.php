@@ -19,7 +19,7 @@
 
         <form action="/admin/status/mealmode" method="post" style="display:inline;">
             Mode:
-            {{ @Form::select('meal_mode', $mealModesAr, $mealModeId, array('class' => 'form-control', 'style' => 'display:inline; width:auto;')); }}
+            {{ Form::select('meal_mode', $mealModesAr, $mealModeId, array('class' => 'form-control', 'style' => 'display:inline; width:auto;')); }}
             <input class="btn btn-default" type="submit" value="Set Admin Meal Mode">
             <span data-toggle="tooltip" data-placement="top" 
                 title="The purpose of setting the mode is so the dashboard knows which menu to populate inventory from."
