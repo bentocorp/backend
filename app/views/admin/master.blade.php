@@ -1,11 +1,15 @@
 <?php
 
-use Bento\Admin\Model\Status;
+use Bento\core\Status;
 use Bento\Model\Status as ApiStatus;
 
+// Status
 $status = ApiStatus::overall()->value;
-        
 $statusClass = Status::getClass();
+
+// Meal Mode
+$mealMode = Status::getMealMode();
+$mealModeName = $mealMode->name;
 
 ?>
 
@@ -66,7 +70,7 @@ $statusClass = Status::getClass();
         <div class="col-lg-2">
           <div id="sidebar">
                                   
-            <div class="bg-{{$statusClass}} text-{{$statusClass}} status-bar">Status: {{$status}}</div>
+            <div class="bg-{{$statusClass}} text-{{$statusClass}} status-bar">Status: {{$status}} / {{$mealModeName}}</div>
             
             <ul class="nav nav-pills nav-stacked">
               <li role="presentation"><a href="/admin">Dashboard</a></li>
@@ -125,7 +129,7 @@ $statusClass = Status::getClass();
         <div class="container">
           <p class="text-muted">
             &copy; Bento Technology, Inc<br>
-            <small>v 1.0</small>
+            <small>v 1.0.1</small>
           </p>
         </div>
     </footer>
@@ -134,6 +138,13 @@ $statusClass = Status::getClass();
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
+    
+    <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+    </script>
+    
     
   </body>
 </html>

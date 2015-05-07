@@ -50,7 +50,7 @@ class MenuCtrlTest extends TestCase {
         
         // And I get the correct next menu
         $json = json_decode($response->getContent());
-        $this->assertEquals('2014-01-27', $json->dinner->Menu->for_date);
+        $this->assertEquals('2014-01-27', $json->menus->dinner->Menu->for_date);
     }
     
     
@@ -68,8 +68,8 @@ class MenuCtrlTest extends TestCase {
         // And I get the correct next menu
         $json = json_decode($response->getContent());
         
-        $this->assertEquals('2014-05-09', $json->lunch->Menu->for_date);
-        $this->assertEquals('2014-05-09', $json->dinner->Menu->for_date);
+        $this->assertEquals('2014-05-09', $json->menus->lunch->Menu->for_date);
+        $this->assertEquals('2014-05-09', $json->menus->dinner->Menu->for_date);
     }
 
 }

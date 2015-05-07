@@ -15,7 +15,7 @@ if (count($currentDrivers) > 0):
 
     <?php
 
-    if ($menu !== NULL):
+    if ($mealMenu !== NULL):
 
     /*
      * The purpose of all of this hashing is to build dynamic columns based on the menu of the day,
@@ -27,7 +27,7 @@ if (count($currentDrivers) > 0):
     $invItemKeys = array();
 
     // Get everything into a consistent lookup table
-    foreach($menu['MenuItems'] as $inv) {
+    foreach($mealMenu['MenuItems'] as $inv) {
         $invItemKeys[$inv->pk_Dish] = $inv; // Hash it
     }
 

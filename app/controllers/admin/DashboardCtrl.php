@@ -1,11 +1,9 @@
-<?php
+<?php namespace Bento\Admin\Ctrl;
 
-namespace Bento\Admin\Ctrl;
 
-use Bento\Admin\Model\Menu;
 use Bento\Admin\Model\Orders;
 use Bento\Admin\Model\Driver;
-use Bento\Admin\Model\Status;
+use Bento\core\Status;
 use Bento\Model\LiveInventory;
 use Bento\Model\Status as ApiStatus;
 use DB;
@@ -18,12 +16,7 @@ class DashboardCtrl extends \BaseController {
     public function getIndex() {
         
         $data = array();
-        
-        // Get today's menu
-        $date = Menu::getDateForTodaysMenu();
-        $menu = Menu::get($date);
-        $data['menu'] = $menu;
-        
+                
         // Get open orders
         $openOrders = Orders::getOpenOrders();
         $data['openOrders'] = $openOrders;
@@ -56,6 +49,15 @@ class DashboardCtrl extends \BaseController {
         $in = "'closed-text', 'closed-text-latenight', 'sold-out-text', 'sale_price', 'price'";
         $iosCopy = DB::select("SELECT * FROM admin_ios_copy WHERE `key` IN ($in) order by `key` asc", array());
         $data['iosCopy'] = $iosCopy;
+        
+        // Get the meal modes for the dropdown
+        $mealModes = Status::getMealModesForDropdown();
+        $data['mealModesAr'] = $mealModes;
+        
+        // Get the meal mode
+        $mealMode = Status::getMealMode();
+        $mealModeId = $mealMode->pk_MealType;
+        $data['mealModeId'] = $mealModeId;
            
         return View::make('admin.index', $data);
     }

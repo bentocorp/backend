@@ -30,6 +30,7 @@ class Menu extends \Eloquent {
         // Otherwise, query the DB...
 
         $return = array();
+        $return['menus'] = array();
 
         $menus = DB::select($sql, array($date2));
 
@@ -66,7 +67,7 @@ class Menu extends \Eloquent {
             $builtMenu['Menu']->day_text = $dayText;
             
             // Add to return
-            $return[$menu->meal_name] = $builtMenu;
+            $return['menus'][$menu->meal_name] = $builtMenu;
         }
 
         // Now add to cache
@@ -83,10 +84,11 @@ class Menu extends \Eloquent {
 
         // Get the Menu            
         $sql = 'SELECT m.pk_Menu, m.name, m.for_date, m.bgimg, m.menu_type, m.fk_MealType meal_type, 
-                    mt.name meal_name
+                    mt.name meal_name, mt.order meal_order
                 FROM Menu m
                 LEFT JOIN MealType mt ON (mt.pk_MealType = m.fk_MealType)
-                WHERE m.for_date = ? AND m.published';
+                WHERE m.for_date = ? AND m.published 
+                ORDER BY mt.`order` ASC';
 
         return self::getMenu($sql, $date, 'menu');
     }

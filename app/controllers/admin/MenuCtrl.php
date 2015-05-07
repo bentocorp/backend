@@ -15,10 +15,8 @@ class MenuCtrl extends \BaseController {
         
         $data = array();
         
-        // Get today's menu
+        // Menu date
         $date = Menu::getDateForTodaysMenu();
-        $menu = Menu::get($date);
-        $data['menu'] = $menu;
         
         // Get upcoming
         $menuUpcoming = Menu::getRelative($date, '>');

@@ -5,11 +5,28 @@
 
 <div class='alert alert-{{$statusClass}}' role='alert'><b>{{$statusMsg}}</b></div>
 
-<a href="/admin/status/open" onclick="return confirm('Open things up? Make sure we aren\'t on sale!')" class="btn btn-success">Open Us</a>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="/admin/status/closed" onclick="return confirm('Shut it down, shut it all down?')" class="btn btn-danger">Shut it all down</a>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="/admin/status/soldout" onclick="return confirm('Food is all gone?')" class="btn btn-warning">We're sold out</a>
+<div class="clearfix">
+    <div style='float:left;'>
+        <a href="/admin/status/open" onclick="return confirm('Open things up? Make sure we aren\'t on sale!')" class="btn btn-success">Open Us</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/admin/status/closed" onclick="return confirm('Shut it down, shut it all down?')" class="btn btn-danger">Shut it all down</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/admin/status/soldout" onclick="return confirm('Food is all gone?')" class="btn btn-warning">We're sold out</a>
+    </div>
+
+    <div style='float:left;'>
+        &nbsp;&nbsp; // &nbsp;
+
+        <form action="/admin/status/mealmode" method="post" style="display:inline;">
+            Mode:
+            {{ @Form::select('meal_mode', $mealModesAr, $mealModeId, array('class' => 'form-control', 'style' => 'display:inline; width:auto;')); }}
+            <input class="btn btn-default" type="submit" value="Set Admin Meal Mode">
+            <span data-toggle="tooltip" data-placement="top" 
+                title="The purpose of setting the mode is so the dashboard knows which menu to populate inventory from."
+            ><i class="glyphicon glyphicon-question-sign"></i></span>
+        </form>
+    </div>
+</div>
 
 <hr>
 

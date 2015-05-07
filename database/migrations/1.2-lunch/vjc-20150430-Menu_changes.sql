@@ -22,7 +22,7 @@ INSERT INTO `MealType` (`pk_MealType`,`name`,`order`,`startTime`) VALUES (3,'din
 
 # Add menu_type and MealType to the Menu table 
 ALTER TABLE `bento`.`Menu` 
-ADD COLUMN `menu_type` ENUM('Fixed', 'Custom') NULL DEFAULT 'Custom' AFTER `published`,
+ADD COLUMN `menu_type` ENUM('fixed', 'custom') NULL DEFAULT 'Custom' AFTER `published`,
 ADD COLUMN `fk_MealType` INT NULL DEFAULT 3 AFTER `menu_type`;
 
 # Add a unique index that is the for_date, and the MealType
@@ -46,9 +46,9 @@ UPDATE `bento`.`settings` SET `public`='1' WHERE `key`='serviceArea_lunch';
 UPDATE `bento`.`settings` SET `public`='1' WHERE `key`='status';
 UPDATE `bento`.`settings` SET `public`='1' WHERE `key`='tzName';
 
+INSERT INTO `bento`.`settings` (`key`, `value`, `public`) VALUES ('fk_MealType_mode', '2', '0');
 
-
-
+### ^^ Above already run on Dev ^^ ###
 
 
 

@@ -27,7 +27,7 @@ if ($menuList !== NULL): ?>
 
         echo "<tr>";
             echo "<th>$menu->for_date</th>";
-            echo "<td>$menu->fk_MealType</td>";
+            echo "<td>$menu->meal_name</td>";
             echo "<td><a href='/admin/menu/edit/{$menu->pk_Menu}'>$menuName</a></td>";
             echo "<td>$menu->menu_type</td>";
             echo "<td>$menu->created_at</td>";
