@@ -6,7 +6,8 @@
 
 <hr>
 <h3>Service Area KML</h3>
-<p>Format: Four or more tuples, each consisting of floating point values for longitude,latitude,altitude. Space delimited.<br>
+<p>Format: Four or more tuples, each consisting of floating point values for <code>longitude,latitude,altitude</code>. 
+  Space delimited. Self-closing (the first point is the same as the last point).<br>
   Source: https://developers.google.com/kml/documentation/kmlreference#coordinates</p>
 
 <!-- Lunch KML -->

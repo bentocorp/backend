@@ -48,6 +48,8 @@ UPDATE `bento`.`settings` SET `public`='1' WHERE `key`='tzName';
 
 INSERT INTO `bento`.`settings` (`key`, `value`, `public`) VALUES ('fk_MealType_mode', '2', '0');
 
+INSERT INTO `bento`.`settings` (`key`, `value`, `public`) VALUES ('buffer_minutes', '60', '1');
+
 ### ^^ Above already run on Dev ^^ ###
 
 
