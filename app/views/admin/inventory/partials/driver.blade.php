@@ -32,17 +32,19 @@ if (count($currentDrivers) > 0):
     }
     ?>
 
-    <button title="Toggle Dish Names" class="btn btn-default" type="submit" onclick="$('.dinv-item-fullname').toggleClass('hidden')"><i class="glyphicon glyphicon glyphicon-cutlery" aria-hidden="true"></i></button>
+    <button title="Toggle Dish Names" class="btn btn-default" type="submit" onclick="$('.dinv-item-fullname').toggleClass('hidden')"><i class="glyphicon glyphicon-cutlery" aria-hidden="true"></i></button>
+    <button title="Merge Drivers" class="btn btn-default" type="submit" onclick="bt.DInv.merge()" disabled="disabled"><i class="glyphicon glyphicon-random" aria-hidden="true"></i></button>
 
     <table class="table table-striped">
         <thead>
           <tr>
+            <th>&nbsp;</th>
             <th>id</th>
             <th>Name</th>
             <th>Phone</th>
             <th>Email</th>
             <?php
-            // Echo the dish labels
+            // Echo the dish header labels
             $dishColumnStr = '';
             foreach($invItemKeys as $item) {
                 $dishColumnStr .= "<th style='text-align:center;'><span title='$item->name'>$item->label</span><br>"
@@ -71,6 +73,7 @@ if (count($currentDrivers) > 0):
                 ?>
                 <tr>
                   <form action="/admin/driver/save-inventory/{{{$row->pk_Driver}}}" method="post">
+                    <td><input type="checkbox" name="drivers[]"></td>
                     <th scope="row">{{{ $row->pk_Driver }}}</th>
                     <td>{{{ $row->firstname }}} {{{ $row->lastname }}}</td>
                     <td>{{{ $row->mobile_phone }}}</td>
@@ -111,6 +114,7 @@ if (count($currentDrivers) > 0):
         
         <tfoot>
           <tr>
+            <th>&nbsp;</th>
             <th>&nbsp;</th>
             <th>&nbsp;</th>
             <th>&nbsp;</th>
