@@ -30,10 +30,9 @@ if (count($currentDrivers) > 0):
     foreach($menu['MenuItems'] as $inv) {
         $invItemKeys[$inv->pk_Dish] = $inv; // Hash it
     }
-
     ?>
 
-
+    <button title="Toggle Dish Names" class="btn btn-default" type="submit" onclick="$('.inv-item-fullname').toggleClass('hidden')"><i class="glyphicon glyphicon glyphicon-cutlery" aria-hidden="true"></i></button>
 
     <table class="table table-striped">
         <thead>
@@ -43,9 +42,13 @@ if (count($currentDrivers) > 0):
             <th>Phone</th>
             <th>Email</th>
             <?php
+            // Echo the dish labels
+            $dishColumnStr = '';
             foreach($invItemKeys as $item) {
-                echo "<th><span title='$item->name'>$item->label</span></th>";
+                $dishColumnStr .= "<th style='text-align:center;'><span title='$item->name'>$item->label</span><br>"
+                   . "<span class='inv-item-fullname hidden'><small>$item->name</small></span></th>";
             }
+            echo $dishColumnStr;
             ?>
             <th>&nbsp;</th>
           </tr>
@@ -73,19 +76,21 @@ if (count($currentDrivers) > 0):
                     <td>{{{ $row->mobile_phone }}}</td>
                     <td>{{{ $row->email }}}</td>
                     <?php
-                    // Now dynamically generate columns for the driver inventory, that we can conveniently
+                    // Now dynamically generate columns for the driver inventory; we can conveniently
                     // use the same hash order for from the <th> section (so everything lines up).
+                    $inventoryColumnsStr  = '';
                     foreach ($invItemKeys as $invItem) { // short names
-                        echo "<td><input type='number' min='0' name='{$invItem->pk_Dish}' value='";
+                        $inventoryColumnsStr .= "<td style='text-align:center;'><input type='number' min='0' name='{$invItem->pk_Dish}' value='";
 
                         // If a menu item is not in driver inventory, the amount is assumed to be 0
                         if ( isset($driverDishes[$invItem->pk_Dish]) )
-                          echo $driverDishes[$invItem->pk_Dish]->qty;
+                          $inventoryColumnsStr .= $driverDishes[$invItem->pk_Dish]->qty;
                         else
-                          echo "0";
+                          $inventoryColumnsStr .= "0";
 
-                        echo "' class='f_slim-input'></td>";
+                        $inventoryColumnsStr .= "' class='f_slim-input'></td>";
                     }
+                    echo $inventoryColumnsStr;
                     ?>
                     <td><button title="Save" type="submit" class="btn btn-default"><span class="glyphicon glyphicon-save"></span></button></td>
                   </form>
@@ -94,6 +99,17 @@ if (count($currentDrivers) > 0):
             }
             ?>
         </tbody>
+        
+        <tfoot>
+          <tr>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+            <?php echo $dishColumnStr; ?>
+            <th>&nbsp;</th>
+          </tr>
+        </tfoot>
     </table>
 
     <?php
