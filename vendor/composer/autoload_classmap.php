@@ -42,7 +42,7 @@ return array(
     'Bento\\Coupon\\CouponInterface' => $baseDir . '/app/core/coupon/CouponInterface.php',
     'Bento\\Coupon\\CouponTrait' => $baseDir . '/app/core/coupon/CouponTrait.php',
     'Bento\\Coupon\\UserCoupon' => $baseDir . '/app/core/coupon/UserCoupon.php',
-    'Bento\\Ctrl\\BootstrapCtrl' => $baseDir . '/app/controllers/bootstrap/Bootstrap.php',
+    'Bento\\Ctrl\\BootstrapCtrl' => $baseDir . '/app/controllers/bootstrap/BootstrapCtrl.php',
     'Bento\\Ctrl\\CouponCtrl' => $baseDir . '/app/controllers/CouponCtrl.php',
     'Bento\\Ctrl\\InitCtrl' => $baseDir . '/app/controllers/InitCtrl.php',
     'Bento\\Ctrl\\MenuCtrl' => $baseDir . '/app/controllers/MenuCtrl.php',
