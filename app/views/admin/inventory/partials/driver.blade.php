@@ -32,7 +32,7 @@ if (count($currentDrivers) > 0):
     }
     ?>
 
-    <button title="Toggle Dish Names" class="btn btn-default" type="submit" onclick="$('.inv-item-fullname').toggleClass('hidden')"><i class="glyphicon glyphicon glyphicon-cutlery" aria-hidden="true"></i></button>
+    <button title="Toggle Dish Names" class="btn btn-default" type="submit" onclick="$('.dinv-item-fullname').toggleClass('hidden')"><i class="glyphicon glyphicon glyphicon-cutlery" aria-hidden="true"></i></button>
 
     <table class="table table-striped">
         <thead>
@@ -46,7 +46,7 @@ if (count($currentDrivers) > 0):
             $dishColumnStr = '';
             foreach($invItemKeys as $item) {
                 $dishColumnStr .= "<th style='text-align:center;'><span title='$item->name'>$item->label</span><br>"
-                   . "<span class='inv-item-fullname hidden'><small>$item->name</small></span></th>";
+                   . "<span class='dinv-item-fullname hidden'><small>$item->name</small></span></th>";
             }
             echo $dishColumnStr;
             ?>
@@ -79,17 +79,26 @@ if (count($currentDrivers) > 0):
                     // Now dynamically generate columns for the driver inventory; we can conveniently
                     // use the same hash order for from the <th> section (so everything lines up).
                     $inventoryColumnsStr  = '';
+                    
                     foreach ($invItemKeys as $invItem) { // short names
-                        $inventoryColumnsStr .= "<td style='text-align:center;'><input type='number' min='0' name='{$invItem->pk_Dish}' value='";
+                        $inventoryColumnsStr .= "<td style='text-align:center;'><input type='number' min='0' required name='newqty-{$invItem->pk_Dish}' value='";
 
                         // If a menu item is not in driver inventory, the amount is assumed to be 0
-                        if ( isset($driverDishes[$invItem->pk_Dish]) )
-                          $inventoryColumnsStr .= $driverDishes[$invItem->pk_Dish]->qty;
+                        $origQty = 0;
+                        if ( isset($driverDishes[$invItem->pk_Dish]) ) {
+                            $origQty = $driverDishes[$invItem->pk_Dish]->qty;
+                            $inventoryColumnsStr .= $origQty;
+                        }
                         else
-                          $inventoryColumnsStr .= "0";
+                            $inventoryColumnsStr .= "0";
 
-                        $inventoryColumnsStr .= "' class='f_slim-input'></td>";
+                        $inventoryColumnsStr 
+                            .= "' class='f_slim-input dinv-qty-input'><br>"
+                            .  "<span class='dinv-qty-changeinfo small text-muted hidden'>"
+                            .       "<span class='dinv-qty-orig'>$origQty</span> / <span class='dinv-qty-diff'>0</span>"
+                            .  "</span></td>";
                     }
+                    
                     echo $inventoryColumnsStr;
                     ?>
                     <td><button title="Save" type="submit" class="btn btn-default"><span class="glyphicon glyphicon-save"></span></button></td>

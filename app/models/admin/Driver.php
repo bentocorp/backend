@@ -116,12 +116,18 @@ class Driver extends \Eloquent {
             // Now insert new
 
             foreach($data as $key => $val) {
+                
+                // Ignore hidden fields
+                $keyParts = explode('-', $key);
+                if ($keyParts[0] != 'newqty')
+                    continue;
+                
                 $sql3 = "
                 insert into DriverInventory (fk_Driver, fk_item, qty, change_reason)
                 values (?,?,?,?)
                 ";
 
-                DB::insert($sql3, array($pk_Driver, $key, $val, 'admin_update'));
+                DB::insert($sql3, array($pk_Driver, $keyParts[1], $val, 'admin_update'));
             }
         });
         
