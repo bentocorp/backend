@@ -9,6 +9,46 @@ Key: <span class="label label-success">Public</span> <span class="label label-pr
 api_token: {{{Session::get('api_token')}}}
 
 
+
+<!--
+******************************************************************************
+Info
+******************************************************************************
+-->
+<hr>
+<h1>Instructions</h1>
+
+
+<b>The user's <code>api_token</code> must be a key in any secure API request.</b><br>
+  a. /foo/bar/?api_token=789<br>
+  b. POST['api_token'] = '789'<br>
+  <br>
+  
+<b>There are two things that comprise a post request:</b>
+<br>
+1) <code>api_token</code> from above.<br>
+<br>
+2) For a POST with a payload, there needs to be a key named "data" in the post array that contains the JSON for the request.<br>
+<br>
+e.g.:<br>
+
+<pre>
+json = HEREDOC
+{
+    "name": "John J. Smith",
+    "email": "vincent+5@bentonow.com",
+    "phone": "555-123-4567",
+    "password": "somepassword"
+}
+HEREDOC;
+
+POST['data'] = json;
+</pre>
+
+<br>
+The API always looks for the payload to be stored in a request key named "data".<br>
+
+
 <!--
 ******************************************************************************
 Status
