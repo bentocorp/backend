@@ -95,7 +95,7 @@ if (count($currentDrivers) > 0):
                         $inventoryColumnsStr 
                             .= "' class='f_slim-input dinv-qty-input'><br>"
                             .  "<span class='dinv-qty-changeinfo small text-muted hidden'>"
-                            .       "<span class='dinv-qty-orig'>$origQty</span> / <span class='dinv-qty-diff'>0</span>"
+                            .       "<span class='dinv-qty-orig'>$origQty</span> | <span class='dinv-qty-diff'>0</span>"
                             .  "</span></td>";
                     }
                     
