@@ -33,16 +33,15 @@ if (count($currentDrivers) > 0):
     ?>
 
     <button title="Toggle Dish Names" class="btn btn-default" type="submit" onclick="$('.dinv-item-fullname').toggleClass('hidden')"><i class="glyphicon glyphicon-cutlery" aria-hidden="true"></i></button>
-    <button title="Merge Drivers" class="btn btn-default" type="submit" onclick="bt.DInv.merge()" disabled="disabled"><i class="glyphicon glyphicon-random" aria-hidden="true"></i></button>
+    <button id="dinv-btn-merge" title="Merge Drivers" class="btn btn-default" type="submit" onclick="bt.DInv.Merge.do()" disabled="disabled"><i class="glyphicon glyphicon-random" aria-hidden="true"></i></button>
 
-    <table class="table table-striped">
+    <table id="dinv-table" class="table table-striped">
         <thead>
           <tr>
-            <th>&nbsp;</th>
+            <th width="1">&nbsp;</th>
             <th>id</th>
-            <th>Name</th>
+            <th>Name / Email</th>
             <th>Phone</th>
-            <th>Email</th>
             <?php
             // Echo the dish header labels
             $dishColumnStr = '';
@@ -75,9 +74,8 @@ if (count($currentDrivers) > 0):
                   <form action="/admin/driver/save-inventory/{{{$row->pk_Driver}}}" method="post">
                     <td><input type="checkbox" name="drivers[]"></td>
                     <th scope="row">{{{ $row->pk_Driver }}}</th>
-                    <td>{{{ $row->firstname }}} {{{ $row->lastname }}}</td>
+                    <td>{{{ $row->firstname }}} {{{ $row->lastname }}}<br><small>{{{ $row->email }}}</small></td>
                     <td>{{{ $row->mobile_phone }}}</td>
-                    <td>{{{ $row->email }}}</td>
                     <?php
                     // Now dynamically generate columns for the driver inventory; we can conveniently
                     // use the same hash order for from the <th> section (so everything lines up).
@@ -114,7 +112,6 @@ if (count($currentDrivers) > 0):
         
         <tfoot>
           <tr>
-            <th>&nbsp;</th>
             <th>&nbsp;</th>
             <th>&nbsp;</th>
             <th>&nbsp;</th>

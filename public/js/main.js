@@ -44,6 +44,31 @@ bt.DInv = (function() {
 
 
 /***************************************
+ * Driver Inventory Merging
+ * 
+ * @return singleton closure
+ */
+bt.DInv.Merge = (function() {
+    
+    var that = {};
+    
+    that.validateCheckedCount = function() {
+        
+        var n = $("#dinv-table input[name='drivers[]']:checked").length;
+        
+        // Make the Merge button active
+        if (n > 1)
+            $('#dinv-btn-merge').removeAttr('disabled');
+        else
+            $('#dinv-btn-merge').attr('disabled', 'disabled');
+    }
+    
+    return that;
+})();
+
+
+
+/***************************************
  * On document ready
  */
 $(document).ready(function() {
@@ -51,5 +76,8 @@ $(document).ready(function() {
     // Driver quantities, input box
     $('input.dinv-qty-input').attr('autocomplete', 'off');
     $('input.dinv-qty-input').on('keyup blur change', bt.DInv.change);
+    
+    // Driver checkboxes
+    $("input[name='drivers[]']").on('change', bt.DInv.Merge.validateCheckedCount);
   
 });
