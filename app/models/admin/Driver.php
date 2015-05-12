@@ -129,6 +129,20 @@ class Driver extends \Eloquent {
 
                 DB::insert($sql3, array($pk_Driver, $keyParts[1], $val, 'admin_update'));
             }
+            
+            // Zero out other inventories from a merge
+            // The format is x,y,z, with the trailing comma
+            if ($data['zeroArray'] !== '') {
+                $zeroAr = explode(',' , $data['zeroArray']);
+                $last = count($zeroAr)-1;
+                if ($zeroAr[ $last ] == '')
+                    unset($zeroAr[$last]); // Last one is garbage due to trailing comma
+                
+                foreach ($zeroAr as $driverToZero) {
+                    $sql = "update DriverInventory set qty = ? where fk_Driver = ?";
+                    DB::update($sql, array(0, $driverToZero));
+                }
+            }
         });
         
         // Recalculate the LiveInventory

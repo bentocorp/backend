@@ -11,12 +11,38 @@ if (count($currentDrivers) > 0):
 ?>
 
     <p><b>Note:</b> Live Inventory is automatically recalculated <i>every time</i> you
-      manually update the Driver Inventory. <br>This is computationally expensive, so do so wisely!</p>
+      manually update the Driver Inventory. This is computationally expensive, so do so wisely!</p>
 
     <?php
 
     if ($menu !== NULL):
-
+    ?>    
+        
+    <!-- 
+    --- Modal Windows! ---
+    -->
+    
+    <!-- Driver Merge Modal -->
+    <div class="modal fade" id="dinv-win-merge" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title"><i class="glyphicon glyphicon-random" aria-hidden="true"></i> &nbsp Merge Drivers</h4>
+          </div>
+          <div class="modal-body">
+            Which driver should get everything?<br>
+            <select id="dinv-win-merge-select" class="form-control"></select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="bt.DInv.Merge.do()">Merge!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+        
+    <?php
     /*
      * The purpose of all of this hashing is to build dynamic columns based on the menu of the day,
      * and to be able to line up the headers with the driver rows.
@@ -33,7 +59,7 @@ if (count($currentDrivers) > 0):
     ?>
 
     <button title="Toggle Dish Names" class="btn btn-default" type="submit" onclick="$('.dinv-item-fullname').toggleClass('hidden')"><i class="glyphicon glyphicon-cutlery" aria-hidden="true"></i></button>
-    <button id="dinv-btn-merge" title="Merge Drivers" class="btn btn-default" type="submit" onclick="bt.DInv.Merge.do()" disabled="disabled"><i class="glyphicon glyphicon-random" aria-hidden="true"></i></button>
+    <button id="dinv-btn-merge" title="Merge Drivers" class="btn btn-default" type="submit" onclick="bt.DInv.Merge.modal()" disabled="disabled"><i class="glyphicon glyphicon-random" aria-hidden="true"></i></button>
 
     <table id="dinv-table" class="table table-striped">
         <thead>
@@ -70,9 +96,9 @@ if (count($currentDrivers) > 0):
                 #var_dump($driverInventoryH); die();
 
                 ?>
-                <tr>
-                  <form action="/admin/driver/save-inventory/{{{$row->pk_Driver}}}" method="post">
-                    <td><input type="checkbox" name="drivers[]"></td>
+                <tr id="dinv-table-tr-{{$row->pk_Driver}}" class="dinv-table-tr" dinv-table-tr-id="{{$row->pk_Driver}}">
+                  <form action="/admin/driver/save-inventory/{{$row->pk_Driver}}" method="post">
+                    <td><input type="checkbox" class="dinv-array-item" name="drivers[{{$row->pk_Driver}}]" value="{{$row->pk_Driver}}" driver-name="{{{ $row->firstname }}} {{{ $row->lastname }}}"></td>
                     <th scope="row">{{{ $row->pk_Driver }}}</th>
                     <td>{{{ $row->firstname }}} {{{ $row->lastname }}}<br><small>{{{ $row->email }}}</small></td>
                     <td>{{{ $row->mobile_phone }}}</td>
@@ -97,12 +123,16 @@ if (count($currentDrivers) > 0):
                             .= "' class='f_slim-input dinv-qty-input'><br>"
                             .  "<span class='dinv-qty-changeinfo small text-muted hidden'>"
                             .       "<span class='dinv-qty-orig'>$origQty</span> | <span class='dinv-qty-diff'>0</span>"
-                            .  "</span></td>";
+                            .  "</span>"
+                            .  "</td>";
                     }
                     
                     echo $inventoryColumnsStr;
                     ?>
-                    <td><button title="Save" type="submit" class="btn btn-default"><span class="glyphicon glyphicon-save"></span></button></td>
+                    <td>
+                      <button title="Save" type="submit" class="btn btn-default dinv-btn-save"><span class="glyphicon glyphicon-save"></span></button>
+                      <input type='hidden' name='zeroArray' value=''>
+                    </td>
                   </form>
                 </tr>
                 <?php
