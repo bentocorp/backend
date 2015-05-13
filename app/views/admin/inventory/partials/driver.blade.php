@@ -123,6 +123,7 @@ if (count($currentDrivers) > 0):
                             .= "' class='f_slim-input dinv-qty-input'><br>"
                             .  "<span class='dinv-qty-changeinfo small text-muted hidden'>"
                             .       "<span class='dinv-qty-orig'>$origQty</span> | <span class='dinv-qty-diff'>0</span>"
+                            .       "<input type='hidden' name='dinv-qty-diff-input' value='0'>"
                             .  "</span>"
                             .  "</td>";
                     }
