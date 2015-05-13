@@ -55,6 +55,7 @@ truncate table OrderLog;
 truncate table OrderStatus;
 truncate table OrderStatusLog;
 truncate table PendingOrder;
+truncate table DriverInventory;
 truncate table DriverInventoryLog;
 truncate table CustomerBentoBox;
 

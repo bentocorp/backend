@@ -116,12 +116,32 @@ class Driver extends \Eloquent {
             // Now insert new
 
             foreach($data as $key => $val) {
+                
+                // Ignore hidden fields
+                $keyParts = explode('-', $key);
+                if ($keyParts[0] != 'newqty')
+                    continue;
+                
                 $sql3 = "
                 insert into DriverInventory (fk_Driver, fk_item, qty, change_reason)
                 values (?,?,?,?)
                 ";
 
-                DB::insert($sql3, array($pk_Driver, $key, $val, 'admin_update'));
+                DB::insert($sql3, array($pk_Driver, $keyParts[1], $val, 'admin_update'));
+            }
+            
+            // Zero out other inventories from a merge
+            // The format is x,y,z, with the trailing comma
+            if ($data['zeroArray'] !== '') {
+                $zeroAr = explode(',' , $data['zeroArray']);
+                $last = count($zeroAr)-1;
+                if ($zeroAr[ $last ] == '')
+                    unset($zeroAr[$last]); // Last one is garbage due to trailing comma
+                
+                foreach ($zeroAr as $driverToZero) {
+                    $sql = "update DriverInventory set qty = ? where fk_Driver = ?";
+                    DB::update($sql, array(0, $driverToZero));
+                }
             }
         });
         
@@ -299,6 +319,16 @@ class Driver extends \Eloquent {
                       array($itemQty, $itemId, $id));
             }
         });
+    }
+    
+    
+    /**
+     * Set everything for this driver's DriverInventory to zero
+     */
+    public function emptyInventory() {
+        
+        $sql = "update DriverInventory set qty = ? where fk_Driver = ?";
+        DB::update($sql, array(0, $this->id()));
     }
     
 }

@@ -25,6 +25,9 @@ $mealModeName = $mealMode->name;
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
     <!-- Everything else -->
     <link rel="stylesheet" href="/css/main.css">
 
@@ -135,9 +138,12 @@ $mealModeName = $mealMode->name;
     </footer>
       
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/main.js"></script>
     
     <script>
     $(function () {

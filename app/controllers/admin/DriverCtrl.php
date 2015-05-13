@@ -52,6 +52,18 @@ class DriverCtrl extends AdminBaseController {
     public function postSaveInventory($pk_Driver) {
         
         $data = $_POST;
+        
+        /*
+        // This isn't a merge
+        if ($data['zeroArray'] == '') {
+            Driver::updateInventory($pk_Driver, $data);
+        }
+        // This IS a merge
+        else {
+            DriverMgr::mergeDrivers($data);
+        }
+         * 
+         */
                 
         // Save the new data
         Driver::overwriteInventory($pk_Driver, $data);
