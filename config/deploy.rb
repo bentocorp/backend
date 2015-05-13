@@ -11,10 +11,14 @@ set :repo_url, 'git@github.com:bentocorp/backend.git'
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
-# Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/var/www/bento-backend/deploy'
+# Set Version
+api_version = 'v2'
 
-components_dir = '/var/www/bento-backend/components'
+# Default deploy_to directory is /var/www/my_app
+deploy_to = "/var/www/bento-backend/#{api_version}/deploy"
+set :deploy_to, deploy_to
+
+components_dir = "/var/www/bento-backend/#{api_version}/components"
 set :components_dir, components_dir
 
 # Default value for :scm is :git
