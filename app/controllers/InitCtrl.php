@@ -51,8 +51,8 @@ class InitCtrl extends \BaseController {
         }
         
         ## App versions
-        $return['ios_min_version'] = '1.0';
-        $return['android_min_version'] = '1.0';
+        $return['ios_min_version'] = '2.0';
+        $return['android_min_version'] = '2.0';
         
         return Response::json($return);
     }
