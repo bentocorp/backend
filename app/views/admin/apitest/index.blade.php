@@ -135,7 +135,8 @@ Order
     },
     "Stripe": {
         "stripeToken": "tok_15Mt2kEmZcPNENoGjJw2am8L"
-    }
+    },
+    "CouponCode":"bentoyum26"
 }
       </textarea>
       <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">
