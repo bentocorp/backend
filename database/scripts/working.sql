@@ -120,6 +120,10 @@ where cbb.created_at >= '2015-03-16'
 ;
 
 
+# ----------------------------------------------------------------------------------------------------------
+# Sales Counting
+# ----------------------------------------------------------------------------------------------------------
+
 # Count bento boxes by day
 select count(*) from CustomerBentoBox where fk_Order in (
 	select fk_Order from OrderStatus where created_at like '2015-03-24 %'
@@ -127,6 +131,26 @@ select count(*) from CustomerBentoBox where fk_Order in (
     
 # Count bento boxes by day 2
 select count(*) from CustomerBentoBox where created_at >= '2015-03-23';
+
+
+# Count Lunch bento boxes by day 
+select count(*) from CustomerBentoBox 
+where 
+	# Convert from local timestamp to UTC, since that's what the DB and servers store time in
+	created_at >= CONVERT_TZ('2015-05-26 11:30:00','America/Los_Angeles','UTC') AND 
+    created_at <= CONVERT_TZ('2015-05-26 14:30:00','America/Los_Angeles','UTC')
+;
+
+# Count Dinner bento boxes by day 
+select count(*) from CustomerBentoBox 
+where 
+	# Convert from local timestamp to UTC, since that's what the DB and servers store time in
+	created_at >= CONVERT_TZ('2015-05-26 16:30:00','America/Los_Angeles','UTC') AND 
+    created_at <= CONVERT_TZ('2015-05-26 23:59:59','America/Los_Angeles','UTC')
+;
+
+# ----------------------------------------------------------------------------------------------------------
+
 
 # count redemptions of a coupon
 select count(*) from CouponRedemption where fk_Coupon = 'thanksbento646';
