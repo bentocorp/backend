@@ -17,10 +17,8 @@ class InventoryCtrl extends \BaseController {
         $data = array();
         
         // Get today's menu
-        $date = Menu::getDateForTodaysMenu();
-        $menu = Menu::get($date);
-        $data['menu'] = $menu;
-                
+        // (performed in the view-composer)
+
         // Get current drivers
         $currentDrivers = Driver::getCurrentDrivers();
         $data['currentDrivers'] = $currentDrivers;

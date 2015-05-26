@@ -1,8 +1,10 @@
 <?php
 
-namespace Bento\Admin\Model;
+namespace Bento\core;
 
 use Bento\Model\Status as ApiStatus;
+use Bento\Admin\Model\Settings;
+use Bento\Model\MealType;
 use DB;
 
 
@@ -77,5 +79,32 @@ class Status {
     }
     
     
+    public static function getMealMode() {
+        
+        $sql = "
+            select mt.* 
+            from settings s
+            left join MealType mt on (s.`value` = mt.pk_MealType)
+            where s.`key` = ?
+        ";
+        
+        $mode = DB::select($sql, array('fk_MealType_mode'));
+        
+        return $mode[0];
+    }
+    
+    
+    public static function getMealModesForDropdown() {
+        
+        $mealTypes = MealType::all();
+        
+        $return = array();
+        
+        foreach ($mealTypes as $mealType) {
+            $return[$mealType->pk_MealType] = $mealType->name;
+        }
+        
+        return $return;
+    }
      
 }

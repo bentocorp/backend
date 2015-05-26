@@ -4,6 +4,8 @@ namespace Bento\Admin\Ctrl;
 
 use Bento\Admin\Model\Menu;
 use Bento\Admin\Model\Dish;
+use Bento\core\Status;
+use Bento\Model\MealType;
 use View;
 use Redirect;
 
@@ -15,10 +17,8 @@ class MenuCtrl extends \BaseController {
         
         $data = array();
         
-        // Get today's menu
+        // Menu date
         $date = Menu::getDateForTodaysMenu();
-        $menu = Menu::get($date);
-        $data['menu'] = $menu;
         
         // Get upcoming
         $menuUpcoming = Menu::getRelative($date, '>');
@@ -42,13 +42,27 @@ class MenuCtrl extends \BaseController {
         $data['mode'] = 'Create New Menu';
         $data['title'] = $data['mode'];
         
+        // Get the meal modes for the dropdown
+        $mealModes = Status::getMealModesForDropdown();
+        $data['mealModesAr'] = $mealModes;
+        
         return View::make('admin.menu.crud', $data);
     }
     
     
     public function postCreate() {
-              
-        $menu = Menu::createNew($_POST);
+        
+        // If you try to save two dinner menus for the same day, for instance, we'll get an exception
+        try{
+            $menu = Menu::createNew($_POST);
+        } 
+        catch (\Illuminate\Database\QueryException $e) {
+            $mealType = MealType::find($_POST['fk_MealType']);
+            $mealName = $mealType->name;
+            
+            return Redirect::back()->with('msg', 
+                array('type' => 'danger', 'txt' => "Menu for <b>{$_POST['for_date']}</b> already has a <b>$mealName</b> menu defined! Menu NOT created.")); 
+        }
         
         return Redirect::to("admin/menu/edit/$menu->pk_Menu")->with('msg', 
             array('type' => 'success', 'txt' => "New menu for <b>$menu->for_date</b> created."));
@@ -69,6 +83,10 @@ class MenuCtrl extends \BaseController {
         $data['mode'] = 'Editing';
         $data['title'] = $data['mode'].': '. "$menu->for_date $menu->name";
         
+        // Get the meal modes for the dropdown
+        $mealModes = Status::getMealModesForDropdown();
+        $data['mealModesAr'] = $mealModes;
+        
         return View::make('admin.menu.crud', $data);
     }
     
@@ -77,7 +95,17 @@ class MenuCtrl extends \BaseController {
         
         $data = $_POST;
         
-        Menu::saveChanges($id, $data);
+        // If you try to save two dinner menus for the same day, for instance, we'll get an exception
+        try {
+            Menu::saveChanges($id, $data);
+        } 
+        catch (\Illuminate\Database\QueryException $e) {
+            $mealType = MealType::find($data['fk_MealType']);
+            $mealName = $mealType->name;
+            
+            return Redirect::back()->with('msg', 
+                array('type' => 'danger', 'txt' => "Menu for <b>{$data['for_date']}</b> already has a <b>$mealName</b> menu defined! Menu not saved.")); 
+        }
         
         return Redirect::back()->with('msg', 
             array('type' => 'success', 'txt' => "Menu for <b>{$data['for_date']}</b> saved."));

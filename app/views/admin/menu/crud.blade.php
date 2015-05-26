@@ -19,6 +19,12 @@ CRUD Menu
     <!-- Bind to model -->
     
     <?php if (isset($menu)) echo Form::model($menu) ?>
+    
+    
+    <div class="form-group">
+        {{ Form::label('fk_MealType', 'Meal Type', array('class' => 'col-sm-2 control-label')) }}
+        <div class="col-sm-5">{{ @Form::select('fk_MealType', $mealModesAr, null, array('class' => 'form-control')); }}</div>
+    </div>
 
     <div class="form-group">
         {{ Form::label('bgimg', 'CDN Image URL', array('class' => 'col-sm-2 control-label')) }}
