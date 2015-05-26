@@ -14,6 +14,10 @@ class MiscCtrl extends \BaseController {
                
         $iosCopy = DB::select('SELECT `key`, `value`, `type` FROM admin_ios_copy', array());
         
+        #var_dump($iosCopy); die();
+        $iosCopy[34]->value = 'Please Upgrade for Deliciousness!';
+        $iosCopy[33]->value = 'An update is available in the App Store.';
+        
         return Response::json($iosCopy);
     }
     

@@ -24,6 +24,8 @@ class StatusCtrl extends \BaseController {
         #var_dump( $response ); die();
         
         $status = Status::overall();
+        #var_dump($status); die();
+        $status->value = 'closed';
         
         return Response::json($status);
     }
