@@ -77,7 +77,7 @@ class Menu extends \Eloquent {
             // Get the Menu            
             $sql = 'SELECT pk_Menu, name, for_date, bgimg 
                     FROM Menu 
-                    WHERE for_date = ? AND published';
+                    WHERE for_date = ? AND published AND fk_MealType = 3';
             
             return self::getMenu($sql, $date, 'menu');
         }
