@@ -149,6 +149,12 @@ where
     created_at <= CONVERT_TZ('2015-05-26 23:59:59','America/Los_Angeles','UTC')
 ;
 
+# Rollup order counts by day, UTC
+select DATE_FORMAT(created_at, '%Y-%m-%d') as date2, count(*) as `count`
+from `Order`
+group by date2
+order by date2 desc;
+
 # ----------------------------------------------------------------------------------------------------------
 
 
