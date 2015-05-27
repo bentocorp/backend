@@ -2,9 +2,11 @@
 
 namespace Bento\Admin\Ctrl;
 
-use Bento\Admin\Model\Status;
+use Bento\core\Status;
+use Bento\Admin\Model\Settings;
 use Redirect;
 use DB;
+use Input;
 
 
 
@@ -58,6 +60,20 @@ class StatusCtrl extends \BaseController {
         return Redirect::back()
             ->with('msg', 
             array('type' => 'success', 'txt' => "<b>I've cleared everything out.</b>"));
+    }
+    
+    
+    public function postMealmode() {
+        
+        $mode = Input::get('meal_mode');
+        
+        $row = Settings::find('fk_MealType_mode');
+        $row->value = $mode;
+        $row->save();
+        
+        return Redirect::back()
+            ->with('msg', 
+            array('type' => 'success', 'txt' => "<b>Meal mode updated.</b>"));
     }
     
     

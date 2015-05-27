@@ -10,6 +10,8 @@ if ($menuList !== NULL): ?>
       <tr>
         <th>For Date</th>
         <th>Name</th>
+        <th>Meal</th>
+        <th>Type</th>
         <th>Created</th>
         <th>Modified</th>
       </tr>
@@ -26,15 +28,18 @@ if ($menuList !== NULL): ?>
         echo "<tr>";
             echo "<th>$menu->for_date</th>";
             echo "<td><a href='/admin/menu/edit/{$menu->pk_Menu}'>$menuName</a></td>";
+            echo "<td>$menu->meal_name</td>";
+            echo "<td>$menu->menu_type</td>";
             echo "<td>$menu->created_at</td>";
             echo "<td>$menu->updated_at</td>";
         echo "</tr>";
-        echo "<tr><td colspan='4' style='padding-left:40px;'>";
+        echo "<tr><td colspan='6' style='padding-left:40px;'>";
             foreach ($compoundMenu['MenuItems'] as $menuItem) {
                 echo "<i>$menuItem->type:</i> $menuItem->name  &nbsp;|&nbsp; ";
             }
             if (count($compoundMenu['MenuItems']) == 0)
                 echo "<span class='label label-warning'>Warning</span> <b>No menu items for this menu!</b>";
+            echo '<br><br>';
         echo "</td></tr>";
     }?>
     </tbody>

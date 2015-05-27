@@ -321,4 +321,14 @@ class Driver extends \Eloquent {
         });
     }
     
+    
+    /**
+     * Set everything for this driver's DriverInventory to zero
+     */
+    public function emptyInventory() {
+        
+        $sql = "update DriverInventory set qty = ? where fk_Driver = ?";
+        DB::update($sql, array(0, $this->id()));
+    }
+    
 }

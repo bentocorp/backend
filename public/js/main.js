@@ -25,14 +25,18 @@ bt.DInv = (function() {
         // Elements
         var infoEle = ele.siblings('.dinv-qty-changeinfo');
         var diffEle = infoEle.children('.dinv-qty-diff');
+        var diffInput = infoEle.children('input[name="dinv-qty-diff-input"]');
         
         var currentQty = ele.val();
         var origQty = infoEle.children('.dinv-qty-orig').text();
         
         var diffQty = currentQty - origQty;
         
+        // Set the difference
         diffEle.text(diffQty);
+        diffInput.val(diffQty);
         
+        // If there's no difference, we don't need to see the helper info
         if (diffQty !== 0)
             infoEle.removeClass('hidden');
         else

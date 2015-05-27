@@ -12,7 +12,7 @@ set :repo_url, 'git@github.com:bentocorp/backend.git'
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
 # Set Version
-api_version = 'v1'
+api_version = 'v2'
 
 # Default deploy_to directory is /var/www/my_app
 deploy_to = "/var/www/bento-backend/#{api_version}/deploy"

@@ -23,39 +23,56 @@ class Menu extends \Eloquent {
         // Otherwise, query the DB...
 
         $return = array();
+        $return['menus'] = array();
 
         // Get the Menu            
-        $sql = "SELECT *  
-                FROM Menu 
-                WHERE for_date = ? AND published";
-        $menu = DB::select($sql, array($date));
+        $sql = "SELECT m.*,
+                    mt.name meal_name,
+                    mt.order meal_order,
+                    mt.startTime meal_start
+                FROM Menu m 
+                left join MealType mt on (m.fk_MealType = mt.pk_MealType)
+                WHERE m.for_date = ? AND m.published
+                ORDER BY mt.`order` ASC";
+        
+        $menus = DB::select($sql, array($date));
 
         // Return if empty
-        if (count($menu) == 0)
+        if (count($menus) == 0)
             return NULL;
-        else 
-            $menu = $menu[0];
 
-        // Get Menu_Items
-        $sql2 = "
-            SELECT 
-                    d.pk_Dish, d.name, d.description, d.type, d.short_name, d.label,
-                (
-                            # summate
-                            select sum(qty) as total
-                            from DriverInventory di
-                            where fk_item = d.pk_Dish
-                            group by fk_item
-                ) as DriverInventoryTotal
-            FROM Menu_Item mi
-            LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)
-            WHERE mi.fk_Menu = ?
-            order by d.type ASC, d.name ASC
-        ";
-        $menuItems = DB::select($sql2, array($menu->pk_Menu));
+        // Otherwise, return the menu(s)!
+        foreach ($menus as $menu) {
+            
+            // Get Menu_Items
+            $sql2 = "
+                SELECT 
+                        d.pk_Dish, d.name, d.description, d.type, d.short_name, d.label,
+                    (
+                        # summate
+                        select sum(qty) as total
+                        from DriverInventory di
+                        where fk_item = d.pk_Dish
+                        group by fk_item
+                    ) as DriverInventoryTotal
+                FROM Menu_Item mi
+                LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)
+                WHERE mi.fk_Menu = ?
+                order by d.type ASC, d.name ASC
+            ";
+            
+            $menuItems = DB::select($sql2, array($menu->pk_Menu));
 
-        $return['Menu'] = $menu;
-        $return['MenuItems'] = $menuItems;
+            // Setup the return
+            
+            $builtMenu = array();
+            
+            $builtMenu['Menu'] = $menu;
+            $builtMenu['MenuItems'] = $menuItems;
+            
+            // Add to return
+            $return['menus'][$menu->meal_name] = $builtMenu;
+        }
 
         // Return
         $return['source'] = 'db';             
@@ -70,10 +87,14 @@ class Menu extends \Eloquent {
         $return = array();
 
         // Get the Menu            
-        $sql = "SELECT *  
-                FROM Menu 
-                WHERE for_date $dateComparator ? AND published
-                ORDER BY for_date $sort
+        $sql = "SELECT m.*,
+                    mt.name meal_name,
+                    mt.order meal_order,
+                    mt.startTime meal_start
+                FROM Menu m
+                left join MealType mt on (m.fk_MealType = mt.pk_MealType)
+                WHERE m.for_date $dateComparator ? AND m.published
+                ORDER BY m.for_date $sort
          ";
         $menus = DB::select($sql, array($date));
 
@@ -92,11 +113,11 @@ class Menu extends \Eloquent {
                     SELECT 
                             d.pk_Dish, d.name, d.description, d.type, d.short_name,
                         (
-                                    # summate
-                                    select sum(qty) as total
-                                    from DriverInventory di
-                                    where fk_item = d.pk_Dish
-                                    group by fk_item
+                            # summate
+                            select sum(qty) as total
+                            from DriverInventory di
+                            where fk_item = d.pk_Dish
+                            group by fk_item
                         ) as DriverInventoryTotal
                     FROM Menu_Item mi
                     LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)
@@ -130,6 +151,10 @@ class Menu extends \Eloquent {
         // Collect MenuItems
         $menuItems = $this->collectMenuItems($data);
         
+        // Set type to fixed for lunch
+        if ($data['fk_MealType'] == 2)
+            $data['menu_type'] = 'fixed';
+        
         // Insert into Menu
         $menu = Menu::create($data);
                 
@@ -145,6 +170,12 @@ class Menu extends \Eloquent {
         // Collect MenuItems
         $menuItems = $this->collectMenuItems($data);
         
+        // Set type to fixed for lunch
+        if ($data['fk_MealType'] == 2)
+            $data['menu_type'] = 'fixed';
+        else
+            $data['menu_type'] = 'custom';
+        
         // Update Menu
         unset($data['_token']);
         
@@ -157,7 +188,7 @@ class Menu extends \Eloquent {
     }
     
     
-    private function collectMenuItems(&$data) {
+    private function collectMenuItems(& $data) {
         
         $menuItems = isset($data['dish']) ? $data['dish'] : array();
         unset($data['dish']);

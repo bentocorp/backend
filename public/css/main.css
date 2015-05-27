@@ -36,6 +36,11 @@ Bootstrap Overrides
 /********************
 Everything Else
 ********************/
+
+cap {
+    text-transform: capitalize;
+}
+
 .f_slim-input {
     width: 45px;
 }

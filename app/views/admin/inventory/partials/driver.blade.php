@@ -14,8 +14,7 @@ if (count($currentDrivers) > 0):
       manually update the Driver Inventory. This is computationally expensive, so do so wisely!</p>
 
     <?php
-
-    if ($menu !== NULL):
+    if ($mealMenu !== NULL):
     ?>    
         
     <!-- 
@@ -53,7 +52,7 @@ if (count($currentDrivers) > 0):
     $invItemKeys = array();
 
     // Get everything into a consistent lookup table
-    foreach($menu['MenuItems'] as $inv) {
+    foreach($mealMenu['MenuItems'] as $inv) {
         $invItemKeys[$inv->pk_Dish] = $inv; // Hash it
     }
     ?>
@@ -108,6 +107,7 @@ if (count($currentDrivers) > 0):
                     $inventoryColumnsStr  = '';
                     
                     foreach ($invItemKeys as $invItem) { // short names
+
                         $inventoryColumnsStr .= "<td style='text-align:center;'><input type='number' min='0' required name='newqty-{$invItem->pk_Dish}' value='";
 
                         // If a menu item is not in driver inventory, the amount is assumed to be 0
@@ -123,6 +123,7 @@ if (count($currentDrivers) > 0):
                             .= "' class='f_slim-input dinv-qty-input'><br>"
                             .  "<span class='dinv-qty-changeinfo small text-muted hidden'>"
                             .       "<span class='dinv-qty-orig'>$origQty</span> | <span class='dinv-qty-diff'>0</span>"
+                            .       "<input type='hidden' name='dinv-qty-diff-input' value='0'>"
                             .  "</span>"
                             .  "</td>";
                     }

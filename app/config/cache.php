@@ -1,5 +1,8 @@
 <?php
 
+
+$apiVersion = Config::get('app.api_version'); // So that multiple versions can run on the same servers with memcached
+
 return array(
 
 	/*
@@ -84,6 +87,6 @@ return array(
 	|
 	*/
 
-	'prefix' => 'laravel',
+	'prefix' => "bento-backend-$apiVersion",
 
 );

@@ -92,3 +92,22 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+
+
+/***************************************************************************
+ * Below begins additional to what Laravel shipped with
+ ***************************************************************************
+ */
+
+
+/*
+|--------------------------------------------------------------------------
+| Load View Composers
+|--------------------------------------------------------------------------
+|
+| http://laravel.com/docs/4.2/responses#view-composers
+|
+*/
+
+require app_path().'/views/admin/etc/composers.php';
