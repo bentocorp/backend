@@ -314,6 +314,59 @@ class OrderCtrlTest extends TestCase {
     }
     
     
+    public function testOrderSuccessWhenItsAllGoneWrongInTrak() 
+    {
+        // Given an order from an authorized user who has a Stripe card on file with us,
+        // AND A BAD ADDRESS, AND a bad lat/long
+        $parameters = array(
+            "data" =>
+                '{
+                    "OrderItems": [
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        }
+                    ],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "1111998883",
+                            "street": "Kearny st.",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94199"
+                        },
+                        "coords": {
+                            "lat": "9937.798220",
+                            "long": "-99122.405606"
+                        },
+                        "tax_cents": 137,
+                        "tip_cents": 200,
+                        "total_cents": "1537"
+                    },
+                    "Stripe": {
+                        "stripeToken": NULL
+                    }
+                }'
+                ,
+            "api_token" => "123"
+        );
+        
+        // and enough inventory for the order,
+        DB::table('LiveInventory')->truncate();
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(1, 100));
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(2, 100));
+                
+        // When I attempt to order
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+    }
+    
+    
     public function testOrderSuccessWithTrakIfMissingAddressInfo() 
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
