@@ -25,6 +25,11 @@ CRUD Menu
         {{ Form::label('fk_MealType', 'Meal Type', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ @Form::select('fk_MealType', $mealModesAr, null, array('class' => 'form-control')); }}</div>
     </div>
+    
+    <div class="form-group">
+        {{ Form::label('menu_type', 'Type of Menu', array('class' => 'col-sm-2 control-label')) }}
+        <div class="col-sm-5">{{ @Form::select('menu_type', array('custom' => 'custom', 'fixed' => 'fixed'), null, array('class' => 'form-control')); }}</div>
+    </div>
 
     <div class="form-group">
         {{ Form::label('bgimg', 'CDN Image URL', array('class' => 'col-sm-2 control-label')) }}

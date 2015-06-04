@@ -8,9 +8,9 @@ if ($menuList !== NULL): ?>
 <table class="table">
     <thead>
       <tr>
-        <th>For Date</th>
-        <th>Name</th>
+        <th style="width:90px">For Date</th>
         <th>Meal</th>
+        <th>Name</th>
         <th>Type</th>
         <th>Created</th>
         <th>Modified</th>
@@ -27,8 +27,8 @@ if ($menuList !== NULL): ?>
 
         echo "<tr>";
             echo "<th>$menu->for_date</th>";
+            echo "<td><cap>$menu->meal_name</cap></td>";
             echo "<td><a href='/admin/menu/edit/{$menu->pk_Menu}'>$menuName</a></td>";
-            echo "<td>$menu->meal_name</td>";
             echo "<td>$menu->menu_type</td>";
             echo "<td>$menu->created_at</td>";
             echo "<td>$menu->updated_at</td>";

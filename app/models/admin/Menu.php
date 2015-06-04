@@ -152,8 +152,9 @@ class Menu extends \Eloquent {
         $menuItems = $this->collectMenuItems($data);
         
         // Set type to fixed for lunch
-        if ($data['fk_MealType'] == 2)
-            $data['menu_type'] = 'fixed';
+        // VJC 2015-06-03: Commenting out so Joseph can test the different flows for lunch/dinner
+        #if ($data['fk_MealType'] == 2)
+        #    $data['menu_type'] = 'fixed';
         
         // Insert into Menu
         $menu = Menu::create($data);
@@ -171,10 +172,10 @@ class Menu extends \Eloquent {
         $menuItems = $this->collectMenuItems($data);
         
         // Set type to fixed for lunch
-        if ($data['fk_MealType'] == 2)
-            $data['menu_type'] = 'fixed';
-        else
-            $data['menu_type'] = 'custom';
+        #if ($data['fk_MealType'] == 2)
+        #    $data['menu_type'] = 'fixed';
+        #else
+        #    $data['menu_type'] = 'custom';
         
         // Update Menu
         unset($data['_token']);
