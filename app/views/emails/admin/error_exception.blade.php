@@ -25,11 +25,16 @@ echo $msg;
 echo "</pre></div><br>";
 
 
-echo "<h2>Stack Trace:</h2>";
+echo "<h2>Exception __toString:</h2>";
 echo "<pre>";
 echo $e;
 echo "</pre>";
 
+# The __toString method takes care of this for you
+#echo "<h2>Exception - traceAsString():</h2>";
+#echo "<pre>";
+#echo $e->getTraceAsString();
+#echo "</pre>";
 
 echo "<h2>User:</h2>";
 echo "<pre>";

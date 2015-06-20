@@ -236,14 +236,14 @@ class TrakSvc {
         
         $response2 = json_decode($response);
         $code = $info['http_code'];
-        #var_dump($info); var_dump($response2); #0
+        #var_dump($payload); var_dump($info); var_dump($response2); die(); #0
         
         // Malformed phone number
         if ($code == 500) 
             return NULL;
         else if ($code == 200)
             return $response2->id;
-        // Otherwise, the user already exists, but Trak's crappy API won't
+        // Otherwise, the user already exists, but Trak's non-optimal API won't
         // actually return the user, so we need to do Yet Another API Call to get the user
         else if ($code == 400 && $response2->message->cause->type == 'duplicateKey') {
             $recip = $this->findRecipientByPhone($phone);
