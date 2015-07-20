@@ -9,13 +9,16 @@ class TrakSvc {
     private $apiUrl;
     private $apiKey;
     private $organization;
-    
+    private $user;
     
     public function __construct() {
         
         $this->apiUrl = $_ENV['Trak_API'];
         $this->apiKey = $_ENV['Trak_key'];
         $this->organization = $_ENV['Trak_organization'];
+        
+        // Get the user
+        $this->user = User::get();
     }
     
     
@@ -74,6 +77,11 @@ class TrakSvc {
         $boxCount = 1;
         
         $n = count($bentoBoxes);
+        
+        // If this is a Top Customer, tell the driver!
+        if ($this->user->is_top_customer) {
+            $orderStr .= ">> ࿉∥(⋆‿⋆)࿉∥ Top Customer! << \\n\\n";
+        }
 
         foreach ($bentoBoxes as $box) {
 
@@ -83,14 +91,19 @@ class TrakSvc {
             $side3_name = $this->encodeStr($box->side3_name);
             $side4_name = $this->encodeStr($box->side4_name);
             
-            $orderStr .= "BENTO $boxCount of $n: \\n ===== \\n";
+            $orderStr .= "旦 BENTO $boxCount of $n: \\n ===== \\n";
             $orderStr .= "$box->main_label - $main_name \\n";
             $orderStr .= "$box->side1_label - $side1_name \\n"; 
             $orderStr .= "$box->side2_label - $side2_name \\n";
             $orderStr .= "$box->side3_label - $side3_name \\n";
-            $orderStr .= "$box->side4_label - $side4_name \\n ===== \\n";
+            $orderStr .= "$box->side4_label - $side4_name \\n ===== \\n\\n";
             
             $boxCount++;
+        }
+        
+        // If this is a Top Customer, tell the driver!
+        if ($this->user->is_top_customer) {
+            $orderStr .= ">> ࿉∥(⋆‿⋆)࿉∥ Top Customer! <<";
         }
         
         $payload = '
@@ -99,7 +112,7 @@ class TrakSvc {
                 "executor": "'.$this->organization.'",
                 "destination": "'.$destinationId.'",
                 "recipients": ['.$recipString.'],
-                "notes": "Order #'.$order->pk_Order.': \\n'."$orderStr".'"
+                "notes": "Order #'.$order->pk_Order.': \\n\\n'."$orderStr".'"
             }
         ';
         #echo $payload; #
@@ -206,17 +219,15 @@ class TrakSvc {
     
     
     private function createRecipient() {
-        
-        $user = User::get();
-        
+                
         $url = $this->apiUrl . '/recipients';
         
-        $phone = $user->phone;
+        $phone = $this->user->phone;
         #$phone = '(310) 433 - 0839'; #0
         
         $payload = '
             {
-                "name": "'."$user->firstname $user->lastname".'",
+                "name": "'."{$this->user->firstname} {$this->user->lastname}".'",
                 "phone": "'.$phone.'"
             }
         ';

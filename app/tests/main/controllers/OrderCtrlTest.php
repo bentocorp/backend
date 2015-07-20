@@ -222,6 +222,13 @@ class OrderCtrlTest extends TestCase {
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
                             ]
+                        },
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
                         }
                     ],
                     "OrderDetails": {

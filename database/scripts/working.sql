@@ -137,7 +137,7 @@ select count(*) from CustomerBentoBox where created_at >= '2015-03-23';
 select count(*) from CustomerBentoBox 
 where 
 	# Convert from local timestamp to UTC, since that's what the DB and servers store time in
-	created_at >= CONVERT_TZ('2015-05-26 11:30:00','America/Los_Angeles','UTC') AND 
+	created_at >= CONVERT_TZ('2015-05-26 10:30:00','America/Los_Angeles','UTC') AND 
     created_at <= CONVERT_TZ('2015-05-26 14:30:00','America/Los_Angeles','UTC')
 ;
 
@@ -231,23 +231,25 @@ ORDER BY order_created_at ASC;
 
 
 
+# ------------------------------------------------------------------------------------------- 
+# Find a Driver
+# ------------------------------------------------------------------------------------------- 
 
-#tmp 1
-ALTER TABLE `bento`.`OrderStatus` 
-ADD COLUMN `trak_status` VARCHAR(10) NULL AFTER `status`,
-ADD COLUMN `trak_error_response` TEXT NULL AFTER `trak_status`;
+# 1. Find the User
+SELECT * FROM bento.User
+where email = 'rinkalahir@gmail.com'
+;
 
-ALTER TABLE `bento`.`OrderStatusLog` 
-CHANGE COLUMN `pk_OrderStatusEvent` `pk_OrderStatusLog` INT(11) NOT NULL AUTO_INCREMENT ,
-ADD COLUMN `trak_status` VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT NULL AFTER `status`,
-ADD COLUMN `trak_error_payload` TEXT NULL AFTER `trak_status`,
-ADD COLUMN `trak_error_response` TEXT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT NULL AFTER `trak_error_payload`;
+# 2. Find the Order
+select * from `Order` where fk_User = 2427;
 
-ALTER TABLE `bento`.`OrderStatus` 
-ADD COLUMN `trak_error_payload` TEXT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT NULL AFTER `trak_status`;
+# 3. Find the OrderStatus
+SELECT * FROM bento.OrderStatus
+where fk_Order = 3121
+;
 
-
-
+# 4. Find the Driver
+select * from Driver where pk_Driver = 49;
 
 
 
