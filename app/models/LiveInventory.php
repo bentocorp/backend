@@ -137,11 +137,13 @@ class LiveInventory extends \Eloquent {
             $driverInventory = Driver::getAggregateInventory();
             
             // Empty it
-            DB::table('LiveInventory')->truncate();
+            #DB::table('LiveInventory')->truncate(); # The problem with a truncate is that it does an implicit commit of the transaction
+            DB::table('LiveInventory')->delete();
             
             // Populate it
+            # (GREATEST() ensures we don't go negative)
             foreach ($driverInventory as $row) {
-                $sql = "insert into LiveInventory (fk_item, qty, change_reason) values (?,?,?)";
+                $sql = "insert into LiveInventory (fk_item, qty, change_reason) values (?, GREATEST(?,0), ?)";
                 DB::insert($sql, array($row->fk_item, $row->dqty, 'admin_update'));
             }
         });

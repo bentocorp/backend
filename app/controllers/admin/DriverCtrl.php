@@ -56,7 +56,8 @@ class DriverCtrl extends AdminBaseController {
         /*
         // This isn't a merge
         if ($data['zeroArray'] == '') {
-            Driver::updateInventory($pk_Driver, $data);
+            $driver = new Driver($pk_Driver);
+            $driver->updateInventory($data);
         }
         // This IS a merge
         else {

@@ -17,7 +17,6 @@ class Driver extends \Eloquent {
     protected $primaryKey = 'pk_Driver';
     protected $guarded = array('pk_Driver');
 
-    #private $pk_Driver = NULL;
     
     public function __construct($attributes = array(), $pk_Driver = NULL) 
     {
@@ -329,6 +328,15 @@ class Driver extends \Eloquent {
         
         $sql = "update DriverInventory set qty = ? where fk_Driver = ?";
         DB::update($sql, array(0, $this->id()));
+    }
+    
+    
+    /**
+     * Update this driver's inventory, using a diff qty
+     */
+    public function updateInventory($data) {
+        
+        
     }
     
 }
