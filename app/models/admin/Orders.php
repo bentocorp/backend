@@ -21,6 +21,7 @@ class Orders {
                 concat(u.firstname, ' ', u.lastname) as user_name,
                 u.phone as user_phone, u.email as user_email,
                 concat(d.firstname, ' ', d.lastname) as driver_name,
+                u.is_top_customer,
                 d.pk_Driver
             from `Order` o
             left join OrderStatus os on (o.pk_Order = os.fk_Order)

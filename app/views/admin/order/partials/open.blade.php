@@ -7,6 +7,7 @@ try {
 ?>
 
 <h1>Open Orders</h1>
+<p class="text-primary"><b>Bold Name</b> = Top customer</p>
 
 <?php
 if (count($openOrders) > 0):
@@ -37,11 +38,17 @@ if (count($openOrders) > 0):
             
             $tableClass = count($groupedDriversDropdown['Possible Drivers']) > 1 ? 'info' : 'warning' ;
             
+            // Set the user's name
+            if ($row->is_top_customer)
+                $user_name = "<b class='text-primary'>$row->user_name</b>";
+            else 
+                $user_name = $row->user_name;
+            
             ?>
             <tr class="{{$tableClass}}">
               <form action="/admin/order/save-status/{{{$row->pk_Order}}}" method="post">
                 <th scope="row">{{{ $row->pk_Order }}}</th>
-                <td>{{ $row->user_name }}<br><small>${{$row->amount}}</small></td>
+                <td>{{ $user_name }}<br><small>${{$row->amount}}</small></td>
                 <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}<br><small>{{ $row->user_email }}</small></td>
                 <td>{{{ $row->user_phone }}}</td>
                 <td>{{{ $row->order_created_at }}}</td>
