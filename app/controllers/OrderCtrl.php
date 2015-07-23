@@ -346,13 +346,7 @@ class OrderCtrl extends \BaseController {
         }
         
         $order->save();
-        
-        // Set the user as now having ordered, if they haven't
-        if (!$user->has_ordered) {
-            $user->has_ordered = 1;
-            $user->save();
-        }
-        
+                
         // Insert into OrderStatus
         $orderStatus = new OrderStatus;
         $orderStatus->fk_Order = $order->pk_Order;
@@ -404,7 +398,6 @@ class OrderCtrl extends \BaseController {
        
         
         // Send an order confirmation email
-        
         Mail::send('emails.transactional.order_confirmation', array(
             'order' => $order, 
             'orderJson' => $orderJson, 
@@ -416,6 +409,13 @@ class OrderCtrl extends \BaseController {
                 $message->from('help@bentonow.com', 'Bento');
                 $message->to($user->email)->subject("Your Bento Order");
             });
+        
+        
+        // Set the user as now having ordered, if they haven't
+        if (!$user->has_ordered) {
+            $user->has_ordered = 1;
+            $user->save();
+        }
     }
     
         

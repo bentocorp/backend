@@ -79,8 +79,15 @@ class TrakSvc {
         $n = count($bentoBoxes);
         
         // If this is a Top Customer, tell the driver!
+        $topCustomerStr = ">> ࿉∥(⋆‿⋆)࿉∥ Top Customer! << \\n\\n";
         if ($this->user->is_top_customer) {
-            $orderStr .= ">> ࿉∥(⋆‿⋆)࿉∥ Top Customer! << \\n\\n";
+            $orderStr .= $topCustomerStr;
+        }
+
+        // If this is NEW customer, tell the driver!
+        $newCustomerStr = ">> *∥(◕‿◕)∥* 1st customer order!! << \\n\\n";
+        if (!$this->user->has_ordered) {
+            $orderStr .= $newCustomerStr;
         }
 
         foreach ($bentoBoxes as $box) {
@@ -103,7 +110,12 @@ class TrakSvc {
         
         // If this is a Top Customer, tell the driver!
         if ($this->user->is_top_customer) {
-            $orderStr .= ">> ࿉∥(⋆‿⋆)࿉∥ Top Customer! <<";
+            $orderStr .= $topCustomerStr;
+        }
+        
+        // If this is NEW customer, tell the driver!
+        if (!$this->user->has_ordered) {
+            $orderStr .= $newCustomerStr;
         }
         
         $payload = '
