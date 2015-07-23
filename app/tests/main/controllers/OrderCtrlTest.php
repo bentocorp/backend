@@ -259,12 +259,21 @@ class OrderCtrlTest extends TestCase {
         DB::table('LiveInventory')->truncate();
         DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(1, 100));
         DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(2, 100));
-                
+        
+        // and the user hasn't ordered before
+        $user = User::find(6);
+        $user->has_ordered = 0;
+        $user->save();
+        
         // When I attempt to order
         $response = $this->call('POST', '/order', $parameters);
         
         // Then I get ok
         $this->assertResponseStatus(200);
+        
+        // And the user is now marked as having ordered
+        $user = User::find(6);
+        $this->assertEquals(1, $user->has_ordered);
     }
     
     

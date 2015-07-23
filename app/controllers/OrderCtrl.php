@@ -347,6 +347,12 @@ class OrderCtrl extends \BaseController {
         
         $order->save();
         
+        // Set the user as now having ordered, if they haven't
+        if (!$user->has_ordered) {
+            $user->has_ordered = 1;
+            $user->save();
+        }
+        
         // Insert into OrderStatus
         $orderStatus = new OrderStatus;
         $orderStatus->fk_Order = $order->pk_Order;

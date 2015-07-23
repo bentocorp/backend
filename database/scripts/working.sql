@@ -57,6 +57,7 @@ truncate table OrderStatusLog;
 truncate table PendingOrder;
 truncate table DriverInventory;
 truncate table DriverInventoryLog;
+truncate table LiveInventory;
 truncate table CustomerBentoBox;
 
 
@@ -250,6 +251,19 @@ where fk_Order = 3121
 
 # 4. Find the Driver
 select * from Driver where pk_Driver = 49;
+
+
+# ------------------------------------------------------------------------------------------- 
+# User Info
+# ------------------------------------------------------------------------------------------- 
+
+# Find users who have registered, but never ordered
+select distinct email
+from User u
+left join `Order` o on u.pk_user = o.fk_User
+where pk_Order IS NULL AND NOT is_test
+limit 2000
+;
 
 
 
