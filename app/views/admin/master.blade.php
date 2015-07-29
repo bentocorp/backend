@@ -24,10 +24,10 @@ $mealModeName = $mealMode->name;
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    
+
     <!-- Everything else -->
     <link rel="stylesheet" href="/css/main.css">
 
@@ -42,7 +42,7 @@ $mealModeName = $mealMode->name;
 
   <div class="container">
     <br>
-    
+
     <div class="row">
       <div class="col-lg-12">
         <nav class="navbar navbar-default">
@@ -52,8 +52,8 @@ $mealModeName = $mealMode->name;
               <a class="navbar-brand" href="/admin">Bento Admin</a>
             </div>
             <div class="collapse navbar-collapse">
-              <p class="navbar-text navbar-right">{{{ $adminUser->name }}} 
-                (<a href="/admin/logout" class="navbar-link">Logout</a>) 
+              <p class="navbar-text navbar-right">{{{ $adminUser->name }}}
+                (<a href="/admin/logout" class="navbar-link">Logout</a>)
                 <?php
                   if (Session::has('api_token')) {
                       $fake = Session::get('api_impersonating');
@@ -64,21 +64,21 @@ $mealModeName = $mealMode->name;
             </div>
           </div>
         </nav>
-        
-        
+
+
       </div>
     </div>
 
     <div class="row">
         <div class="col-lg-2">
           <div id="sidebar">
-                                  
+
             <div class="bg-{{$statusClass}} text-{{$statusClass}} status-bar">Status: {{$status}} / {{$mealModeName}}</div>
-            
+
             <ul class="nav nav-pills nav-stacked">
               <li role="presentation"><a href="/admin">Dashboard</a></li>
             </ul>
-            
+
             <h4>Service</h4>
             <ul class="nav nav-pills nav-stacked">
               <li role="presentation"><a href="/admin/inventory">Inventory</a></li>
@@ -92,12 +92,17 @@ $mealModeName = $mealMode->name;
               <li role="presentation"><a href="/admin/dish">Dishes</a></li>
               <!-- <li role="presentation"><a href="/admin/preplog">Prep Log</a></li> -->
             </ul>
-            
+
             <h4>Business</h4>
             <ul class="nav nav-pills nav-stacked">
               <li role="presentation"><a href="/admin/driver">Drivers</a></li>
               <li role="presentation"><a href="/admin/user">Users</a></li>
               <li role="presentation"><a href="/admin/coupon">Coupons</a></li>
+            </ul>
+
+            <h4>Reports</h4>
+            <ul class="nav nav-pills nav-stacked">
+              <li role="presentation"><a href="/admin/reports/orderhistory">Order History</a></li>
             </ul>
 
             <h4>Dev</h4>
@@ -106,7 +111,7 @@ $mealModeName = $mealMode->name;
               <li role="presentation"><a href="/admin/misc/ioscopy">iOS Copy</a></li>
               <li role="presentation"><a href="/admin/settings">Settings</a></li>
             </ul>
-          
+
           </div>
         </div>
         <div class="col-lg-10">
@@ -121,13 +126,13 @@ $mealModeName = $mealMode->name;
                 ";
             }
             ?>
-          
+
           @yield('content')
         </div>
     </div>
-    
+
   </div><!-- /container -->
-    
+
     <footer class="footer">
         <div class="container">
           <p class="text-muted">
@@ -136,21 +141,21 @@ $mealModeName = $mealMode->name;
           </p>
         </div>
     </footer>
-      
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    
+
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/main.js"></script>
-    
+
     <script>
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
     </script>
-    
-    
+
+
   </body>
 </html>

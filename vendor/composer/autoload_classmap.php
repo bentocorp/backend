@@ -18,6 +18,7 @@ return array(
     'Bento\\Admin\\Ctrl\\MiscCtrl' => $baseDir . '/app/controllers/admin/MiscCtrl.php',
     'Bento\\Admin\\Ctrl\\OrderCtrl' => $baseDir . '/app/controllers/admin/OrderCtrl.php',
     'Bento\\Admin\\Ctrl\\PendingOrderCtrl' => $baseDir . '/app/controllers/admin/PendingOrderCtrl.php',
+    'Bento\\Admin\\Ctrl\\ReportsCtrl' => $baseDir . '/app/controllers/admin/ReportsCtrl.php',
     'Bento\\Admin\\Ctrl\\SettingsCtrl' => $baseDir . '/app/controllers/admin/SettingsCtrl.php',
     'Bento\\Admin\\Ctrl\\StatusCtrl' => $baseDir . '/app/controllers/admin/StatusCtrl.php',
     'Bento\\Admin\\Ctrl\\UserCtrl' => $baseDir . '/app/controllers/admin/UserCtrl.php',
