@@ -54,27 +54,27 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
 
     ## PUBLIC /init routes
     Route::get('init/{date?}', 'InitCtrl@getIndex');
-    
+
     ## PUBLIC /menu routes
     Route::get('menu/{date}', 'MenuCtrl@show');
     Route::get('menu/next/{date}', 'MenuCtrl@next');
-    
+
     ## PUBLIC /status routes
     Route::controller('status', 'StatusCtrl');
-    
+
     ## PUBLIC /user routes
     Route::post('user/signup', 'UserCtrl@postSignup');
     Route::post('user/fbsignup', 'UserCtrl@postFbsignup');
     Route::post('user/login', 'UserCtrl@postLogin');
     Route::post('user/fblogin', 'UserCtrl@postFblogin');
-    
+
     ## PUBLIC /coupon routes
     Route::post('coupon/request', 'CouponCtrl@postRequest');
-    
+
     ## PUBLIC /misc routes
     Route::get('/ioscopy', 'MiscCtrl@getIoscopy');
     Route::get('/servicearea', 'MiscCtrl@getServicearea');
-    
+
     ## PUBLIC /password routes
     #Route::controller('password', 'RemindersController');
 });
@@ -86,16 +86,16 @@ Route::group(array('namespace' => 'Bento\Ctrl'), function() {
  ****************************************************************************
  */
 Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), function() {
-        
+
     ## /order routes
     #Route::post('order/phase1', 'OrderCtrl@phase1');
     #Route::post('order/phase2', 'OrderCtrl@phase2');
     Route::post('order/', 'OrderCtrl@postIndex');
-    
+
     ## /user auth routes
     Route::get('user/logout', 'UserCtrl@getLogout');
     Route::get('user/info', 'UserCtrl@getInfo');
-    
+
     ## /coupon routes
     Route::controller('coupon', 'CouponCtrl');
 });
@@ -105,7 +105,7 @@ Route::group(array('before' => 'api_auth', 'namespace' => 'Bento\Ctrl'), functio
 /****************************************************************************
  * ADMIN: Admins Only Routes
  ****************************************************************************
- * 
+ *
  * prefix => admin: All routes accessed through /admin/{...}
  * before => admin: Calling the admin filter on all routes.
  */
@@ -113,36 +113,38 @@ Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
 #Route::group(array('prefix' => 'admin'), function() {
 
     View::share('adminUser', Session::get('adminUser'));
-    
+
     // Admin index
     Route::get('/', function() {
         return Redirect::to('admin/dashboard');
     });
-    
+
     Route::controller('dashboard', 'Bento\Admin\Ctrl\DashboardCtrl');
-    
+
     Route::controller('status', 'Bento\Admin\Ctrl\StatusCtrl');
-    
+
     Route::controller('driver', 'Bento\Admin\Ctrl\DriverCtrl');
-    
+
     Route::controller('order', 'Bento\Admin\Ctrl\OrderCtrl');
-    
+
     Route::controller('pendingorder', 'Bento\Admin\Ctrl\PendingOrderCtrl');
-    
+
     Route::controller('inventory', 'Bento\Admin\Ctrl\InventoryCtrl');
-    
+
     Route::controller('menu', 'Bento\Admin\Ctrl\MenuCtrl');
-    
+
     Route::controller('dish', 'Bento\Admin\Ctrl\DishCtrl');
-    
+
     Route::controller('user', 'Bento\Admin\Ctrl\UserCtrl');
-    
+
     Route::controller('apitest', 'Bento\Admin\Ctrl\ApiTestCtrl');
-    
+
     Route::controller('misc', 'Bento\Admin\Ctrl\MiscCtrl');
-    
+
     Route::controller('settings', 'Bento\Admin\Ctrl\SettingsCtrl');
-    
+
+    Route::controller('reports', 'Bento\Admin\Ctrl\ReportsCtrl');
+
 }); // /End protected admin rotes
 
 // These need to be able to be called without being logged in (duh)
@@ -158,16 +160,16 @@ Route::controller('admin', 'Bento\Admin\Ctrl\AdminUserCtrl');
 /****************************************************************************
  * EXTERNAL API: [PRIVATE] A secured API for vendors, etc.
  ****************************************************************************
- * 
+ *
  * prefix => extapi: All routes accessed through /extapi/{...}
  * before => ext_api: Calling the external API filter on all routes.
  */
 Route::group(array('prefix' => 'extapi', 'before' => 'ext_api', 'namespace' => 'Bento\ExtApi\Ctrl'), function() {
-    
+
     Route::get('dish/{id}', 'DishCtrl@getIndex');
-    
+
     Route::controller('dish', 'DishCtrl');
-    
+
     Route::controller('reports/survey', 'Reports\SurveyCtrl');
-    
+
 }); // /End protected admin rotes
