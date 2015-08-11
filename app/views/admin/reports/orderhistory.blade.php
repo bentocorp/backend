@@ -3,6 +3,7 @@
 @section('content')
 <h2>Order History</h2>
 
+<a class="pull-right btn btn-default" href="/admin/reports/orderhistory?format=json&min_id={{{ $minId }}}">JSON</a>
 <table class="table table-striped">
   <thead>
     <th>Order ID</th>
@@ -27,7 +28,7 @@
 </table>
 <nav>
   <?php
-    if (count($orders) > 0) {
+    if (count($orders) == 0) {
       $nextUrl = "/admin/reports/orderhistory?min_id=" . (end($orders)->order_id + 1);
       $nextText = "Next";
     } else {
