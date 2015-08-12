@@ -17,7 +17,7 @@ class Orders {
                 o.pk_Order,
                 o.created_at as order_created_at,
                 o.number, o.street, o.city, o.state, o.zip, o.amount,
-                os.`status`,
+                os.`status`, os.trak_status,
                 concat(u.firstname, ' ', u.lastname) as user_name,
                 u.phone as user_phone, u.email as user_email,
                 concat(d.firstname, ' ', d.lastname) as driver_name,

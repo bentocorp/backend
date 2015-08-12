@@ -329,7 +329,7 @@ class OrderCtrlTest extends TestCase {
         $this->assertResponseStatus(200);
     }
     
-    /*
+
     public function testOrderSuccessWhenItsAllGoneWrongInTrak() 
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
@@ -381,8 +381,6 @@ class OrderCtrlTest extends TestCase {
         // Then I get ok
         $this->assertResponseStatus(200);
     }
-     * 
-     */
     
     
     public function testOrderSuccessWithTrakIfMissingAddressInfo() 
