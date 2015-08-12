@@ -376,26 +376,35 @@ class OrderCtrl extends \BaseController {
         $bentoBoxes = Orders::getBentoBoxesByOrder($order->pk_Order); 
                 
         // Put into Trak
-        $trkResponse = Trak::addTask($order, $orderJson, $bentoBoxes);
-        #Trak::test(); #0
-        #print_r($trkResponse); die(); #0
-        
-        // Log the Trak (Onfleet) response, if it was bad
-        $trkStatus = $trkResponse['info']['http_code'];
-        
-        // Trak worked, it's ok
-        if ($trkStatus == 200) {
-            $orderStatus->trak_status = 200;
+        try {
+            $trkResponse = Trak::addTask($order, $orderJson, $bentoBoxes);
+            #Trak::test(); #0
+            #print_r($trkResponse); die(); #0
+            
+            // Log the Trak (Onfleet) response, if it was bad
+            $trkStatus = $trkResponse['info']['http_code'];
+
+            // Trak worked, it's ok
+            if ($trkStatus == 200) {
+                $orderStatus->trak_status = 200;
+                $orderStatus->save();
+            }
+            // Trak failed, log some errors
+            else {
+                $orderStatus->trak_status = $trkStatus;
+                $orderStatus->trak_error_payload = $trkResponse['payload'];
+                $orderStatus->trak_error_response = $trkResponse['response'];
+                $orderStatus->save();
+            }
+            
+        } catch (\Exception $e) {
+        // Catch any other exceptions, and safely return
+            $orderStatus->trak_status = 'Exception';
             $orderStatus->save();
+            
+            Bento::alert($e, 'Onfleet Exception', '1be04240-c860-4bf7-b205-f362e832ba85');
         }
-        // Trak failed, log some errors
-        else {
-            $orderStatus->trak_status = $trkStatus;
-            $orderStatus->trak_error_payload = $trkResponse['payload'];
-            $orderStatus->trak_error_response = $trkResponse['response'];
-            $orderStatus->save();
-        }
-       
+        
         
         // Send an order confirmation email
         Mail::send('emails.transactional.order_confirmation', array(
