@@ -47,7 +47,7 @@ if (count($openOrders) > 0):
             // Alert if Trak Error, and not in Trak!
             $trak_alert = '';
             if ($row->trak_status != '200')
-                $trak_alert = '<span class="label label-danger"><big>Trak Error!</big></span><br>';
+                $trak_alert = '<span class="label label-danger"><big>Onfleet Error!</big></span><br>';
             
             ?>
             <tr class="{{$tableClass}}">
