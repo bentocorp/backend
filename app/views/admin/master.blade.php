@@ -102,7 +102,9 @@ $mealModeName = $mealMode->name;
 
             <h4>Reports</h4>
             <ul class="nav nav-pills nav-stacked">
+              <li role="presentation"><a href="/admin/reports/couponredemptions">Redemption History</a></li>
               <li role="presentation"><a href="/admin/reports/orderhistory">Order History</a></li>
+              <li role="presentation"><a href="/admin/reports/users">Users</a></li>
             </ul>
 
             <h4>Dev</h4>
