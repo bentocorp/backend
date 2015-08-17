@@ -53,7 +53,7 @@ if (count($openOrders) > 0):
             <tr class="{{$tableClass}}">
               <form action="/admin/order/save-status/{{{$row->pk_Order}}}" method="post">
                 <th scope="row">{{{ $row->pk_Order }}}</th>
-                <td><?php echo $trak_alert?>{{ $user_name }}<br><small>${{$row->amount}}</small></td>
+                <td><?php echo $trak_alert?>{{ $user_name }}<br><small>${{$row->amount}} {{$row->fk_Coupon}}</small></td>
                 <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}<br><small>{{ $row->user_email }}</small></td>
                 <td>{{{ $row->user_phone }}}</td>
                 <td>{{{ $row->order_created_at }}}</td>

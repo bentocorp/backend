@@ -1,7 +1,9 @@
 <?php
-use Bento\Admin\Model\Orders;
+
+#use Bento\Admin\Model\Orders;
 
 ?>
+
 <p>
   Hi {{$user->firstname}}. Thanks for ordering from Bento!<br>
   <br>
@@ -9,8 +11,6 @@ use Bento\Admin\Model\Orders;
   Your phone number is: <b>{{$user->phone}}</b><br>
   <br>
   If anything is incorrect, please reply to this email or give us a call: 415-300-1332.<br>
-  <br>
-  <b>+++ Note, we're now serving lunch! :D +++</b><br>
   <br>
   Once your order is en route, we'll send you text message updates. 
   Enjoy your meal, and please feel free to reply directly to this email with any feedback you may have.<br>

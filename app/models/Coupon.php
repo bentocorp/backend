@@ -43,11 +43,8 @@ class Coupon extends \Eloquent implements CouponInterface {
     
                     
     public function getGiveAmount() {
-        
         return $this->give_amount;
     }
     
    
-    
-        
 }

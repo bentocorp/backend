@@ -745,5 +745,222 @@ DATA;
 
     
     
+    /**************************************************************************
+     * Coupon Scenarios
+     *************************************************************************/
+    
+    public function testCoupon_404CantOrder() 
+    {
+        // Given a nonexistent coupon
+        $coupon = 'someBadCoupon';
+        
+        $parameters = array(
+            "data" =>
+                '{
+                    "OrderItems": [
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        },
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        }
+                    ],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "1111",
+                            "street": "Kearny st.",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94133"
+                        },
+                        "coords": {
+                            "lat": "37.798220",
+                            "long": "-122.405606"
+                        },
+                        "tax_cents": 137,
+                        "tip_cents": 200,
+                        "total_cents": "1537"
+                    },
+                    "Stripe": {
+                        "stripeToken": NULL
+                    },
+                    "CouponCode": "'.$coupon.'"
+                }'
+                ,
+            "api_token" => "123"
+        );
+        
+        // and enough inventory for the order,
+        DB::table('LiveInventory')->truncate();
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(1, 100));
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(2, 100));
+        
+        
+        // When I attempt to order
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get an error
+        $this->assertResponseStatus(404);
+    }
+    
+    
+    public function testCoupon_GoodCanOrder() 
+    {
+        // Given a valid coupon
+        $coupon = '1121113370998kkk7';
+        
+        $parameters = array(
+            "data" =>
+                '{
+                    "OrderItems": [
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        },
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        }
+                    ],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "1111",
+                            "street": "Kearny st.",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94133"
+                        },
+                        "coords": {
+                            "lat": "37.798220",
+                            "long": "-122.405606"
+                        },
+                        "tax_cents": 137,
+                        "tip_cents": 200,
+                        "total_cents": "1537"
+                    },
+                    "Stripe": {
+                        "stripeToken": NULL
+                    },
+                    "CouponCode": "'.$coupon.'"
+                }'
+                ,
+            "api_token" => "123"
+        );
+        
+        // and enough inventory for the order,
+        DB::table('LiveInventory')->truncate();
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(1, 100));
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(2, 100));
+        
+        
+        // When I attempt to order
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get okay
+        $this->assertResponseStatus(200);
+        
+        // And when I try again with the same coupon
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get an error
+        $this->assertResponseStatus(400);
+        
+        // Reset
+        DB::delete('delete from CouponRedemption where fk_User = ?', array(6));
+    }
+    
+    
+    public function testCoupon_InavlidForUser_CantOrder() 
+    {
+        // Given an invalid coupon *for this user*
+        $coupon = '1121113370998kkk7';
+        
+        $data =
+        '{
+            "OrderItems": [
+                {
+                    "item_type": "CustomerBentoBox",
+                    "items": [
+                        {"id": 1, "type": "main"},
+                        {"id": 2, "type": "side1"}
+                    ]
+                },
+                {
+                    "item_type": "CustomerBentoBox",
+                    "items": [
+                        {"id": 1, "type": "main"},
+                        {"id": 2, "type": "side1"}
+                    ]
+                }
+            ],
+            "OrderDetails": {
+                "address": {
+                    "number": "1111",
+                    "street": "Kearny st.",
+                    "city": "San Francisco",
+                    "state": "CA",
+                    "zip": "94133"
+                },
+                "coords": {
+                    "lat": "37.798220",
+                    "long": "-122.405606"
+                },
+                "tax_cents": 137,
+                "tip_cents": 200,
+                "total_cents": "1537"
+            },
+            "Stripe": {
+                "stripeToken": NULL
+            },
+            "CouponCode": "%s"
+        }';
+        
+        $parameters = array(
+            "data" => '',
+            "api_token" => "00123"
+        );
+        
+        // and enough inventory for the order,
+        DB::table('LiveInventory')->truncate();
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(1, 100));
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(2, 100));
+        
+        
+        // When I attempt to order
+        $parameters['data'] = sprintf($data, $coupon);
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get an error
+        $this->assertResponseStatus(400);
+        
+        // And when I try again with the same data
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I still get the same error
+        $this->assertResponseStatus(400);
+        
+        // And when I try again with a coupon that I've also already used
+        $parameters['data'] = sprintf($data, 'vincent2');
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I still get the same error
+        $this->assertResponseStatus(400);
+    }
+    
+    
 
 }

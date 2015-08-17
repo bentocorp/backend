@@ -48,17 +48,14 @@ class CouponCtrlTest extends TestCase {
         // And when I try again with the same coupon
         $response2 = $this->call('GET', "/coupon/apply/1121113370998kkk7?$api_token");
         
-        // Then I get an error
-        $this->assertResponseStatus(400);
+        // Then I still get okay
+        $this->assertResponseStatus(200);
         
         // And when I try another valid coupon in ALL CAPS
         $response3 = $this->call('GET', "/coupon/apply/TEST_VINCENT?$api_token");
         
         // Then I get ok
-        $this->assertResponseStatus(200);
-                
-        // Reset
-        DB::delete('delete from CouponRedemption where fk_User = ?', array(6));
+        $this->assertResponseStatus(200);    
     }
     
     
@@ -81,8 +78,8 @@ class CouponCtrlTest extends TestCase {
         // And when I try again with the same coupon
         $response2 = $this->call('GET', "/coupon/apply/vincent2?$api_token");
         
-        // Then I get an error
-        $this->assertResponseStatus(400);
+        // Then I still get ok
+        $this->assertResponseStatus(200);
         
         // And when I try another valid coupon in CAPS
         $response3 = $this->call('GET', "/coupon/apply/JASON1?$api_token");
@@ -110,7 +107,7 @@ class CouponCtrlTest extends TestCase {
         $response = $this->call('GET', "/coupon/apply/test_vincent_expired?$api_token");
         
         // Then I get an error
-        $this->assertResponseStatus(400);     
+        $this->assertResponseStatus(404);     
     }
     
     
@@ -119,8 +116,33 @@ class CouponCtrlTest extends TestCase {
         // Given an authenticated user
         $api_token = 'api_token=123';
         
-        // When I attempt to apply a non-existant coupon code
+        // When I attempt to apply a non-existent coupon code
         $response = $this->call('GET', "/coupon/apply/someBadCouponCode?$api_token");
+
+        // Then I get an error
+        $this->assertResponseStatus(404);
+    }
+    
+    
+    public function testCantApplyAlreadyUsedCoupon()
+    {
+        // Given an authenticated user
+        $api_token = 'api_token=456';
+        
+        // When I attempt to apply a coupon that I've already used
+        $response = $this->call('GET', "/coupon/apply/1121113370998kkk7?$api_token");
+
+        // Then I get an error
+        $this->assertResponseStatus(400);
+        
+        // AND When I attempt to apply a coupon that I've already used (in lowercase)
+        $response = $this->call('GET', "/coupon/apply/vincent2?$api_token");
+
+        // Then I get an error
+        $this->assertResponseStatus(400);
+        
+        // AND When I attempt to apply a coupon that I've already used (in funny caps)
+        $response = $this->call('GET', "/coupon/apply/vIncENt2?$api_token");
 
         // Then I get an error
         $this->assertResponseStatus(400);

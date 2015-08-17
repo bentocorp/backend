@@ -9,8 +9,10 @@ use Bento\Model\LiveInventory;
 use Bento\Model\Status;
 use Bento\Tracking\Trak;
 use Bento\app\Bento;
+use Bento\Coupon\AppCoupon;
 use User;
 use Response;
+use Request; use Route;
 use Input;
 use Mail;
 use Stripe; use Stripe_Charge; use Stripe_Customer;
@@ -61,6 +63,7 @@ class OrderCtrl extends \BaseController {
         
         // Vars
         $stripeCharge = false;
+        $couponFromOrder = NULL;
         
         // Get data
         $data = json_decode(Input::get('data'));
@@ -71,7 +74,8 @@ class OrderCtrl extends \BaseController {
         // Assume that there is a payment to process
         $processPayment = true;
         
-        // -- DATA VALIDATIONS --     
+        
+        // -- BEGIN DATA VALIDATIONS --
         try {
             // Reject API call if the OrderItems[] is empty. This has actually happened, 
             // and as of 2015-04-21, VJC and JL are not sure how.
@@ -101,10 +105,32 @@ class OrderCtrl extends \BaseController {
                         array("error" => "No payment specified, and no payment on file."), 
                         402);
             }
+            
+            // IF coupon, make sure that they are using a valid coupon
+            if ( isset($data->CouponCode) && $data->CouponCode !== NULL && $data->CouponCode != '' ) {
+                
+                // Call the same Controller function that we used to get the coupon's value, 
+                // because it also includes all validation. If this method returns 200, then
+                // we know we can safely apply the coupon.
+                $request1 = Request::create("coupon/apply/$data->CouponCode", 'GET');
+                $response1 = Route::dispatch($request1);
+                $statusCode = $response1->getStatusCode();
+                
+                // Instantiate the coupon
+                if ($statusCode == 200) {
+                    $coupon = new AppCoupon;
+                    $coupon->find($data->CouponCode);
+                    $couponFromOrder = $coupon;
+                }
+                // Otherwise, return the error
+                else {
+                    return $response1;
+                }
+            }
         }
         catch(\Exception $e) {
             Bento::alert($e, 'Order Data Validation Error', 'd1f8330b-789e-4a6b-86c7-6c027340d8d2');
-            return Response::json(array("error" => "Something has gone wrong. Bento has been notified."), 460);
+            return Response::json(array("error" => "Bad news bears. Something has gone wrong. Bento has been notified."), 460);
         }
         // -- END DATA VALIDATIONS -- 
         
@@ -151,7 +177,7 @@ class OrderCtrl extends \BaseController {
         // Payment Success
         if ($stripeCharge['status'] === true) {
             
-            $this->paymentSuccess($data, $stripeCharge['body']);
+            $this->paymentSuccess($data, $stripeCharge['body'], $couponFromOrder);
             
             return Response::json('', 200);
         }
@@ -314,7 +340,7 @@ class OrderCtrl extends \BaseController {
     }
     
     
-    private function paymentSuccess($orderJson, $stripeCharge) {
+    private function paymentSuccess($orderJson, $stripeCharge, $coupon) {
         
         // Get the user
         $user = $this->user;
@@ -345,7 +371,11 @@ class OrderCtrl extends \BaseController {
             $order->stripe_charge_id = $stripeCharge->id;
         }
         
-        $order->save();
+        // Store the coupon
+        if ( $coupon !== NULL )
+            $order->fk_Coupon = $coupon->getCode();
+        
+        $order->save(); // Finally, insert into the Order table
                 
         // Insert into OrderStatus
         $orderStatus = new OrderStatus;
@@ -361,6 +391,10 @@ class OrderCtrl extends \BaseController {
         
         // Soft-delete pending order
         $this->pendingOrder->delete();
+        
+        // Redeem the coupon
+        if ( $coupon !== NULL )
+            $coupon->redeem($order->pk_Order);
         
         // --- Do something stupidly expensive until we can fix it 
         /* The issue was that we didn't have the *name* of the item, so we had
