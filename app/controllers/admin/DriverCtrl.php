@@ -116,4 +116,22 @@ class DriverCtrl extends AdminBaseController {
             array('type' => 'success', 'txt' => 'Driver Saved.'));
     }
     
+    
+    public function getArchive($id) {
+        
+        $driver = Driver::find($id);
+        
+        // Check to make sure that they aren't on shift
+        if (!$driver->on_shift) {
+            
+            $driver->delete();
+            
+            return Redirect::back()->with('msg', 
+                array('type' => 'success', 'txt' => "<b>Driver <u>#$id</u></b> has been archived."));
+        }
+        else
+            return Redirect::to('/admin/driver')->with('msg', 
+                array('type' => 'danger', 'txt' => "<b>Driver <u>#$id</u> cannot be archived while on shift.</b>"));
+    }
+    
 }

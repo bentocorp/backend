@@ -18,6 +18,7 @@
         <th>Last Name</th>
         <th>Email</th>
         <th>Cell</th>
+        <th>&nbsp;</th>
       </tr>
     </thead>
     
@@ -33,6 +34,10 @@
             
             $checkbox = Form::checkbox('drivers[]', $driver->pk_Driver, $driver->on_shift, array('class'=>'f-checkbox'));
             
+            // Only show the Archive button if the driver isn't on shift.
+            $btnArchive = '';
+            if (!$driver->on_shift)
+                $btnArchive = '<a class="btn btn-default" href="/admin/driver/archive/'.$driver->pk_Driver.'" role="button" onclick="return confirm(\'Archive this driver forever? This cannot be undone.\')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Archive</a>';
             ?>
             <tr class="{{$class}}">
               <td>{{ $checkbox }}</td>
@@ -41,6 +46,7 @@
               <td>{{ $driver->lastname }}</td>
               <td>{{ $driver->email }}</td>
               <td>{{ $driver->mobile_phone }}</td>
+              <td>{{ $btnArchive }}</td>
             </tr>
             <?php
         }

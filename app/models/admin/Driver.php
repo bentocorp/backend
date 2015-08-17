@@ -8,6 +8,8 @@ use DB;
 
 class Driver extends \Eloquent {
     
+    use \SoftDeletingTrait;
+    
     /**
      * The database table used by the model.
      *
@@ -16,6 +18,7 @@ class Driver extends \Eloquent {
     protected $table = 'Driver';
     protected $primaryKey = 'pk_Driver';
     protected $guarded = array('pk_Driver');
+    protected $dates = ['deleted_at'];
 
     
     public function __construct($attributes = array(), $pk_Driver = NULL) 
