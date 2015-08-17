@@ -124,7 +124,7 @@ class MainAuthSvc implements AuthInterface {
     
     public function makeApiToken($email) {
         // Make their secret token
-        $toHash = $email . time();
+        $toHash = $email . time() .  mt_rand(10000 , 99999);
         $api_token = Hash::make($toHash);
         
         return $api_token;

@@ -12,7 +12,11 @@ use User;
 class CouponCtrl extends \BaseController {
     
     /**
-     * Apply a coupon on the frontend.
+     * Return a coupon off amount the frontend.
+     * 
+     * Unfortunately, this is a bit of a historical misnomer. The coupon isn't
+     * yet really being "applied" to the user's account. Instead, this function is just
+     * telling the frontend how much the amount off is. Just think of this as getAmountOff.
      * 
      * @param string $code The coupon code
      * @return json, HTTP status code
@@ -25,20 +29,16 @@ class CouponCtrl extends \BaseController {
         
         // If this coupon doesn't exist, we're done
         if ($isValidCoupon === false)
-            return Response::json(array('error' => 'Invalid coupon.'), 400);
+            return Response::json(array('error' => "We couldn't find that coupon code, or it expired."), 404);
         
         // So it's at least a valid code... Is it valid for this user?
         
         // If the code is valid for the user, return the amount off
-        if ($coupon->isValidForUser()) {
-            
-            $coupon->redeem();
-            
+        if ($coupon->isValidForUser())
             return Response::json(array('amountOff' => $coupon->getGiveAmount()), 200);
-        }
         // if the code isn't valid for the user, return an error
         else
-            return Response::json(array('error' => 'Invalid coupon for you.'), 400);
+            return Response::json(array('error' => 'Invalid coupon for you. Did you already use it?'), 400);
     }
     
     

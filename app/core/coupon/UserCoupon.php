@@ -1,17 +1,21 @@
-<?php
+<?php namespace Bento\Coupon;
 
-namespace Bento\Coupon;
 
 use Bento\Coupon\CouponTrait;
 
+
+/**
+ * A UserCoupon is the user's personal coupon code to give out
+ */
 
 class UserCoupon implements CouponInterface {
     
     use CouponTrait;
     
+    # The User who corresponds to this User Coupon Code
     private $userRow;
     
-    
+
     public function __construct($userRow) {
         
         $this->userRow = $userRow;
@@ -27,6 +31,5 @@ class UserCoupon implements CouponInterface {
         
         return "5.00";
     }
-
-    
+        
 }

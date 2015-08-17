@@ -138,6 +138,7 @@ Order
     "OrderItems": [
         {
             "item_type": "CustomerBentoBox",
+            "unit_price": 12,
             "items": [
                 {"id": 11,  "type": "main"}, 
                 {"id": 1,  "type": "side1"},
@@ -148,6 +149,7 @@ Order
         },
         {
             "item_type": "CustomerBentoBox",
+            "unit_price": 12,
             "items": [
                 {"id": 9,  "type": "main"}, 
                 {"id": 5,  "type": "side1"}, 
@@ -169,6 +171,7 @@ Order
             "lat": "37.798220",
             "long": "-122.405606"
         },
+        "coupon_discount_cents": 500,
         "tax_cents": 137,
         "tip_cents": 200,
         "total_cents": "1537"
