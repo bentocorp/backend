@@ -15,6 +15,7 @@ use Response;
 use Request; use Route;
 use Input;
 use Mail;
+use Queue;
 use Stripe; use Stripe_Charge; use Stripe_Customer;
 
 class OrderCtrl extends \BaseController {
@@ -438,6 +439,9 @@ class OrderCtrl extends \BaseController {
             
             Bento::alert($e, 'Onfleet Exception', '1be04240-c860-4bf7-b205-f362e832ba85');
         }
+        
+        // Put into the order queue for async processing
+        Queue::push('Bento\Jobs\DoNothing', array('message' => json_encode($orderJson)));
         
         
         // Send an order confirmation email

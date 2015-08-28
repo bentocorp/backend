@@ -15,7 +15,7 @@ return array(
 	|
 	*/
 
-	'default' => 'sqs',
+	'default' => 'orders',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -30,6 +30,8 @@ return array(
 
 	'connections' => array(
 
+                /* Examples */
+            
 		'sync' => array(
 			'driver' => 'sync',
 		),
@@ -46,7 +48,7 @@ return array(
 			'key'    => 'your-public-key',
 			'secret' => 'your-secret-key',
 			'queue'  => 'your-queue-url',
-			'region' => 'us-east-1',
+			'region' => 'us-west-2',
 		),
 
 		'iron' => array(
@@ -61,6 +63,17 @@ return array(
 		'redis' => array(
 			'driver' => 'redis',
 			'queue'  => 'default',
+		),
+            
+            
+                /* Real stuff */
+            
+		'orders' => array(
+			'driver' => 'sqs',
+			'key'    => $_ENV['sqs-orders-key'],
+			'secret' => $_ENV['sqs-orders-secret'],
+			'queue'  => $_ENV['sqs-orders-url'],
+			'region' => 'us-west-2',
 		),
 
 	),
