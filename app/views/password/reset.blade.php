@@ -54,7 +54,7 @@
                 <input type="password" name="password_confirmation" placeholder="your new password again" class="form-control" required>
                 <br>
                 <input type="hidden" name="token" value="{{ $token }}">
-                <input type="submit" value="Reset Password" class="btn btn-default">
+                <input type="submit" value="Reset My Password" class="btn btn-success">
             </form>
             <?php 
             } ?>

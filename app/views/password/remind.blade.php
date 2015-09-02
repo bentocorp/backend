@@ -29,7 +29,7 @@
     <div class="row">
         <div class="col-lg-12">
 
-          <h1>Reset your password</h1>
+          <h1>Reset your password <small><br>It's ok. It happens. Bento is here to help!</small></h1>
 
           <?php
           if (Session::has('status')) {
@@ -44,9 +44,9 @@
           ?>
 
           <form action="/password/remind" method="POST">
-              <input type="email" name="email" placeholder="your email..." class="form-control" required>
+              <input type="email" name="email" placeholder="Just enter your email..." class="form-control" required>
               <br>
-              <input type="submit" value="Send Reminder" class="btn btn-default">
+              <input type="submit" value="Email My Reset Link" class="btn btn-success">
           </form>
 
         </div>
