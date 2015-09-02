@@ -17,7 +17,7 @@ return array(
 
 	"user" => "We can't find a user with that e-mail address.",
     
-        "facebook_user" => "It appears that you've registered with Facebook, not with a password. Please login with Facbeook instead.",
+        "facebook_user" => "It appears that you've registered with Facebook, not with a password. Please login with Facebook instead.",
 
 	"token" => "This password reset token is invalid.",
 
