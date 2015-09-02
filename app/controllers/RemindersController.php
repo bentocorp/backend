@@ -2,6 +2,7 @@
 
 namespace Bento\Ctrl;
 
+use User;
 use View;
 use Password;
 use Hash;
@@ -30,7 +31,18 @@ class RemindersController extends \Controller {
 	 */
 	public function postRemind()
 	{
-		switch ($response = Password::remind(Input::only('email')))
+                // A FB user can't reset their password.
+                $user = User::findByEmail(Input::get('email'));
+                
+                if ($user !== NULL && $user->reg_type != 'auth')
+                    return Redirect::back()->with('error', Lang::get('reminders.facebook_user'));
+            
+                // Otherwise, let's try
+                switch ($response = Password::remind(Input::only('email'), function($message)
+                    {
+                        $message->subject(Lang::get('reminders.subject'));
+                        $message->from('help@bentonow.com', 'Bento');
+                    }))
 		{
 			case Password::INVALID_USER:
 				return Redirect::back()->with('error', Lang::get($response));
@@ -79,7 +91,8 @@ class RemindersController extends \Controller {
 				return Redirect::back()->with('error', Lang::get($response));
 
 			case Password::PASSWORD_RESET:
-				return Redirect::to('/');
+				#return Redirect::to('/');
+                                return Redirect::back()->with('success', Lang::get($response));
 		}
 	}
 

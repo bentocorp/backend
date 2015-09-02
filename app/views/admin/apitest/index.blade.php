@@ -179,7 +179,9 @@ Order
     "Stripe": {
         "stripeToken": "tok_15Mt2kEmZcPNENoGjJw2am8L"
     },
-    "CouponCode":"bentoyum26"
+    "CouponCode": "bentoyum26",
+    "IdempotentToken": "some_uuid",
+    "Platform": "iOS"
 }
       </textarea>
       <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">

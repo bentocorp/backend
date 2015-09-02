@@ -76,7 +76,7 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
         $sql = "SELECT pk_User, firstname, lastname, email, phone, coupon_code,
                     api_token, password, is_admin, stripe_customer_obj
                 FROM User WHERE email = ? AND email IS NOT NULL 
-                    and password IS NOT NULL";
+                    AND password IS NOT NULL AND reg_type = 'auth' ";
 
         $user = self::hydrateRaw($sql, array($email));
 
@@ -89,7 +89,7 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
         $sql = "SELECT pk_User, firstname, lastname, email, phone, coupon_code,
                     api_token, fb_token, fb_id, is_admin, stripe_customer_obj
                 FROM User WHERE email = ? AND email IS NOT NULL 
-                    and fb_id IS NOT NULL and fb_token IS NOT NULL";
+                    AND fb_id IS NOT NULL and fb_token IS NOT NULL AND reg_type = 'Facebook' ";
 
         $user = self::hydrateRaw($sql, array($email));
 
@@ -126,6 +126,19 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
             return true;
         else
             return false;
+    }
+    
+    
+    public static function findByEmail(
+        $email,
+        $columns = array('*')
+    ) {
+        if ( ! is_null($user = static::whereEmail($email)->first($columns))) {
+            return $user;
+        }
+
+        #throw new ModelNotFoundException;
+        return NULL;
     }
     
     

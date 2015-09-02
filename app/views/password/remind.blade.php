@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bento Admin</title>
+    <title>Bento helps you reset your password</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -29,7 +29,7 @@
     <div class="row">
         <div class="col-lg-12">
 
-          <h1>Reset your password</h1>
+          <h1>Reset your password <small><br>It's ok. It happens. Bento is here to help!</small></h1>
 
           <?php
           if (Session::has('status')) {
@@ -44,9 +44,9 @@
           ?>
 
           <form action="/password/remind" method="POST">
-              <input type="email" name="email" placeholder="your email..." class="form-control">
+              <input type="email" name="email" placeholder="Just enter your email..." class="form-control" required>
               <br>
-              <input type="submit" value="Send Reminder" class="btn btn-default">
+              <input type="submit" value="Email My Reset Link" class="btn btn-success">
           </form>
 
         </div>

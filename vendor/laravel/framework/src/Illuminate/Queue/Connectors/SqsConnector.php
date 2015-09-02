@@ -13,6 +13,7 @@ class SqsConnector implements ConnectorInterface {
 	 */
 	public function connect(array $config)
 	{
+                #var_dump($config); die();
 		$sqs = SqsClient::factory($config);
 
 		return new SqsQueue($sqs, $config['queue']);
