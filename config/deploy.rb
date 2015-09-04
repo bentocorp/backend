@@ -15,10 +15,10 @@ set :repo_url, 'git@github.com:bentocorp/backend.git'
 api_version = 'v2'
 
 # Default deploy_to directory is /var/www/my_app
-deploy_to = "/var/www/bento-backend/#{api_version}/deploy"
+deploy_to = "/sites/bento-backend/#{api_version}/deploy"
 set :deploy_to, deploy_to
 
-components_dir = "/var/www/bento-backend/#{api_version}/components"
+components_dir = "/sites/bento-backend/#{api_version}/components"
 set :components_dir, components_dir
 
 # Default value for :scm is :git
@@ -106,7 +106,7 @@ namespace :ops do
       #system("tar -zcf ./build/vendor.tar.gz ./vendor ")
       upload! './build/vendor.tar.gz', "#{components_dir}", :recursive => true
       execute "cd #{components_dir}
-       tar -zxf /var/www/bento-backend/components/vendor.tar.gz"
+       tar -zxf /sites/bento-backend/components/vendor.tar.gz"
     end
   end
   
