@@ -348,8 +348,7 @@ User
     <br>
     <b>Returns:</b><br>
     <ul>
-      <li><code>200</code> if ok. <br>
-        {"api_token": "some_long_string"}<br></li>
+      <li><code>200</code> if ok.</li>
       <li><code>401</code> if Unauthorized (standard).</li>
     </ul>
 
