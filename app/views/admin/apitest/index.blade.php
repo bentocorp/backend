@@ -16,7 +16,7 @@ Info
 ******************************************************************************
 -->
 <hr>
-<h1>Instructions</h1>
+<h1 class="bg-info">Instructions</h1>
 
 
 <b>The user's <code>api_token</code> must be a key in any secure API request.</b><br>
@@ -55,7 +55,7 @@ Status
 ******************************************************************************
 -->
 <hr>
-<h1>Init & Status</h1>
+<h1 class="bg-info">Init & Status</h1>
 
     <h3>GET:</h3>
     
@@ -93,7 +93,7 @@ Order
 ******************************************************************************
 -->
 <hr>
-<h1>Order</h1>
+<h1 class="bg-info">Order</h1>
  
     <!--
     <b>A reminder about the flow:</b><br>
@@ -196,7 +196,7 @@ Menu
 ******************************************************************************
 -->
 <hr>
-<h1>Menu</h1>
+<h1 class="bg-info">Menu</h1>
     
     <h3>GET:</h3>
     <ul>
@@ -211,7 +211,7 @@ Misc
 ******************************************************************************
 -->
 <hr>
-<h1>Misc</h1>
+<h1 class="bg-info">Misc</h1>
     
     <h3>GET:</h3>
     <ul>
@@ -225,7 +225,7 @@ User
 ******************************************************************************
 -->
 <hr>
-<h1>User</h1>
+<h1 class="bg-info">User</h1>
  
     <!-- <div class="admin-jsonForm"> -->
     <h3><span class="label label-primary">&nbsp;</span> 
@@ -339,7 +339,32 @@ User
       <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">
       <button type="submit" class="btn btn-default">Submit</button>
     </form>
+    <!-- End API call -->
 
+    
+    <h3><span class="label label-primary">&nbsp;</span> 
+      POST: /user/phone <small><br>Change the user's phone number</small></h3>
+
+    <br>
+    <b>Returns:</b><br>
+    <ul>
+      <li><code>200</code> if ok. <br>
+        {"api_token": "some_long_string"}<br></li>
+      <li><code>401</code> if Unauthorized (standard).</li>
+    </ul>
+
+    <form action="/user/phone" method="post">
+      data:<br>
+      <textarea name="data" class="form-control admin-jsonTextarea">
+{
+    "new_phone":"585-502-7804"
+}
+      </textarea>
+      <input type="hidden" name="api_token" value="{{Session::get('api_token')}}">
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+    <!-- End API call -->
+    
 
     <h3>GET:</h3>
     <ul>
@@ -365,7 +390,7 @@ Coupon
 ******************************************************************************
 -->
 <hr>
-<h1>Coupon</h1>
+<h1 class="bg-info">Coupon</h1>
     
     <h3>GET:</h3>
     <ul>

@@ -119,5 +119,24 @@ class UserCtrl extends \BaseController {
         return Response::json($return, 200);
     }
     
+    
+    /**
+     * Update the user's phone number
+     * @param phone $newPhone
+     * @return httpStatus
+     */
+    public function postPhone() {
+        
+        // Get data
+        $data = json_decode(Input::get('data'));
+        $newPhone = $data->new_phone;
+        
+        $user = User::get();
+        $user->phone = $newPhone;
+        $user->save();
+        
+        return Response::json('', 200);
+    }
+    
         
 }

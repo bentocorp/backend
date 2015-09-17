@@ -304,6 +304,38 @@ class UserCtrlTest extends TestCase {
         DB::delete('delete from User where email = "vcardillo+42.0@gmail.com"');
     }
     
+    
+    /**************************************************************************
+     * All Other Tests
+    /*************************************************************************/
+    
+    public function testUserCanChangeTheirPhoneNumber()
+    {
+        // Given an authenticated user
+        $parameters = array(
+            "data" =>
+                '{
+                    "new_phone":"585-502-7804"
+                }',
+            "api_token" => '123'
+        );
         
+        // With a bad number
+        $user = User::where('api_token', '123')->first();
+        $user->phone = '1-800-somebadnumber';
+        $user->save();
+        
+        // When I change my phone number
+        $response = $this->call('POST', '/user/phone', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+        
+        // And when I check
+        $user2 = User::where('api_token', '123')->first();
+        
+        // It's been set
+        $user2->phone = '585-502-7804';
+    }
     
 }
