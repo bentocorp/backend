@@ -10,8 +10,7 @@ use Bento\Admin\Model\Driver;
 if (count($currentDrivers) > 0):
 ?>
 
-    <p><b>Note:</b> Live Inventory is automatically recalculated <i>every time</i> you
-      manually update the Driver Inventory. This is computationally expensive, so do so wisely!</p>
+    <p><b>Note:</b> Only one person should be editing this at a time. Another admin must always refresh first.</p>
 
     <?php
     if ($mealMenu !== NULL):
@@ -108,7 +107,7 @@ if (count($currentDrivers) > 0):
                     
                     foreach ($invItemKeys as $invItem) { // short names
 
-                        $inventoryColumnsStr .= "<td style='text-align:center;'><input type='number' min='0' required name='newqty-{$invItem->pk_Dish}' value='";
+                        $inventoryColumnsStr .= "<td style='text-align:center;'><input type='number' min='0' required name='newqty[{$invItem->pk_Dish}]' value='";
 
                         // If a menu item is not in driver inventory, the amount is assumed to be 0
                         $origQty = 0;

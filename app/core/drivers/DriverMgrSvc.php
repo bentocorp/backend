@@ -122,8 +122,34 @@ class DriverMgrSvc {
     }
     
     
-    public function mergeDrivers($data) {
+    public function mergeDrivers($data, $pk_DriverReceiving) {
         
+        // Do nothing if empty
+        if ($data['zeroArray'] == '')
+            return;
+        
+        // Zero out other inventories from a merge
+        // The format is x,y,z, with the trailing comma
+        $zeroAr = explode(',' , $data['zeroArray']);
+            
+        $last = count($zeroAr)-1;
+        if ($zeroAr[ $last ] == '')
+            unset($zeroAr[$last]); // Last one is garbage due to trailing comma
+
+        DB::transaction(function() use ($data, $pk_DriverReceiving, $zeroAr)
+        {
+            // Empty everyone else
+            foreach ($zeroAr as $pk_Driver) {
+                #$sql = "update DriverInventory set qty = ? where fk_Driver = ?";
+                #DB::update($sql, array(0, $driverToZero));
+                $driver = new Driver(null, $pk_Driver);
+                $driver->emptyInventory(false); // already in transaction
+            }
+
+            // Update the Driver receiving everything
+            $driver = new Driver(null, $pk_DriverReceiving);
+            $driver->updateInventory($data, false); // already in transaction
+        });
     }
         
 }

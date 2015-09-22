@@ -53,25 +53,22 @@ class DriverCtrl extends AdminBaseController {
         
         $data = $_POST;
         
-        /*
-        // This isn't a merge
+        // This is NOT a merge
         if ($data['zeroArray'] == '') {
-            $driver = new Driver($pk_Driver);
+            $driver = new Driver(null, $pk_Driver);
             $driver->updateInventory($data);
         }
         // This IS a merge
         else {
-            DriverMgr::mergeDrivers($data);
+            DriverMgr::mergeDrivers($data, $pk_Driver);
         }
-         * 
-         */
-                
+                        
         // Save the new data
-        Driver::overwriteInventory($pk_Driver, $data);
+        #Driver::overwriteInventory($pk_Driver, $data);
         
         return Redirect::back()->with('msg', array(
             'type' => 'success', 
-            'txt' => 'Driver inventory <b>AND</b> Live Inventory updated.'));
+            'txt' => 'Driver inventory <b>AND</b> Live Inventory updated via diff.'));
     }
     
     

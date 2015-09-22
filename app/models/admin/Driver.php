@@ -4,6 +4,7 @@ namespace Bento\Admin\Model;
 
 use Bento\Model\LiveInventory;
 use Bento\Model\CustomerBentoBox;
+use Bento\core\Util\DbUtil;
 use DB;
 
 class Driver extends \Eloquent {
@@ -91,6 +92,10 @@ class Driver extends \Eloquent {
     }
     
     
+    /**
+     * WARNING: This method is deprecated in favor of updateInventory() instead.
+     * @deprecated
+     */
     public static function overwriteInventory($pk_Driver, $data) {
         
         // Update driver inventory
@@ -109,47 +114,33 @@ class Driver extends \Eloquent {
              * 
              */
 
-            // Now delete
+            // Now, delete
 
             $sql2 = "delete from DriverInventory where fk_Driver = ?";
 
             DB::delete($sql2, array($pk_Driver));
 
             // Now insert new
-
-            foreach($data as $key => $val) {
+            
+            foreach($data['newqty'] as $key => $val) {
                 
                 // Ignore hidden fields
-                $keyParts = explode('-', $key);
-                if ($keyParts[0] != 'newqty')
-                    continue;
+                #$keyParts = explode('-', $key);
+                #if ($keyParts[0] != 'newqty')
+                    #continue;
                 
                 $sql3 = "
                 insert into DriverInventory (fk_Driver, fk_item, qty, change_reason)
                 values (?,?,?,?)
                 ";
 
-                DB::insert($sql3, array($pk_Driver, $keyParts[1], $val, 'admin_update'));
+                DB::insert($sql3, array($pk_Driver, $key, $val, 'admin_update'));
             }
             
-            // Zero out other inventories from a merge
-            // The format is x,y,z, with the trailing comma
-            if ($data['zeroArray'] !== '') {
-                $zeroAr = explode(',' , $data['zeroArray']);
-                $last = count($zeroAr)-1;
-                if ($zeroAr[ $last ] == '')
-                    unset($zeroAr[$last]); // Last one is garbage due to trailing comma
-                
-                foreach ($zeroAr as $driverToZero) {
-                    $sql = "update DriverInventory set qty = ? where fk_Driver = ?";
-                    DB::update($sql, array(0, $driverToZero));
-                }
-            }
+            // Recalculate (overwrite) the LiveInventory with the DriverInventory
+            LiveInventory::recalculate();
         });
         
-        // Recalculate the LiveInventory
-        
-        LiveInventory::recalculate();
     }
     
     
@@ -202,19 +193,32 @@ class Driver extends \Eloquent {
     
     public function removeFromShift() {
         
-        $status = $this->safeToRemoveFromShift();
-        #var_dump($status); die(); #0
+        // Take the driver off-shift immediately, so no other processes will assign him
+        DB::update("update Driver set on_shift = 0 where pk_Driver = ?", array($this->id()));
         
-        if ($status['ok']) {
-            
-            DB::delete("delete from DriverInventory where fk_Driver = ?", array($this->id()));
-            
-            DB::update("update Driver set on_shift = 0 where pk_Driver = ?", array($this->id()));
-            
-            return $status;
+        try {
+            $status = $this->safeToRemoveFromShift();
+            #var_dump($status); die(); #0
+
+            if ($status['ok']) {
+
+                DB::delete("delete from DriverInventory where fk_Driver = ?", array($this->id()));
+                
+                // And since we already took him off shift above, we're done.
+
+                return $status;
+            }
+            else {
+                // Something's gone wrong, we can't pull them off shift yet
+                DB::update("update Driver set on_shift = 1 where pk_Driver = ?", array($this->id()));
+
+                return $status;
+            }
+        } 
+        catch (\Exception $e) {
+        // Catch for anything else, so as not to leave this record in a dirty state
+            DB::update("update Driver set on_shift = 1 where pk_Driver = ?", array($this->id()));
         }
-        else
-            return $status;
     }
     
     
@@ -258,11 +262,19 @@ class Driver extends \Eloquent {
         }
     }
     
-    
-    private function getInventory() {
+    /**
+     * 
+     * @param boolean $forupdate Do a locking read via FOR UPDATE?
+     * @return array
+     */
+    private function getInventory($forupdate = false) {
+        
+        $forupdateSql = '';
+        if ($forupdate)
+            $forupdateSql = 'FOR UPDATE';
         
         // Get from db           
-        $sql = "select * from DriverInventory where fk_Driver = ?";
+        $sql = "SELECT * FROM DriverInventory WHERE fk_Driver = ? $forupdateSql";
         
         $rows = DB::select($sql, array($this->id()));
         
@@ -326,20 +338,147 @@ class Driver extends \Eloquent {
     
     /**
      * Set everything for this driver's DriverInventory to zero
+     * 
+     * @param bool $transaction Should this be a transaction? Useful to avoid 
+     *      transaction nesting, which MySQL doesn't support
      */
-    public function emptyInventory() {
+    public function emptyInventory($transaction = true) {
         
-        $sql = "update DriverInventory set qty = ? where fk_Driver = ?";
-        DB::update($sql, array(0, $this->id()));
+        if ($transaction) 
+        {
+            DB::transaction(function() 
+            {
+                $this->doEmptyInventory();
+            });
+        }
+        else
+            $this->doEmptyInventory();
+    }
+    
+    private function doEmptyInventory() {
+        
+        ## 1. Do a locking read on the driver's inventory
+        $di = $this->getInventory(true);
+        
+        // We need to index the di return, since it's just a dumb array
+        $diIdx = DbUtil::makeIndexFromResults($di, 'fk_item');
+        
+        ## 2. Determine the diffs
+
+        $diffs = array(); // Track diffs
+        
+        foreach ($diIdx as $key => $row) {
+            $diffs[$key] = $row->qty;
+        }
+        
+        
+        ## 3. Delete the DriverInventory for this driver
+
+        $sql1 = 'delete from DriverInventory where fk_Driver = ?';
+        
+        DB::delete($sql1, array($this->id()));
+
+        
+        ## 4. Subtract the driver's stuff from the LiveInventory with the diffs
+
+        foreach($diffs as $itemId => $diffAmt) {
+            $sql2 = 'update LiveInventory set qty = greatest(0, qty - :diff) where fk_item = :item AND item_type = "Dish"';
+            DB::update( $sql2,
+                array('diff'=>$diffAmt, 'item'=>$itemId)
+            );
+        }
     }
     
     
     /**
      * Update this driver's inventory, using a diff qty
+     * 
+     * There are a number of scenarios that we need to account for:
+     * 
+     * 1. The item is already in both DI and LI:
+     *    This is a locking read for DI, and an update in both tables.
+     * 
+     * 2. The item is not in the DI, but is in the LI: 
+     *    This might happen when first bringing a driver on shift for example, or if we've
+     *    added a new item the menu midway, and we're going along and updating all driver inventories.
+     *    This is an insert in DI, and update in LI. No locks needed.
+     * 
+     * 3. The item is in neither place:
+     *    When we're adding the first driver of the day. This is two inserts.
+     * 
+     * 4. The item is in the DI, but not in the LI (inverse of 2):
+     *    This should never happen.
+     * 
      */
-    public function updateInventory($data) {
+    public function updateInventory($data, $transaction = true) {
         
-        
+        if ($transaction) 
+        {
+            DB::transaction(function() use ($data)
+            {
+                $this->doUpdateInventory($data);
+            });
+        }
+        else
+            $this->doUpdateInventory($data);
     }
     
+    private function doUpdateInventory($data) {
+        
+        #DB::transaction(function() use ($data)
+        #{
+        
+        ## 1. Do a locking read on the driver's inventory
+
+        $di = $this->getInventory(true);
+
+        // We need to index the di return, since it's just a dumb array
+        $diIdx = DbUtil::makeIndexFromResults($di, 'fk_item');
+
+        ## 2. Determine the diffs
+
+        $newQtys = $data['newqty']; // 'newqty' is the html form array
+        $diffs = array(); // Track diffs
+
+        foreach($newQtys as $key => $newval) 
+        {
+            // The value already exists
+            if (isset($diIdx[$key])) {
+                $diffQty = $newval - $diIdx[$key]->qty; //  new value minus existing value
+            }
+            // It doesn't exist, so the diff is simply what the form has sent
+            else
+                $diffQty = $newval; 
+
+            // If we've found that there's a difference (pos or neg), record it
+            if ($diffQty != 0)
+                $diffs[$key] = $diffQty;
+        }
+
+
+        ## 3. Update the DriverInventory
+
+        foreach($diffs as $itemId => $diffAmt) {
+            DB::update(
+                 "INSERT INTO DriverInventory (fk_Driver, fk_item, item_type, qty) "
+                ."VALUES (:driver, :item, 'Dish', greatest(0, qty + :diff)) " 
+                .   "ON DUPLICATE KEY UPDATE qty = greatest(0, qty + :diff2)" , 
+                array('diff'=>$diffAmt, 'diff2'=>$diffAmt, 'driver'=>$this->id(), 'item'=>$itemId)
+            );
+        }
+
+
+        ## 4. Update the LiveInventory
+
+        foreach($diffs as $itemId => $diffAmt) {
+            DB::update(
+                 'INSERT INTO LiveInventory (fk_item, item_type, qty) '
+                .'VALUES (:item, "Dish", greatest(0, qty + :diff)) '
+                .   'ON DUPLICATE KEY UPDATE qty = greatest(0, qty + :diff2) ' ,
+                array('diff'=>$diffAmt, 'diff2'=>$diffAmt, 'item'=>$itemId)
+            );
+        }
+        #});
+    }
+            
 }

@@ -2,7 +2,7 @@
 
 namespace Bento\Admin\Model;
 
-use Bento\Lib\Lib;
+use Bento\core\Util\DbUtil;
 use DB;
 
 class Orders {
@@ -68,7 +68,7 @@ class Orders {
     
     public static function getStatusesForDropdown() {
         
-        $enum = Lib::getEnumValuesHash('OrderStatus', 'status');
+        $enum = DbUtil::getEnumValuesHash('OrderStatus', 'status');
         
         return $enum;
     }

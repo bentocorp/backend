@@ -1,10 +1,10 @@
 <?php
 
-namespace Bento\Lib;
+namespace Bento\core\Util;
 
 use DB;
 
-class Lib {
+class DbUtil {
     
     public static function getEnumValues($table, $field) {
 
@@ -34,6 +34,24 @@ class Lib {
        }
 
        return $enum;
+    }
+    
+    
+    /**
+     * Make an index from a result array with some primary key field as the array key
+     * @param array $results
+     * @param string $keyName The name of the DB field to use as the new array key
+     * @return array
+     */
+    public static function makeIndexFromResults(array $results, $keyName) {
+        
+        // We need to index the return, since it's just a dumb array
+        $idx = array();
+        foreach ($results as $row) {
+        $idx[$row->{$keyName}] = $row; # ToDo: We are going to need a UUID system when we have multiple item types
+        }
+        
+        return $idx;
     }
     
 }
