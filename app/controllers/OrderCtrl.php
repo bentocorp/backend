@@ -447,6 +447,7 @@ class OrderCtrl extends \BaseController {
         // Put into the order queue for async processing
         try {
             $orderJson->pk_Order = $order->pk_Order;
+            $orderJson->User = User::get();
             Queue::push('Bento\Jobs\DoNothing', json_encode($orderJson));
         } catch (\Exception $e) {
             Bento::alert($e, 'Queue Insertion Exception', 'af30d4ea-6f7c-4f80-89ca-972f8541ee2f');
