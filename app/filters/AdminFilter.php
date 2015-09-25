@@ -9,7 +9,7 @@ class AdminFilter {
 
     public function filter() {
         
-        if (Session::has('isAdminLoggedIn')){
+        if (Session::has('isAdminLoggedIn')) {
             // Return nothing to execute the route
             #return Redirect::to('admin/');
             #return Redirect::intended();

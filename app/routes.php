@@ -12,10 +12,10 @@
 */
 
 // Index
-Route::get('/', function() {
+Route::get('/', array('as' => 'index', function() {
     #return View::make('homepage.index');
     return Redirect::away('https://bentonow.com');
-});
+}));
 
 // AWS Health check
 Route::get('/healthcheck', function() {

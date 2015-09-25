@@ -6,6 +6,8 @@ use Bento\Admin\Model\Driver;
 use Bento\Drivers\DriverMgr;
 use Redirect;
 use View;
+use Input;
+use Route;
 
 
 class DriverCtrl extends AdminBaseController {
@@ -16,7 +18,7 @@ class DriverCtrl extends AdminBaseController {
         // Get drivers
         $drivers = Driver::all();
         $data['drivers'] = $drivers;
-        
+                
         return View::make('admin.driver.index', $data);
     }
     
@@ -51,7 +53,8 @@ class DriverCtrl extends AdminBaseController {
 
     public function postSaveInventory($pk_Driver) {
         
-        $data = $_POST;
+        #$data = $_POST;
+        $data = Input::all();
         
         // This is NOT a merge
         if ($data['zeroArray'] == '') {
@@ -65,10 +68,10 @@ class DriverCtrl extends AdminBaseController {
                         
         // Save the new data
         #Driver::overwriteInventory($pk_Driver, $data);
-        
+                
         return Redirect::back()->with('msg', array(
             'type' => 'success', 
-            'txt' => 'Driver inventory <b>AND</b> Live Inventory updated via diff.'));
+            'txt' => 'Driver Inventory <b>AND</b> Live Inventory updated via diff.'));
     }
     
     
