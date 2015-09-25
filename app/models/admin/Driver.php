@@ -472,10 +472,10 @@ class Driver extends \Eloquent {
 
         foreach($diffs as $itemId => $diffAmt) {
             DB::update(
-                 'INSERT INTO LiveInventory (fk_item, item_type, qty) '
-                .'VALUES (:item, "Dish", greatest(0, qty + :diff)) '
+                 'INSERT INTO LiveInventory (fk_item, item_type, qty, qty_saved) '
+                .'VALUES (:item, "Dish", greatest(0, qty + :diff), greatest(0, qty + :diff3)) '
                 .   'ON DUPLICATE KEY UPDATE qty = greatest(0, qty + :diff2) ' ,
-                array('diff'=>$diffAmt, 'diff2'=>$diffAmt, 'item'=>$itemId)
+                array('diff'=>$diffAmt, 'diff2'=>$diffAmt, 'diff3'=>$diffAmt, 'item'=>$itemId)
             );
         }
         #});
