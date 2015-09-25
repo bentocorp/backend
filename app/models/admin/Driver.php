@@ -470,12 +470,17 @@ class Driver extends \Eloquent {
 
         ## 4. Update the LiveInventory
 
+        /*
+         * We need to be careful and account for items that are marked as "sold out".
+         * This is why we have the IF statement within the SQL below.
+         */
+        
         foreach($diffs as $itemId => $diffAmt) {
             DB::update(
                  'INSERT INTO LiveInventory (fk_item, item_type, qty, qty_saved) '
-                .'VALUES (:item, "Dish", greatest(0, qty + :diff), greatest(0, qty + :diff3)) '
-                .   'ON DUPLICATE KEY UPDATE qty = greatest(0, qty + :diff2) ' ,
-                array('diff'=>$diffAmt, 'diff2'=>$diffAmt, 'diff3'=>$diffAmt, 'item'=>$itemId)
+                .'VALUES (:item, "Dish", IF(sold_out, 0, greatest(0, qty + :diff)), greatest(0, qty_saved + :diff3)) '
+                .   'ON DUPLICATE KEY UPDATE qty = IF(sold_out, 0, greatest(0, qty + :diff2)), qty_saved = greatest(0, qty_saved + :diff4) ' ,
+                array('diff'=>$diffAmt, 'diff2'=>$diffAmt, 'diff3'=>$diffAmt, 'diff4'=>$diffAmt, 'item'=>$itemId)
             );
         }
         #});

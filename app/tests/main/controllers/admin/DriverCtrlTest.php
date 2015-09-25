@@ -167,6 +167,44 @@ class DriverCtrlTest extends TestCase {
         
         /***/
         
+        
+        // And if I mark an item as sold out
+        $this->call('GET', '/admin/inventory/soldout/on/10', [], [], ['HTTP_REFERER' => route('index')]);
+
+        // Then it's saved correctly
+        $liSave = DB::select('select * from LiveInventory where fk_item = 10')[0];
+        $this->assertEquals(0, $liSave->qty);
+        $this->assertEquals(21, $liSave->qty_saved);
+        $this->assertEquals(1, $liSave->sold_out);
+        
+        // And if I update inventory while sold out
+        
+        $inv = array(
+            10 => '5', // +4
+        );
+        $parameters = array(
+            'newqty' => $inv,
+            'zeroArray' => '' 
+        );
+        
+        $this->call('POST', '/admin/driver/save-inventory/2', $parameters, [], ['HTTP_REFERER' => route('index')]);
+
+        // Then the qty is still 0 and qty_saved is the one that's accurate
+        $liSave = DB::select('select * from LiveInventory where fk_item = 10')[0];
+        $this->assertEquals(0, $liSave->qty);
+        $this->assertEquals(25, $liSave->qty_saved);
+        $this->assertEquals(1, $liSave->sold_out);
+        
+        // And if I un-sell-out the item
+        $this->call('GET', '/admin/inventory/soldout/off/10', [], [], ['HTTP_REFERER' => route('index')]);
+        
+        // Then the qty is back to being accurate
+        $liSave = DB::select('select * from LiveInventory where fk_item = 10')[0];
+        $this->assertEquals(25, $liSave->qty);
+        $this->assertEquals(0, $liSave->sold_out);
+        
+        /***/
+        
         // Reset
         DB::table('LiveInventory')->truncate();
         DB::table('DriverInventory')->truncate();
