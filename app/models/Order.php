@@ -136,7 +136,7 @@ class Order extends \Eloquent {
             foreach ($totals as $itemId => $itemQty) {
               DB::update("UPDATE LiveInventory SET
                             qty = IF(sold_out, 0, greatest(0, qty + ?)), 
-                            qty_saved = greatest(0, qty_saved + ?)
+                            qty_saved = greatest(0, qty_saved + ?),
                             change_reason='admin_update' 
                           WHERE fk_item = ?", 
                       array($itemQty, $itemQty, $itemId));

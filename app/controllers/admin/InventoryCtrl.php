@@ -2,7 +2,6 @@
 
 namespace Bento\Admin\Ctrl;
 
-use Bento\Admin\Model\Menu;
 use Bento\Admin\Model\Driver;
 use Bento\Model\LiveInventory;
 use View;
@@ -36,7 +35,7 @@ class InventoryCtrl extends \BaseController {
         LiveInventory::sellOut($mode, $fk_item);
         
         return Redirect::back()->with('msg', 
-            array('type' => 'success', 'txt' => '<b>Item Banished (sold out)!</b>'));
+            array('type' => 'success', 'txt' => '<b>Item sold out toggled.</b>'));
     }
     
     
