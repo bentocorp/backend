@@ -275,6 +275,7 @@ class Driver extends \Eloquent {
         
         // Get from db           
         $sql = "SELECT * FROM DriverInventory WHERE fk_Driver = ? $forupdateSql";
+        #echo $sql; die(); #0
         
         $rows = DB::select($sql, array($this->id()));
         

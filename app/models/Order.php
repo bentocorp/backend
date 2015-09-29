@@ -129,14 +129,17 @@ class Order extends \Eloquent {
         // 1. Rollback the LiveInventory
         
         $totals = CustomerBentoBox::calculateTotalsFromJson($this->getOrderJsonObj($pending));
-                
+              
         // Add back in
         DB::transaction(function() use ($totals)
         {
             foreach ($totals as $itemId => $itemQty) {
-              DB::update("update LiveInventory set qty = qty + ?, change_reason='admin_update' 
+              DB::update("UPDATE LiveInventory SET
+                            qty = IF(sold_out, 0, greatest(0, qty + ?)), 
+                            qty_saved = greatest(0, qty_saved + ?)
+                            change_reason='admin_update' 
                           WHERE fk_item = ?", 
-                      array($itemQty, $itemId));
+                      array($itemQty, $itemQty, $itemId));
             }
         });
     }
