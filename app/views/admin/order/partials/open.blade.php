@@ -59,7 +59,7 @@ if (count($openOrders) > 0):
                 <td>{{{ $row->order_created_at }}}</td>
                 <td><?php echo Form::select('pk_Driver[new]', $groupedDriversDropdown, $row->pk_Driver); echo Form::hidden('pk_Driver[current]', $row->pk_Driver)?></td>
                 <td><?php echo Form::select('status', $orderStatusDropdown, $row->status)?></td>
-                <td><button title="Save" type="submit" class="btn btn-default"><span class="glyphicon glyphicon-save"></span></button></td>
+                <td><button title="Save" type="submit" class="btn btn-default order-status-btn-save"><span class="glyphicon glyphicon-save"></span></button></td>
               </form>
             </tr>
             <tr>

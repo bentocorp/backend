@@ -190,5 +190,19 @@ $(document).ready(function() {
     
     // Driver checkboxes
     $("input.dinv-array-item").on('change', bt.DInv.Merge.validateCheckedCount);
-  
+    
+    // Disable the various form submit & status/inventory save buttons when clicked, to avoid "double tapping"
+    
+    // # Generic forms (but this won't catch <forms> in <tr>'s)
+    $('input[type=submit]').click(function() {
+        $(this).attr('disabled', 'disabled');
+        $(this).parents('form').submit();
+    });
+    
+    // # This will catch <forms> in <tr>'s
+    $('button.dinv-btn-save, button.order-status-btn-save').on('click', function() {
+        $(this).attr('disabled', 'disabled');
+        $(this).parents('tr').find('form').submit();
+    });
+      
 });
