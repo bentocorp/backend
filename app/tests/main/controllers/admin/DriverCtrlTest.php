@@ -3,7 +3,7 @@
 use Bento\core\Util\DbUtil;
 
 
-class DriverCtrlTest extends TestCase {
+class AdminDriverCtrlTest extends TestCase {
 
 
     public function setUp() {

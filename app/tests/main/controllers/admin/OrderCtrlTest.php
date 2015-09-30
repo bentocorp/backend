@@ -1,9 +1,9 @@
 <?php
 
-use Bento\core\Util\DbUtil;
+#use Bento\core\Util\DbUtil;
 
 
-class OrderCtrlTest extends TestCase {
+class AdminOrderCtrlTest extends TestCase {
 
 
     public function setUp() {
