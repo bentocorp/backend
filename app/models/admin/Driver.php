@@ -383,9 +383,12 @@ class Driver extends \Eloquent {
         ## 4. Subtract the driver's stuff from the LiveInventory with the diffs
 
         foreach($diffs as $itemId => $diffAmt) {
-            $sql2 = 'update LiveInventory set qty = greatest(0, qty - :diff) where fk_item = :item AND item_type = "Dish"';
+            $sql2 = 'update LiveInventory SET
+                        qty = greatest(0, qty - :diff),
+                        qty_saved = greatest(0, qty_saved - :diff2)
+                     where fk_item = :item AND item_type = "Dish"';
             DB::update( $sql2,
-                array('diff'=>$diffAmt, 'item'=>$itemId)
+                array('diff'=>$diffAmt, 'diff2'=>$diffAmt, 'item'=>$itemId)
             );
         }
     }

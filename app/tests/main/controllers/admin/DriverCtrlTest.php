@@ -310,6 +310,20 @@ class AdminDriverCtrlTest extends TestCase {
         DB::table('LiveInventory')->truncate();
         DB::table('DriverInventory')->truncate();
     }
+    
+    
+    public function testMergingWithSoldOutItems()
+    {
+        // Given some drivers on shift
+        
+        // And some inventory
+        
+        // And some sold out items
+        
+        // When I perform a merge
+        
+        // Then both the DI and LI the counts are accurate, and the LI hasn't been incremented
+    }
 
     
     public function testDriversCannotBeTakenOffShiftWhenNotAppropriate() 
