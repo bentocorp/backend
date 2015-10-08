@@ -46,7 +46,7 @@ class DashboardCtrl extends \BaseController {
         $data['status'] = ApiStatus::overall()->value;
         
         // Get some copy to edit on the dashboard
-        $in = "'closed-text', 'closed-text-latenight', 'sold-out-text', 'sale_price', 'price'";
+        $in = "'closed-text', 'closed-text-latenight', 'sold-out-text'";
         $iosCopy = DB::select("SELECT * FROM admin_ios_copy WHERE `key` IN ($in) order by `key` asc", array());
         $data['iosCopy'] = $iosCopy;
         
