@@ -82,6 +82,7 @@ return array(
     'Bento\\ViewComposer\\MenuTodayComposer' => $baseDir . '/app/core/view-composers/MenuTodayComposer.php',
     'Bento\\app\\Bento' => $baseDir . '/app/core/Bento.php',
     'Bento\\app\\BentoSvc' => $baseDir . '/app/core/BentoSvc.php',
+    'Bento\\core\\OrderStatus' => $baseDir . '/app/core/OrderStatus.php',
     'Bento\\core\\Status' => $baseDir . '/app/core/Status.php',
     'Bento\\core\\Util\\DbUtil' => $baseDir . '/app/core/util/DbUtil.php',
     'CreateFailedJobsTable' => $baseDir . '/app/database/migrations/2015_08_27_192336_create_failed_jobs_table.php',

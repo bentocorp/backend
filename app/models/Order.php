@@ -123,7 +123,7 @@ class Order extends \Eloquent {
         return DB::select($sql);
     }
     
-    
+        
     public function rollback($pending = false) 
     {
         // 1. Rollback the LiveInventory

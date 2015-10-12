@@ -283,12 +283,23 @@ class Driver extends \Eloquent {
     }
     
     
+    /*
+     * Lock the driver's inventory by doing a locking read
+     */
+    public function lockInventory() {
+        $this->getInventory(true);
+    }
+    
+    
     /**
      * Add an order back into a Driver's inventory
      * 
+     * Laravel seems to support nested transactions: https://github.com/laravel/framework/issues/1823
+     * So this architecture is overkill, but it's fine, we can leave it.
+     * 
      * @param int $pk_Order
      */
-    public function addOrderToInventory($pk_Order)
+    public function addOrderToInventory($pk_Order, $transaction = true)
     {
         $order = new \Bento\Model\Order(null, $pk_Order);
         
@@ -298,15 +309,26 @@ class Driver extends \Eloquent {
         
         $id = $this->id();
         
-        // Subtract
-        DB::transaction(function() use ($totals, $id)
-        {
-            foreach ($totals as $itemId => $itemQty) {
-              DB::update("update DriverInventory set qty = qty + ?, change_reason='order_assignment' 
-                          WHERE fk_item = ? AND fk_Driver = ?", 
-                      array($itemQty, $itemId, $id));
-            }
-        });
+        // Add
+        if ($transaction) {
+            DB::transaction(function() use ($totals, $id)
+            {
+                $this->doAddOrderToInventory($totals, $id);
+            });
+        }
+        else 
+            $this->doAddOrderToInventory ($totals, $id);
+    }
+    
+    private function doAddOrderToInventory($totals, $id) 
+    {    
+        $this->lockInventory();
+        
+        foreach ($totals as $itemId => $itemQty) {
+          DB::update("update DriverInventory set qty = qty + ?, change_reason='order_assignment' 
+                      WHERE fk_item = ? AND fk_Driver = ?", 
+                  array($itemQty, $itemId, $id));
+        }
     }
     
     
@@ -315,7 +337,7 @@ class Driver extends \Eloquent {
      * 
      * @param int $pk_Order
      */
-    public function subtractOrderFromInventory($pk_Order)
+    public function subtractOrderFromInventory($pk_Order, $transaction = true)
     {
         $order = new \Bento\Model\Order(null, $pk_Order);
         
@@ -326,14 +348,25 @@ class Driver extends \Eloquent {
         $id = $this->id();
         
         // Subtract
-        DB::transaction(function() use ($totals, $id)
-        {
-            foreach ($totals as $itemId => $itemQty) {
-              DB::update("update DriverInventory set qty = qty - ?, change_reason='order_assignment' 
-                          WHERE fk_item = ? AND fk_Driver = ?", 
-                      array($itemQty, $itemId, $id));
-            }
-        });
+        if ($transaction) {
+            DB::transaction(function() use ($totals, $id)
+            {
+                $this->doSubtractOrderFromInventory($totals, $id);
+            });
+        }
+        else 
+            $this->doSubtractOrderFromInventory($totals, $id);
+    }
+    
+    private function doSubtractOrderFromInventory($totals, $id) 
+    {    
+        $this->lockInventory();
+        
+        foreach ($totals as $itemId => $itemQty) {
+          DB::update("update DriverInventory set qty = qty - ?, change_reason='order_assignment' 
+                      WHERE fk_item = ? AND fk_Driver = ?", 
+                  array($itemQty, $itemId, $id));
+        }
     }
     
     

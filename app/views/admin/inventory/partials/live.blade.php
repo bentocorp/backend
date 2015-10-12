@@ -24,7 +24,7 @@
         $isMatchClass = '';
         
         // Counts matching UI
-        if($row->lqty == $row->dqty) {
+        if( (!$row->sold_out && $row->lqty == $row->dqty) || ($row->sold_out && $row->qty_saved == $row->dqty) ) {
             $isMatch = '<span class="glyphicon glyphicon-ok"></span>';
             $isMatchClass = 'success';
         }

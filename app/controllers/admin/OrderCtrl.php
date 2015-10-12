@@ -2,7 +2,7 @@
 
 namespace Bento\Admin\Ctrl;
 
-use Bento\Model\OrderStatus;
+use Bento\core\OrderStatus;
 use Bento\Admin\Model\Orders;
 use Bento\Admin\Model\Driver;
 use Redirect;
@@ -30,15 +30,29 @@ class OrderCtrl extends \BaseController {
     }
     
     
-    public function postSaveStatus($pk_Order) {
+    public function postSetDriver($pk_Order) {
         
-        #if ($data === NULL)
         $data = $_POST;
         
-        OrderStatus::setStatus($pk_Order, $data);
+        $orderStatus = new OrderStatus($pk_Order);
+        $orderStatus->setDriver($data);
         
-        return Redirect::back()->with('msg', 
-            array('type' => 'success', 'txt' => 'Order status updated.'));
+        $response = Redirect::back()->with('msg', 
+            array('type' => 'success', 'txt' => 'Driver assigned to order.'));
+        
+        return $response;
+    }
+    
+    
+    public function getCancel($pk_Order){
+        
+        $orderStatus = new OrderStatus($pk_Order);
+        $orderStatus->cancel();
+        
+        $response = Redirect::back()->with('msg', 
+            array('type' => 'success', 'txt' => 'Order cancelled.'));
+        
+        return $response;
     }
     
     
