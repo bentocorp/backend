@@ -204,5 +204,10 @@ $(document).ready(function() {
         $(this).attr('disabled', 'disabled');
         $(this).parents('tr').find('form').submit();
     });
+    
+    // # Everything else you want
+    $('.disable-onclick').on('click', function() {
+        $(this).addClass('disabled');
+    });
       
 });

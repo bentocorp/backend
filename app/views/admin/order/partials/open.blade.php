@@ -59,7 +59,7 @@ if (count($openOrders) > 0):
                         {{ $row->order_created_at }}</td>
                     <td align="center">
                         <?php echo $row->status; #echo Form::select('status', $orderStatusDropdown, $row->status)?><br>
-                        <a href="/admin/order/cancel/{{$row->pk_Order}}" title="Cancel" role="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></a>
+                        <a href="/admin/order/cancel/{{$row->pk_Order}}" title="Cancel" role="button" class="btn btn-default btn-xs" onclick="return confirm('Cancel {{$row->user_name}}\u2019s order?')"><span class="glyphicon glyphicon-remove"></span></a>
                     </td>
                     <td><?php echo Form::select('pk_Driver[new]', $groupedDriversDropdown, $row->pk_Driver); echo Form::hidden('pk_Driver[current]', $row->pk_Driver)?></td>
                     <td><button title="Save driver" type="submit" class="btn btn-default order-status-btn-save"><span class="glyphicon glyphicon-save"></span></button></td>
