@@ -9,6 +9,10 @@ class OrderCtrlTest extends TestCase {
         Route::enableFilters();
     }
     
+    private function getIdempotentToken() {
+        return rand(1000,9999) . chr(rand(65,90));
+    }
+    
     
     public function testCantOrderIfPublic()
     {
@@ -44,6 +48,7 @@ class OrderCtrlTest extends TestCase {
     public function testCantOrderIfNoPaymentSentAndNoPaymentOnFile() 
     {
         // Given an order from an authorized user, with no payment specified and none on file,
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -77,10 +82,13 @@ class OrderCtrlTest extends TestCase {
                         "tax_cents": 137,
                         "tip_cents": 200,
                         "total_cents": "50"
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }',
             "api_token" => "456"
         );
+        
+        #print_r($parameters); die();
                         
         // When I attempt to order
         $response = $this->call('POST', '/order', $parameters);
@@ -93,6 +101,7 @@ class OrderCtrlTest extends TestCase {
     public function testCantOrderIfNotEnoughInventory() 
     {
         // Given an order from an authorized user,
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -127,7 +136,8 @@ class OrderCtrlTest extends TestCase {
                         "tax_cents": 137,
                         "tip_cents": 200,
                         "total_cents": "50"
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "123"
@@ -149,6 +159,7 @@ class OrderCtrlTest extends TestCase {
     public function testStripeOrderIntegrationFailsWithBadToken() 
     {
         // Given an order from an authorized user who is sending us a bad stripe token,
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -179,7 +190,8 @@ class OrderCtrlTest extends TestCase {
                     },
                     "Stripe": {
                         "stripeToken": "badToken!"
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "456"
@@ -212,6 +224,7 @@ class OrderCtrlTest extends TestCase {
     public function testStripeOrderIntegrationWithUserCardSavedInDb() 
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -249,7 +262,8 @@ class OrderCtrlTest extends TestCase {
                     },
                     "Stripe": {
                         "stripeToken": NULL
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "123"
@@ -281,6 +295,7 @@ class OrderCtrlTest extends TestCase {
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
         // AND A BAD ADDRESS
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -311,7 +326,8 @@ class OrderCtrlTest extends TestCase {
                     },
                     "Stripe": {
                         "stripeToken": NULL
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "123"
@@ -334,6 +350,7 @@ class OrderCtrlTest extends TestCase {
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
         // AND A BAD ADDRESS, AND a bad lat/long
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -364,7 +381,8 @@ class OrderCtrlTest extends TestCase {
                     },
                     "Stripe": {
                         "stripeToken": NULL
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "123"
@@ -387,6 +405,8 @@ class OrderCtrlTest extends TestCase {
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
         // AND an address with missing information
+        
+        $idempotentTkn = $this->getIdempotentToken();
         
         $data = <<<DATA
 {
@@ -417,7 +437,8 @@ class OrderCtrlTest extends TestCase {
     },
     "Stripe": {
         "stripeToken": NULL
-    }
+    },
+    "IdempotentToken": "$idempotentTkn"
 }      
 DATA;
         
@@ -443,6 +464,7 @@ DATA;
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
         // AND an address with missing information
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -473,7 +495,8 @@ DATA;
                     },
                     "Stripe": {
                         "stripeToken": NULL
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "123"
@@ -498,6 +521,7 @@ DATA;
         //  an order from an authorized user, 
         //  who has a Stripe card on file with us, 
         //  and is an admin,
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -528,7 +552,8 @@ DATA;
                     },
                     "Stripe": {
                         "stripeToken": NULL
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "00123"
@@ -556,6 +581,7 @@ DATA;
     public function testUserWithSavedStripeInfoCanOrderWithZeroAmount() 
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -586,7 +612,8 @@ DATA;
                     },
                     "Stripe": {
                         "stripeToken": NULL
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "123"
@@ -608,6 +635,7 @@ DATA;
     public function testUserWithoutSavedStripeInfoCanOrderWithZeroAmount() 
     {
         // Given an order from an authorized user who does NOT have a Stripe card on file with us,
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -638,7 +666,8 @@ DATA;
                     },
                     "Stripe": {
                         "stripeToken": NULL
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "789"
@@ -660,6 +689,7 @@ DATA;
     public function testCantOrderWithUnder50Cents() 
     {
         // Given an order from an authorized user who does NOT have a Stripe card on file with us,
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -690,7 +720,8 @@ DATA;
                     },
                     "Stripe": {
                         "stripeToken": NULL
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "789"
@@ -700,7 +731,7 @@ DATA;
         $response = $this->call('POST', '/order', $parameters);
         
         // Then I get an error
-        $this->assertResponseStatus(400);
+        $this->assertResponseStatus(462);
     }
     
     
@@ -708,6 +739,7 @@ DATA;
     {
         // Given an order from an authorized user who has a Stripe card on file with us,
         // AND some bad input (a blank order)
+        $idempotentTkn = $this->getIdempotentToken();
         $parameters = array(
             "data" =>
                 '{
@@ -730,7 +762,8 @@ DATA;
                     },
                     "Stripe": {
                         "stripeToken": NULL
-                    }
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "123"
@@ -753,6 +786,8 @@ DATA;
     {
         // Given a nonexistent coupon
         $coupon = 'someBadCoupon';
+        
+        $idempotentTkn = $this->getIdempotentToken();
         
         $parameters = array(
             "data" =>
@@ -792,7 +827,8 @@ DATA;
                     "Stripe": {
                         "stripeToken": NULL
                     },
-                    "CouponCode": "'.$coupon.'"
+                    "CouponCode": "'.$coupon.'",
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "123"
@@ -817,6 +853,8 @@ DATA;
         // Given a valid coupon
         $coupon = '1121113370998kkk7';
         
+        $idempotentTkn = $this->getIdempotentToken();
+        
         $parameters = array(
             "data" =>
                 '{
@@ -855,7 +893,8 @@ DATA;
                     "Stripe": {
                         "stripeToken": NULL
                     },
-                    "CouponCode": "'.$coupon.'"
+                    "CouponCode": "'.$coupon.'",
+                    "IdempotentToken": "'.$idempotentTkn.'"
                 }'
                 ,
             "api_token" => "123"
@@ -888,6 +927,8 @@ DATA;
     {
         // Given an invalid coupon *for this user*
         $coupon = '1121113370998kkk7';
+        
+        $idempotentTkn = $this->getIdempotentToken();
         
         $data =
         '{
@@ -926,7 +967,8 @@ DATA;
             "Stripe": {
                 "stripeToken": NULL
             },
-            "CouponCode": "%s"
+            "CouponCode": "%s",
+            "IdempotentToken": "'.$idempotentTkn.'"
         }';
         
         $parameters = array(
@@ -962,5 +1004,87 @@ DATA;
     }
     
     
+    
+    /**************************************************************************
+     * Idempotent Scenarios
+     *************************************************************************/
+    
+    function testThatADuplicateOrderReturns200ButIsntProcessed()
+    {
+        // Reset
+        DB::delete('delete from `Order` where amount = ?', array(1337.00));
+
+        // Given a valid order
+        
+        $idempotentTkn = $this->getIdempotentToken();
+        
+        $parameters = array(
+            "data" =>
+                '{
+                    "OrderItems": [
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        },
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        }
+                    ],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "1111",
+                            "street": "Kearny st.",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94133"
+                        },
+                        "coords": {
+                            "lat": "37.798220",
+                            "long": "-122.405606"
+                        },
+                        "tax_cents": 137,
+                        "tip_cents": 200,
+                        "total_cents": "133700"
+                    },
+                    "Stripe": {
+                        "stripeToken": NULL
+                    },
+                    "CouponCode": "",
+                    "IdempotentToken": "'.$idempotentTkn.'"
+                }'
+                ,
+            "api_token" => "123"
+        );
+        
+        // and enough inventory for the order,
+        DB::table('LiveInventory')->truncate();
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(1, 100));
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(2, 100));
+        
+        
+        // When I attempt to order
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get okay
+        $this->assertResponseStatus(200);
+        
+        // And when I try again with the exact same order
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I still get ok
+        $this->assertResponseStatus(200);
+        
+        // And there is only one item
+        $rows = DB::select('select * from `Order` where amount = ?', array(1337.00));
+        
+        $this->assertEquals(1, count($rows));
+    }
 
 }

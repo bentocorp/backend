@@ -1,10 +1,9 @@
-<?php
-
-namespace Bento\Model;
+<?php namespace Bento\Model;
 
 use Bento\Model\PendingOrder;
 use Bento\Admin\Model\Driver;
 use Bento\Model\CustomerBentoBox;
+use Bento\core\InternalResponse;
 use DB;
 use User;
 use Illuminate\Database\QueryException;
@@ -30,6 +29,45 @@ class LiveInventory extends \Eloquent {
      */
     public static function reserve($data) {
 
+        $response = new InternalResponse;
+        
+        // ## First, detect a duplicate order
+        
+        // Create a new PendingOrder object
+        $pendingOrder = new PendingOrder;
+        
+        // Get the user for this request
+        $user = User::get();
+
+        // Attempt to save the PendingOrder:
+        
+        $pendingOrder->fk_User = $user->pk_User;
+        $pendingOrder->order_json = json_encode($data);
+        
+        // Try the idempotent token!
+        $pendingOrder->idempotent_token = NULL;
+        if (isset($data->IdempotentToken))
+            $pendingOrder->idempotent_token = $data->IdempotentToken;
+        
+        try {
+            $pendingOrder->save();
+        } 
+        catch (QueryException $e) {
+            #var_dump($e->errorInfo[0]); die();
+            if ($e->errorInfo[0] == 23000) { // SQLSTATE: 23000 (ER_DUP_KEY)
+                // Return an appropriate status object back to the OrderCtrl
+                $response->setSuccess(false);
+                $response->setStatusCode(23000);
+                
+                return $response;
+            }
+            else
+                throw new QueryException;
+        }
+        
+        // ## At this point, we're sure that there isn't a duplicate order,
+        // so let's continue trying to process the order.
+        
         /* First calculate the totals */
         $totals = CustomerBentoBox::calculateTotalsFromJson($data);
 
@@ -48,25 +86,25 @@ class LiveInventory extends \Eloquent {
             });
         }
         catch(QueryException $e) {
-            return false;
+            // Hard delete the pending order. We don't need it.
+            $pendingOrder->forceDelete();
+            
+            $response->setSuccess(false);
+            $response->setStatusCode(410);
+
+            return $response;
         }
-
-        // Everything is good so far.
-        #return true;
         
+        // ## We had enough inventory for this order.
+
+        // ## Everything is good.
+                
+        // Return the PendingOrder
+        $response->setSuccess(true);
+        $response->setStatusCode(200);
+        $response->bag->pendingOrder = $pendingOrder;
         
-        // Everything is good so far. Insert into PendingOrder.
-        $user = User::get();
-
-        $pendingOrder = new PendingOrder;
-        $pendingOrder->fk_User = $user->pk_User;
-        $pendingOrder->order_json = json_encode($data);
-        $pendingOrder->save();
-
-        // Returning the PendingOrder
-        return $pendingOrder;
-        #return $pendingOrder->pk_PendingOrder;
-        #return true;
+        return $response;
     }
     
     

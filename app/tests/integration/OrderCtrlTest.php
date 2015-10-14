@@ -9,7 +9,7 @@ class OrderCtrlTest extends TestCase {
         Route::enableFilters();
     }
     
-    
+
     public function testStripeOrderIntegrationWithSentToken() 
     {
         // Given an order from an authorized user who is sending us a new stripe token,

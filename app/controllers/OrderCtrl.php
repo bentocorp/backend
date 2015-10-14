@@ -85,16 +85,23 @@ class OrderCtrl extends \BaseController {
             if ($orderItemsLength <= 0) {
                 Bento::alert(null, 'OrderItems[] was empty', '14c309c2-1cc6-47e5-93ba-51cddfdd52f1');
                 return Response::json(
-                        array("error" => "Something has gone wrong with your order. Bento has been notified."), 
+                        array("error" => "Something went wrong with your order. We've been alerted! (2f1)"), 
                         400);
             }
 
+            // Every order must have an idempotent token
+            if (!isset($data->IdempotentToken)) {
+                Bento::alert(null, 'Idempotent Token Missing', 'f75a73ed-5d0b-426e-8d2f-633c8810d23b');
+                return Response::json(
+                        array("error" => "Something went wrong with your order. We've been alerted! (23b)"), 
+                        461);
+            }
             
             // Reject API call if amount is less than 50 cents, otherwise Stripe denies the charge.
             if ($data->OrderDetails->total_cents > 0 && $data->OrderDetails->total_cents < 50)
                 return Response::json(
                         array("error" => "The amount must be at least $0.50."), 
-                        400);
+                        462);
 
             // Don't process a $0 payment in the backend / with Stripe
             if ($data->OrderDetails->total_cents == 0)
@@ -131,15 +138,21 @@ class OrderCtrl extends \BaseController {
         }
         catch(\Exception $e) {
             Bento::alert($e, 'Order Data Validation Error', 'd1f8330b-789e-4a6b-86c7-6c027340d8d2');
-            return Response::json(array("error" => "Bad news bears. Something has gone wrong. Bento has been notified."), 460);
+            return Response::json(array("error" => "Bad news bears. Something's gone wrong. We've been notified! (8d2)"), 460);
         }
         // -- END DATA VALIDATIONS -- 
         
         // Check the LiveInventory 
+        // an InternalResponse is returned here
         $reserved = LiveInventory::reserve($data);
         
+        // Check Idempotency
+        // This means that this order is a duplicate
+        if ($reserved->getSuccess() == false && $reserved->getStatusCode() == 23000)           
+            return Response::json('', 200);
+        
         // If inventory reservation failed. We are out of something.
-        if ($reserved === false) {
+        if ($reserved->getSuccess() == false && $reserved->getStatusCode() == 410) {
             // Since the inventory is incorrect in the client, conveniently send it back to them
             $menuStatus = Status::menu();
             
@@ -152,7 +165,7 @@ class OrderCtrl extends \BaseController {
         }
         
         // Otherwise, everything's good. Keep going.
-        $this->pendingOrder = $reserved;
+        $this->pendingOrder = $reserved->bag->pendingOrder;
         
         // ** Process payment
         

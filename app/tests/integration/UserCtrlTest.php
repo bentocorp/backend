@@ -45,7 +45,8 @@ class UserCtrlTest extends TestCase {
     
     
     
-    public function testFbLoginIntegrationWorksWithBadDbTokenButGoodProvidedToken() {
+    public function testFbLoginIntegrationWorksWithBadDbTokenButGoodProvidedToken() 
+    {
         
         // Given that the provided token doesn't match the token in the database,
         // but is still a valid FB access token
