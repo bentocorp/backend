@@ -19,7 +19,7 @@ if (count($openOrders) > 0):
         <th>id</th>
         <th>Customer</th>
         <th>Address</th>
-        <th>Phone /<br>Created</th>
+        <th style="width:140px;">Phone /<br>Created</th>
         <th style="text-align:center;">Status</th>
         <th>Driver</th>
         <th>&nbsp;</th>
@@ -55,8 +55,7 @@ if (count($openOrders) > 0):
                     <th scope="row">{{{ $row->pk_Order }}}</th>
                     <td><?php echo $trak_alert?>{{ $user_name }}<br><small>${{$row->amount}} {{$row->fk_Coupon}}</small></td>
                     <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}<br><small>{{ $row->user_email }}</small></td>
-                    <td>{{{ $row->user_phone }}}<br>
-                        {{ $row->order_created_at }}</td>
+                    <td>{{{ $row->user_phone }}}<br><small>{{ $row->order_created_at }}</small></td>
                     <td align="center">
                         <?php echo $row->status; #echo Form::select('status', $orderStatusDropdown, $row->status)?><br>
                         <a href="/admin/order/cancel/{{$row->pk_Order}}" title="Cancel" role="button" class="btn btn-default btn-xs" onclick="return confirm('Cancel {{$row->user_name}}\u2019s order?')"><span class="glyphicon glyphicon-remove"></span></a>
@@ -95,7 +94,7 @@ if (count($openOrders) > 0):
                 <?php
             }
             catch(\Exception $e) {
-                echo "<span class='label label-danger'><big>Error with order #$row->pk_Order. Admin is alerted.</big></span> </tr>";
+                echo "<div><span class='label label-danger'><big>Error with order #$row->pk_Order. Admin is alerted.</big></span><div></tr>";
                 Bento::alert($e, "[HIGH] Corrupted Order: #$row->pk_Order", 'efe1c6d7-1085-4855-951b-7e45885f0d41');
             }
         }

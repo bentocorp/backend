@@ -21,7 +21,11 @@ echo "</pre></div><br>";
 
 echo "<div><b>Message:</b><br>";
 echo "<pre>";
-echo $msg;
+try {
+    echo $msg;
+} catch (\Exception $e2) {
+    print_r($msg);
+}
 echo "</pre></div><br>";
 
 

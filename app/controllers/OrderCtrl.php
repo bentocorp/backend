@@ -148,8 +148,10 @@ class OrderCtrl extends \BaseController {
         
         // Check Idempotency
         // This means that this order is a duplicate
-        if ($reserved->getSuccess() == false && $reserved->getStatusCode() == 23000)           
+        if ($reserved->getSuccess() == false && $reserved->getStatusCode() == 23000) {  
+            Bento::alert(null, 'Duplicate Order / Idempotent Error', '33dccd84-ecbd-4d21-bbf6-eb5441a73dc7', $data);
             return Response::json('', 200);
+        }
         
         // If inventory reservation failed. We are out of something.
         if ($reserved->getSuccess() == false && $reserved->getStatusCode() == 410) {
