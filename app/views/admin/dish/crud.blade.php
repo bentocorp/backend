@@ -75,7 +75,7 @@ CRUD Dish
     </div>
         
     <div class="form-group">
-        {{ Form::label('i_notes', 'Internal Notes', array('class' => 'col-sm-2 control-label', 'style' => 'font-weight:100 !important; font-style:italic;')) }}
+        {{ Form::label('i_notes', 'Internal Notes', array('class' => 'col-sm-2 control-label', 'style' => 'font-weight:normal !important; font-style:italic;')) }}
         <div class="col-sm-5">{{ Form::textarea('i_notes', null, array('class' => 'form-control', 'rows' => 5)) }}</div>
     </div>
     
