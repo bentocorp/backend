@@ -47,20 +47,20 @@ CRUD Dish
         <div class="col-sm-5">{{ Form::text('short_name', null, array('class' => 'form-control')) }}</div>
     </div>
     -->
+        
+    <div class="form-group">
+        {{ Form::label('description', 'Savory Description', array('class' => 'col-sm-2 control-label')) }}
+        <div class="col-sm-5">{{ Form::textarea('description', null, array('class' => 'form-control', 'rows' => 3)) }}</div>
+    </div>
+        
+    <div class="form-group">
+        {{ Form::label('type', 'Type', array('class' => 'col-sm-2 control-label')) }}
+        <div class="col-sm-5">{{ @Form::select('type', array('main' => 'main', 'side' => 'side'), $dish->type, array('class' => 'form-control')); }}</div>
+    </div>
     
     <div class="form-group">
         {{ Form::label('label', 'Label', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::text('label', null, array('class' => 'form-control')) }}</div>
-    </div>
-    
-    <div class="form-group">
-        {{ Form::label('description', 'Description', array('class' => 'col-sm-2 control-label')) }}
-        <div class="col-sm-5">{{ Form::text('description', null, array('class' => 'form-control')) }}</div>
-    </div>
-    
-    <div class="form-group">
-        {{ Form::label('type', 'Type', array('class' => 'col-sm-2 control-label')) }}
-        <div class="col-sm-5">{{ @Form::select('type', array('main' => 'main', 'side' => 'side'), $dish->type, array('class' => 'form-control')); }}</div>
     </div>
     
     <div class="form-group">
@@ -75,8 +75,8 @@ CRUD Dish
     </div>
         
     <div class="form-group">
-        {{ Form::label('i_notes', 'Internal Notes', array('class' => 'col-sm-2 control-label')) }}
-        <div class="col-sm-5">{{ Form::textarea('i_notes', null, array('class' => 'form-control')) }}</div>
+        {{ Form::label('i_notes', 'Internal Notes', array('class' => 'col-sm-2 control-label', 'style' => 'font-weight:100 !important; font-style:italic;')) }}
+        <div class="col-sm-5">{{ Form::textarea('i_notes', null, array('class' => 'form-control', 'rows' => 5)) }}</div>
     </div>
     
     <div class="form-group">

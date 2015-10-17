@@ -19,7 +19,7 @@ if (count($openOrders) > 0):
         <th>id</th>
         <th>Customer</th>
         <th>Address</th>
-        <th style="width:140px;">Phone /<br>Created</th>
+        <th style="width:140px;">Phone /<br><small>Created</small></th>
         <th style="text-align:center;">Status</th>
         <th>Driver</th>
         <th>&nbsp;</th>
