@@ -142,13 +142,14 @@ class OrderCtrl extends \BaseController {
         }
         // -- END DATA VALIDATIONS -- 
         
-        // Check the LiveInventory 
-        // an InternalResponse is returned here
+        // Immediately write to PendingOrder, and
+        // check the LiveInventory.
+        // An InternalResponse is returned here
         $reserved = LiveInventory::reserve($data);
         
         // Check Idempotency
         // This means that this order is a duplicate
-        if ($reserved->getSuccess() == false && $reserved->getStatusCode() == 23000) {  
+        if ($reserved->getSuccess() == false && $reserved->getStatusCode() == 23000) { 
             Bento::alert(null, 'Duplicate Order / Idempotent Error', '33dccd84-ecbd-4d21-bbf6-eb5441a73dc7', $data);
             return Response::json('', 200);
         }

@@ -195,6 +195,12 @@ class LiveInventory extends \Eloquent {
             
             DB::transaction(function() use ($fk_item)
             {
+                // Ensure idempotency
+                $row = DB::select('select * from LiveInventory where fk_item = ? FOR UPDATE', array($fk_item))[0];
+                
+                if ($row->sold_out)
+                    return;
+                
                 DB::update('update LiveInventory set `qty_saved` = `qty`, sold_out = 1 where fk_item = ?', array($fk_item));
                 DB::update('update LiveInventory set `qty` = 0 where fk_item = ?', array($fk_item));
             });
@@ -204,6 +210,12 @@ class LiveInventory extends \Eloquent {
             
             DB::transaction(function() use ($fk_item)
             {
+                // Ensure idempotency
+                $row = DB::select('select * from LiveInventory where fk_item = ? FOR UPDATE', array($fk_item))[0];
+                
+                if (!$row->sold_out)
+                    return;
+                
                 DB::update('update LiveInventory set `qty` = `qty_saved`, sold_out = 0 where fk_item = ?', array($fk_item));
             });
         }

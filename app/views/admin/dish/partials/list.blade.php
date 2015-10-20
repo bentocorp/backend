@@ -12,7 +12,7 @@ if ($list !== NULL): ?>
         <th>Label</th>
         <th>Type</th>
         <th>Temp</th>
-        <th>Max Per Order</th>
+        <th>Max Per Bento</th>
       </tr>
     </thead>
 
