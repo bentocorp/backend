@@ -5,6 +5,7 @@ namespace Bento\Admin\Ctrl;
 use Bento\Order\OrderStatus;
 use Bento\Admin\Model\Orders;
 use Bento\Admin\Model\Driver;
+use Bento\app\Bento;
 use Redirect;
 use View;
 
@@ -37,10 +38,15 @@ class OrderCtrl extends \BaseController {
         $orderStatus = new OrderStatus($pk_Order);
         $orderStatus->setDriver($data);
         
-        $response = Redirect::back()->with('msg', 
-            array('type' => 'success', 'txt' => 'Driver assigned to order.'));
-        
-        return $response;
+        if (Bento::isAdminApiRequest()) {
+            return true;
+        }
+        else {
+            $response = Redirect::back()->with('msg', 
+                array('type' => 'success', 'txt' => 'Driver assigned to order.'));
+
+            return $response;
+        }
     }
     
     

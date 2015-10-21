@@ -59,8 +59,20 @@ CRUD Dish
     </div>
     
     <div class="form-group">
+        {{ Form::label('price', 'Price', array('class' => 'col-sm-2 control-label')) }}
+        <div class="col-sm-5">{{ @Form::number('price', $dish->price, array(
+                    'class' => 'form-control',
+                    'required' => 'required',
+                    'min' => '1',
+                    'step' => '.01',
+                    'disabled' => 'disabled'
+        ))}}</div>
+    </div>
+    
+    <div class="form-group">
         {{ Form::label('label', 'Label', array('class' => 'col-sm-2 control-label')) }}
-        <div class="col-sm-5">{{ Form::text('label', null, array('class' => 'form-control')) }}</div>
+        <div class="col-sm-5">{{ Form::text('label', null, array(
+                    'class' => 'form-control','required' => 'required'))}}</div>
     </div>
     
     <div class="form-group">
@@ -69,9 +81,9 @@ CRUD Dish
     </div>
     
     <div class="form-group">
-        <?php @$default = $dish->max_per_order ? $dish->max_per_order : 99 ?>
+        <?php @$default_max = $dish->max_per_order ? $dish->max_per_order : 99 ?>
         {{ Form::label('max_per_order', 'Max Per Bento', array('class' => 'col-sm-2 control-label')) }}
-        <div class="col-sm-5">{{ Form::text('max_per_order', $default, array('class' => 'form-control')) }}</div>
+        <div class="col-sm-5">{{ Form::text('max_per_order', $default_max, array('class' => 'form-control')) }}</div>
     </div>
         
     <div class="form-group">

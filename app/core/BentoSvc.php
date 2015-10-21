@@ -8,6 +8,8 @@ use Session;
 
 class BentoSvc {
     
+    private $isAdminApiRequest = false;
+    
     
     public function __construct() {
 
@@ -35,6 +37,15 @@ class BentoSvc {
         {
             $message->to($_ENV['Mail_EngAlert'], 'Bento App')->subject($finalSubject);
         });
+    }
+    
+    
+    public function isAdminApiRequest() {
+        return $this->isAdminApiRequest;
+    }
+    
+    public function setAsAdminApiRequest() {
+        $this->isAdminApiRequest = true;
     }
         
 }

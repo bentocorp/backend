@@ -159,6 +159,21 @@ Route::controller('admin', 'Bento\Admin\Ctrl\AdminUserCtrl');
 
 
 /****************************************************************************
+ * ADMIN API: [PRIVATE] A secured API corresponding to some /admin functions
+ ****************************************************************************
+ *
+ * prefix => adminapi: All routes accessed through /adminapi/{...}
+ * before => admin_api: Calling the Admin API filter on all routes.
+ */
+Route::group(array('prefix' => 'adminapi', 'before' => 'admin_api', 'namespace' => 'Bento\AdminApi\Ctrl'), function() {
+
+    Route::controller('order', 'OrderCtrl');
+
+}); // /End protected adminapi rotes
+
+
+
+/****************************************************************************
  * EXTERNAL API: [PRIVATE] A secured API for vendors, etc.
  ****************************************************************************
  *
@@ -173,4 +188,4 @@ Route::group(array('prefix' => 'extapi', 'before' => 'ext_api', 'namespace' => '
 
     Route::controller('reports/survey', 'Reports\SurveyCtrl');
 
-}); // /End protected admin rotes
+}); // /End protected extapi rotes

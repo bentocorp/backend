@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
+    'Bento\\AdminApi\\Ctrl\\OrderCtrl' => $baseDir . '/app/controllers/adminapi/OrderCtrl.php',
     'Bento\\Admin\\Ctrl\\AdminBaseController' => $baseDir . '/app/controllers/admin/AdminBaseController.php',
     'Bento\\Admin\\Ctrl\\AdminUserCtrl' => $baseDir . '/app/controllers/admin/AdminUserCtrl.php',
     'Bento\\Admin\\Ctrl\\ApiTestCtrl' => $baseDir . '/app/controllers/admin/ApiTestCtrl.php',
@@ -54,6 +55,7 @@ return array(
     'Bento\\Drivers\\DriverMgrSvc' => $baseDir . '/app/core/drivers/DriverMgrSvc.php',
     'Bento\\ExtApi\\Ctrl\\DishCtrl' => $baseDir . '/app/controllers/extapi/DishCtrl.php',
     'Bento\\ExtApi\\Ctrl\\Reports\\SurveyCtrl' => $baseDir . '/app/controllers/extapi/reports/SurveyCtrl.php',
+    'Bento\\Filter\\AdminApiFilter' => $baseDir . '/app/filters/AdminApiFilter.php',
     'Bento\\Filter\\AdminFilter' => $baseDir . '/app/filters/AdminFilter.php',
     'Bento\\Filter\\ApiAuthFilter' => $baseDir . '/app/filters/ApiAuthFilter.php',
     'Bento\\Filter\\ExtApiFilter' => $baseDir . '/app/filters/ExtApiFilter.php',

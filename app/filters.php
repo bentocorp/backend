@@ -62,9 +62,10 @@ Route::filter('auth.basic', function()
 |
 */
 
-Route::filter('admin', 'Bento\Filter\AdminFilter');
-Route::filter('api_auth', 'Bento\Filter\ApiAuthFilter');
-Route::filter('ext_api', 'Bento\Filter\ExtApiFilter');
+Route::filter('admin', 'Bento\Filter\AdminFilter'); // The admin panel
+Route::filter('admin_api', 'Bento\Filter\AdminApiFilter'); // The admin panel, via API
+Route::filter('api_auth', 'Bento\Filter\ApiAuthFilter'); // The consumer app API
+Route::filter('ext_api', 'Bento\Filter\ExtApiFilter'); // An API for external vendors or other services
 
 
 /*
