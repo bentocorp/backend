@@ -2,7 +2,7 @@
 
 namespace Bento\Admin\Ctrl;
 
-use Bento\core\OrderStatus;
+use Bento\Order\OrderStatus;
 use Bento\Admin\Model\Orders;
 use Bento\Admin\Model\Driver;
 use Redirect;

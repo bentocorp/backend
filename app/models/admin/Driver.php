@@ -1,11 +1,11 @@
-<?php
+<?php namespace Bento\Admin\Model;
 
-namespace Bento\Admin\Model;
 
 use Bento\Model\LiveInventory;
 use Bento\Model\CustomerBentoBox;
 use Bento\core\Util\DbUtil;
 use DB;
+
 
 class Driver extends \Eloquent {
     

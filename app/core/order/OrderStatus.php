@@ -1,4 +1,4 @@
-<?php namespace Bento\core;
+<?php namespace Bento\Order;
 
 use Bento\Drivers\DriverMgr;
 use Bento\Admin\Model\Driver;

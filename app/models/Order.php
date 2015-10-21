@@ -1,6 +1,5 @@
-<?php
+<?php namespace Bento\Model;
 
-namespace Bento\Model;
 
 use Bento\Model\CustomerBentoBox;
 use DB;

@@ -5,11 +5,11 @@ use Bento\Model\Order;
 use Bento\Admin\Model\Orders;
 use Bento\Model\OrderStatus;
 use Bento\Model\CustomerBentoBox;
-use Bento\Model\LiveInventory;
 use Bento\Model\Status;
 use Bento\Tracking\Trak;
 use Bento\app\Bento;
 use Bento\Coupon\AppCoupon;
+use Bento\Order\OrderReserver;
 use User;
 use Response;
 use Request; use Route;
@@ -17,6 +17,7 @@ use Input;
 use Mail;
 use Queue;
 use Stripe; use Stripe_Charge; use Stripe_Customer;
+
 
 class OrderCtrl extends \BaseController {
     
@@ -39,7 +40,8 @@ class OrderCtrl extends \BaseController {
     
         
     /**
-     * We don't need a two phase commit if we're processing payment on the backend.
+     * We don't need a two phase commit if we're processing payment on the backend,
+     * and using idempotency.
      */
     public function postIndex() {
         
@@ -145,30 +147,39 @@ class OrderCtrl extends \BaseController {
         // Immediately write to PendingOrder, and
         // check the LiveInventory.
         // An InternalResponse is returned here
-        $reserved = LiveInventory::reserve($data);
+        $orderReserver = new OrderReserver($data);
+        $reserveStatus = $orderReserver->reserve();
         
         // Check Idempotency
         // This means that this order is a duplicate
-        if ($reserved->getSuccess() == false && $reserved->getStatusCode() == 23000) { 
+        if ($reserveStatus->getSuccess() == false && $reserveStatus->getStatusCode() == 23000) {
             Bento::alert(null, 'Duplicate Order / Idempotent Error', '33dccd84-ecbd-4d21-bbf6-eb5441a73dc7', $data);
             return Response::json('', 200);
         }
         
-        // If inventory reservation failed. We are out of something.
-        if ($reserved->getSuccess() == false && $reserved->getStatusCode() == 410) {
+        // If inventory reservation failed, because we are out of something.
+        else if ($reserveStatus->getSuccess() == false && $reserveStatus->getStatusCode() == 410) {
             // Since the inventory is incorrect in the client, conveniently send it back to them
             $menuStatus = Status::menu();
             
             $response = array(
-                'Error' => 'Some of our inventory in your order just sold out!',
+                'error' => 'Some of our inventory in your order just sold out!',
                 'MenuStatus' => $menuStatus
                 );
             
             return Response::json($response, 410);
         }
         
+        // If inventory reservation failed for some unknown reason
+        else if ($reserveStatus->getSuccess() == false) {
+            $orderReserver->fail();
+            Bento::alert(null, 'Unknown Inventory Reservation Failure', '864543b5-5ea3-49d9-8f74-da68a93cbcbf', $data);
+            
+            return Response::json(array("error" => "Something's gone wrong. We've been notified! (cbf)."), 500);
+        }
+        
         // Otherwise, everything's good. Keep going.
-        $this->pendingOrder = $reserved->bag->pendingOrder;
+        $this->pendingOrder = $reserveStatus->bag->pendingOrder;
         
         // ** Process payment
         
@@ -201,10 +212,11 @@ class OrderCtrl extends \BaseController {
         // Payment Failure
         else {
             // Order inventory rollback
-            // This is a bit of a hack until we remove the PendingOrder architecture
-            // that isn't really needed in the first place. But it's fine for now.
             $order = new Order(null, $this->pendingOrder->pk_PendingOrder);
             $order->rollback(true); // TRUE denotes we're rolling back a PendingOrder instead of an Order
+            
+            // Get rid of the PendingOrder
+            $orderReserver->fail();
             
             return Response::json(array("error" => $stripeCharge['body']['message']), 406);
         }
@@ -406,8 +418,10 @@ class OrderCtrl extends \BaseController {
         // Insert into CustomerBentoBox
         $this->insertCustomerBentoBoxes($orderJson, $order->pk_Order);
         
-        // Bind the completed Order to the PendingOrder
+        // Bind the completed Order to the PendingOrder,
+        // and mark it as no longer processing.
         $this->pendingOrder->fk_Order = $order->pk_Order;
+        $this->pendingOrder->is_processing = false;
         $this->pendingOrder->save();
         
         // Soft-delete pending order
