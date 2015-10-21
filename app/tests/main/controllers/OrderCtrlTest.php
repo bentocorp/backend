@@ -1085,6 +1085,12 @@ DATA;
         $rows = DB::select('select * from `Order` where amount = ?', array(1337.00));
         
         $this->assertEquals(1, count($rows));
+        
+        // And the is_processing flag has been correctly set to 0
+        $row = $rows[0];
+        $pendingOrder = DB::select('select * from `PendingOrder` where fk_Order = ?', array($row->pk_Order))[0];
+        
+        $this->assertEquals(0, $pendingOrder->is_processing);
     }
 
 }
