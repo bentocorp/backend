@@ -31,12 +31,12 @@ class OrderCtrl extends \BaseController {
     }
     
     
-    public function postSetDriver($pk_Order) {
+    public function postSetDriver($pk_Order, $insertAt = 0) {
         
         $data = $_POST;
         
         $orderStatus = new OrderStatus($pk_Order);
-        $orderStatus->setDriver($data);
+        $orderStatus->setDriver($data, $insertAt);
         
         if (Bento::isAdminApiRequest()) {
             return true;

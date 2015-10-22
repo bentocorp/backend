@@ -27,7 +27,7 @@ class Orders {
             left join OrderStatus os on (o.pk_Order = os.fk_Order)
             left join Driver d on (os.fk_Driver = d.pk_Driver)
             left join User u on (o.fk_User = u.pk_User)
-            where os.status IN ('Open', 'En Route')
+            where os.status != 'Cancelled'
             ORDER BY order_created_at DESC
         ";
         $rows = DB::select($sql, array());

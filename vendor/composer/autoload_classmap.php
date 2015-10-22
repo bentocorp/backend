@@ -53,6 +53,7 @@ return array(
     'Bento\\Ctrl\\UserCtrl' => $baseDir . '/app/controllers/UserCtrl.php',
     'Bento\\Drivers\\DriverMgr' => $baseDir . '/app/core/drivers/DriverMgr.php',
     'Bento\\Drivers\\DriverMgrSvc' => $baseDir . '/app/core/drivers/DriverMgrSvc.php',
+    'Bento\\Drivers\\DriverQueue' => $baseDir . '/app/core/drivers/DriverQueue.php',
     'Bento\\ExtApi\\Ctrl\\DishCtrl' => $baseDir . '/app/controllers/extapi/DishCtrl.php',
     'Bento\\ExtApi\\Ctrl\\Reports\\SurveyCtrl' => $baseDir . '/app/controllers/extapi/reports/SurveyCtrl.php',
     'Bento\\Filter\\AdminApiFilter' => $baseDir . '/app/filters/AdminApiFilter.php',

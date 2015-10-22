@@ -8,6 +8,7 @@ use DB;
 class OrderStatus {
 
     private $pk_Order;
+    private $insertAt = NULL;
     
     
     public function __construct($pk_Order) 
@@ -56,33 +57,60 @@ class OrderStatus {
     }
     
     
-    public function setDriver($data) {
+    public function setDriver($data, $insertAt = NULL) {
         
         $pk_Order = $this->pk_Order;
+        $this->insertAt = $insertAt;
         
         DB::transaction(function() use ($pk_Order, $data)
         {
             // Lock for read the order status
             $row = DB::select('select * from OrderStatus where fk_Order = ? FOR UPDATE', array($pk_Order))[0];
-            $from = $row->fk_Driver == 0 ? NULL : $row->fk_Driver; // (treat 0 as NULL, just in case)
-
-            // Intended assignment by the admin
-            // (treat 0 as NULL)
-            $to = $data['pk_Driver']['new'] == 0 ? NULL : $data['pk_Driver']['new'];
-            
-            // If current driver doesn't differ from intended driver, exit
-            if ($from == $to)
-                return;
             
             // If the order is cancelled, exit
             if ($row->status == 'Cancelled')
                 return;
+            
+            // From: The current driver
+            $from = $row->fk_Driver == 0 ? NULL : $row->fk_Driver; // (treat 0 as NULL, just in case)
 
+            // To: Intended assignment by the admin
+            // (treat 0 as NULL)
+            $to = $data['pk_Driver']['new'] == 0 ? NULL : $data['pk_Driver']['new'];
+            
+            # 1. Even if current driver doesn't differ from intended driver, set the order_queue properly.
+            // Even though the from/to might be the same, the admin might be re-ordering
+            // an existing assignment in the driver's queue, so we need to let this processing happen.
+        
+            if ($from == $to) 
+            {
+                // From null to null doesn't need to do anything
+                // A null insertAt index does nothing
+                if ($to !== NULL && $this->insertAt !== NULL) {
+                    #$toDriver = new Driver(null, $to);
+                    $toDriver = Driver::find($to);
+                    $toDriver->addOrderToQueue($pk_Order, $this->insertAt);
+                }
+                
+                // If current driver doesn't differ from intended driver,
+                // then there's nothing left to do with OrderStatus
+                return;
+            }
+            
+            # 2. Adjust the Driver assignment, if necessary
+            
             // Current driver differs from intended driver; Order isn't cancelled;
-            // execute
+            // Therefore, execute:
+            
+            // Set the status to Assigned if we're assigning to a driver,
+            // or back to Open if we're unassigning
+            $status = 'Assigned';
+            if ($to === NULL)
+                $status = 'Open';
             
             $update = array(
                 'fk_Driver' => $to,
+                'status' => $status
             );
 
             DB::table('OrderStatus')
@@ -90,18 +118,18 @@ class OrderStatus {
                     ->update($update);
 
             // Update driver inventories based on this new assignment (if any)
-            $this->setOrderDriver($from, $to);
+            $this->updateDriverInventories($from, $to);
         });
     }
     
     /**
-     * Change the assigned driver of this order
+     * Update their inventories accordingly
      * 
      * @param pk_Driver $from
      * @param pk_Driver $to
      * @param int $pk_Order
      */
-    private function setOrderDriver($from, $to) {
+    private function updateDriverInventories($from, $to) {
         
         $pk_Order = $this->pk_Order;
         
@@ -114,16 +142,24 @@ class OrderStatus {
         // Something has changed
          */
         
-        // If the prior selection wasn't blank, add it back in
-        if ($from != NULL) {
-            $fromDriver = new Driver(null, $from);
+        // If the prior selection wasn't blank, add it back in,
+        // and remove from order_queue
+        if ($from != NULL) 
+        {
+            $fromDriver = Driver::find($from);
             $fromDriver->addOrderToInventory($pk_Order, false); // Already in a transaction
+            $fromDriver->removeOrderFromQueue($pk_Order);
         }
         
-        // If the new selection isn't blank, subtract it
-        if ($to != NULL) {
-            $toDriver = new Driver(null, $to);
+        // If the new selection isn't blank, subtract it,
+        // and add to order_queue
+        if ($to != NULL) 
+        {
+            $toDriver = Driver::find($to);
             $toDriver->subtractOrderFromInventory($pk_Order, false); // Already in a transaction
+            
+            if ($this->insertAt !== NULL) 
+                $toDriver->addOrderToQueue($pk_Order, $this->insertAt);
         }
             
     }
@@ -142,11 +178,12 @@ class OrderStatus {
             if ($row->status == 'Cancelled')
                 return;
             
-            // The status hasn't already been set to this, execute
+            // The status hasn't already been set to this, so execute
                 
             // Update the table
             $update = array(
-                'status' => 'Cancelled'
+                'status' => 'Cancelled',
+                'fk_Driver' => NULL
             );
 
             DB::table('OrderStatus')
@@ -159,9 +196,11 @@ class OrderStatus {
 
             // Rollback the DI
             // If the prior selection wasn't blank, add it back in
-            if ($row->fk_Driver != 0 && $row->fk_Driver != NULL) {
-                $driver = new Driver(null, $row->fk_Driver);
+            if ($row->fk_Driver != 0 && $row->fk_Driver != NULL) 
+            {
+                $driver = Driver::find($row->fk_Driver);
                 $driver->addOrderToInventory($pk_Order);
+                $driver->removeOrderFromQueue($pk_Order);
             }
             
         });

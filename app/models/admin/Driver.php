@@ -4,6 +4,7 @@
 use Bento\Model\LiveInventory;
 use Bento\Model\CustomerBentoBox;
 use Bento\core\Util\DbUtil;
+use Bento\Drivers\DriverQueue;
 use DB;
 
 
@@ -286,22 +287,31 @@ class Driver extends \Eloquent {
     /*
      * Lock the driver's inventory by doing a locking read
      */
-    public function lockInventory() {
+    private function lockInventory() {
         $this->getInventory(true);
     }
     
-    
+    /*
+     * Lock the Driver
+     */
+    private function lock() {
+        DB::select('select * from Driver where pk_Driver = ? FOR UPDATE', array($this->id()));
+    }
+
+
+
+
     /**
      * Add an order back into a Driver's inventory
      * 
      * Laravel seems to support nested transactions: https://github.com/laravel/framework/issues/1823
      * So this architecture is overkill, but it's fine, we can leave it.
      * 
-     * @param int $pk_Order
+     * @param int $globalTaskId
      */
-    public function addOrderToInventory($pk_Order, $transaction = true)
+    public function addOrderToInventory($globalTaskId, $transaction = true)
     {
-        $order = new \Bento\Model\Order(null, $pk_Order);
+        $order = new \Bento\Model\Order(null, $globalTaskId);
         
         $orderJsonObj = $order->getOrderJsonObj();
         
@@ -335,11 +345,11 @@ class Driver extends \Eloquent {
     /**
      * Subtract an order from a Driver's inventory
      * 
-     * @param int $pk_Order
+     * @param int $globalTaskId
      */
-    public function subtractOrderFromInventory($pk_Order, $transaction = true)
+    public function subtractOrderFromInventory($globalTaskId, $transaction = true)
     {
-        $order = new \Bento\Model\Order(null, $pk_Order);
+        $order = new \Bento\Model\Order(null, $globalTaskId);
         
         $orderJsonObj = $order->getOrderJsonObj();
         
@@ -522,5 +532,48 @@ class Driver extends \Eloquent {
         }
         #});
     }
+    
+    /**
+     * Add or move the given order in the driver's order_queue.
+     * This should be called from within a transaction.
+     * 
+     * @param string $pk_Order
+     * @param string $insertAt
+     */
+    public function addOrderToQueue($pk_Order, $insertAt)
+    {    
+        // Lock this Driver's row for read
+        $this->lock();
+        
+        // Write the new updated queue string to the DB
+        #die($this->firstname); #0
+        $driverQueue = new DriverQueue($this->order_queue);
+        
+        $newOrderQueueStr = $driverQueue->addOrder($pk_Order, $insertAt);
+        
+        DB::update('update Driver set order_queue = ? where pk_Driver = ?', array($newOrderQueueStr, $this->id()));
+    }
+    
+    
+    /**
+     * Delete the order from the Driver's queue
+     * This should be called from within a transaction.
+     * 
+     * @param int $pk_Order
+     */
+    public function removeOrderFromQueue($pk_Order) 
+    {
+        // Lock this Driver's row for read
+        $this->lock();
+        
+        // Write the new updated queue string to the DB
+        
+        $driverQueue = new DriverQueue($this->order_queue);
+        
+        $newOrderQueueStr = $driverQueue->removeOrder($pk_Order);
+        
+        DB::update('update Driver set order_queue = ? where pk_Driver = ?', array($newOrderQueueStr, $this->id()));
+    }
+    
             
 }
