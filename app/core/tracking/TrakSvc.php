@@ -118,6 +118,10 @@ class TrakSvc {
             $orderStr .= $newCustomerStr;
         }
         
+        // Remind the drivers about accuracy, mochi, soy sauce, and chopsticks
+        $orderStr .= ">> Is everything accurate? \\n\\n";
+        $orderStr .= ">> Don't forget:\\n + mochi!\\n + to ask which type of soy sauce\\n + to offer utensils \\n\\n";
+        
         $payload = '
             {
                 "merchant": "'.$this->organization.'",
