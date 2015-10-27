@@ -61,3 +61,7 @@
     ?>
     </tbody>
 </table>
+
+<a href="/admin/inventory/recalculate" class="btn btn-danger" onclick="return confirm('Are you SURE you want to forcibly overwrite the LI with the DI? You can ONLY do this when there are no open orders!')"
+   >Recalculate! <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span></a>
+   

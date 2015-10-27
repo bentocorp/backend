@@ -39,5 +39,14 @@ class InventoryCtrl extends \BaseController {
     }
     
     
+    public function getRecalculate()
+    {
+        LiveInventory::recalculate();
+        
+        return Redirect::back()->with('msg', 
+            array('type' => 'success', 'txt' => '<b>Live Inventory has been recalculated!!</b>'));
+    }
+    
+    
     
 }

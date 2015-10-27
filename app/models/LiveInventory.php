@@ -1,6 +1,7 @@
 <?php namespace Bento\Model;
 
-
+use Bento\app\Bento;
+use Bento\Admin\Model\Driver;
 use DB;
 
 
@@ -75,6 +76,9 @@ class LiveInventory extends \Eloquent {
     }
     
     
+    /**
+     * @deprecated 
+     */
     public static function recalculate() {
         
         DB::transaction(function()
@@ -92,6 +96,8 @@ class LiveInventory extends \Eloquent {
                 DB::insert($sql, array($row->fk_item, $row->dqty, 'admin_update'));
             }
         });
+        
+         Bento::alert(null, 'LiveInventory was recalculated!', '46a77b53-a821-494b-a567-526f37e6e197');
     }
     
     
