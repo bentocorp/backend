@@ -150,8 +150,12 @@ class DriverQueue {
     }
     
     
-    private function getString() {
-        return implode(',' , $this->queueAr);
+    private function getString() 
+    {
+        if ($this->queueAr === NULL || '')
+            return NULL;
+        else
+            return implode(',' , $this->queueAr);
     }
     
     /*
