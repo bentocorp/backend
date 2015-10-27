@@ -46,7 +46,8 @@ class Menu extends \Eloquent {
 
             // Get Menu_Items            
             $sql2 = "
-                SELECT d.pk_Dish itemId, d.name, d.description, d.type, d.image1, d.max_per_order 
+                SELECT d.pk_Dish itemId, d.name, d.description, d.type, d.image1, d.max_per_order,
+                    IF(d.type = 'main', d.price, NULL) as price
                 FROM Menu_Item mi
                 LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)
                 WHERE mi.fk_Menu = ?

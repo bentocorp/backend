@@ -4,6 +4,31 @@
 
 @section('content')
 
+<script>
+/***************************************
+ * On document ready
+ */
+ $(document).ready(function() {
+
+    // Handle the required price field for main dishes only
+    function dishChange() 
+    {
+        var dishType = $('#type').val();
+
+        if (dishType == 'main')
+            $('#price').removeAttr('disabled');
+        else {
+            $('#price').val('');
+            $('#price').attr('disabled', true); 
+       }
+    }
+    
+    dishChange();
+            
+    $('#type').on('keyup blur change', dishChange);
+
+});
+</script>
 
 <!--
 ******************************************************************************

@@ -183,6 +183,9 @@ bt.DInv.Merge = (function() {
  * On document ready
  */
 $(document).ready(function() {
+    
+    // Tooltips
+    $('[data-toggle="tooltip"]').tooltip();
 
     // Driver quantities, input box
     $('input.dinv-qty-input').attr('autocomplete', 'off');
@@ -209,5 +212,6 @@ $(document).ready(function() {
     $('.disable-onclick').on('click', function() {
         $(this).addClass('disabled');
     });
-      
+    // ** end disabling
+          
 });
