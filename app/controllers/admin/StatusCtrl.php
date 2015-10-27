@@ -55,7 +55,7 @@ class StatusCtrl extends \BaseController {
          DB::update('update Driver set on_shift = 0', array());
 
         // Close any open orders
-        DB::update('update OrderStatus set `status` = "Delivered" where `status` IN (?,?)', array('Open', 'En Route'));
+        DB::update('update OrderStatus set `status` = "Delivered" where `status` IN (?,?,?)', array('Open', 'En Route', 'Assigned'));
         
         return Redirect::back()
             ->with('msg', 
