@@ -62,6 +62,7 @@
     </tbody>
 </table>
 
-<a href="/admin/inventory/recalculate" class="btn btn-danger" onclick="return confirm('Are you SURE you want to forcibly overwrite the LI with the DI? You can ONLY do this when there are no open orders!')"
+<a href="/admin/inventory/recalculate" title="For Emergency Use Only!" class="btn btn-sm btn-danger" 
+   onclick="return confirm('** WARNING: For Emergency Use Only! ** Are you SURE you want to forcibly overwrite the LI with the DI? You can ONLY do this when there are no open orders! A message will be logged to the admin.')"
    >Recalculate! <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span></a>
    

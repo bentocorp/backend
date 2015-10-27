@@ -83,6 +83,10 @@ class LiveInventory extends \Eloquent {
         
         DB::transaction(function()
         {
+            // Lock the Order table, for the moment
+            // Issues with doing this: http://stackoverflow.com/questions/12942967/mysql-lock-error-or-bug
+            #DB::unprepared('LOCK TABLES `Order` WRITE');
+            
             $driverInventory = Driver::getAggregateInventory();
             
             // Empty it
@@ -95,6 +99,9 @@ class LiveInventory extends \Eloquent {
                 $sql = "insert into LiveInventory (fk_item, qty, change_reason) values (?, GREATEST(?,0), ?)";
                 DB::insert($sql, array($row->fk_item, $row->dqty, 'admin_update'));
             }
+            
+            // Unlock
+            #DB::unprepared('UNLOCK TABLES');
         });
         
          Bento::alert(null, 'LiveInventory was recalculated!', '46a77b53-a821-494b-a567-526f37e6e197');
