@@ -324,6 +324,18 @@ class AdminDriverCtrlTest extends TestCase {
         
         // Then both the DI and LI the counts are accurate, and the LI hasn't been incremented
     }
+    
+    
+    public function testDriverReassignment()
+    {
+        // Given some drivers on shift, some inventory, and some orders
+        
+        // When I assign a driver to an order
+        
+        // And then assign a different driver to the same order
+        
+        // All is well
+    }
 
     
     public function testDriversCannotBeTakenOffShiftWhenNotAppropriate() 
