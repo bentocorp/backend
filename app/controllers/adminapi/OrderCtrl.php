@@ -67,18 +67,26 @@ class OrderCtrl extends \BaseController {
         return Response::json('', 200);
     }
     
-    
-    private function getPk($globalTaskId, &$count) {
-        return str_replace('o-', '', $globalTaskId, $count);
-    }
-    
-    
-    public function getCancel($pk_Order) 
+        
+    public function getCancel($globalTaskId) 
     {
+        $count = 0;
+        $pk_Order = $this->getPk($globalTaskId, $count);
+        
+        // A valid orderId was not passed
+        if ($count == 0)
+            return Response::json(array('error' => "A valid orderId was not passed. Must begin with 'o-'."), 
+                    400);
+        
         $adminOrderCtrl = new AdminOrderCtrl;
         $adminOrderCtrl->getCancel($pk_Order);
         
         return Response::json('', 200);
+    }
+    
+    
+    private function getPk($globalTaskId, &$count) {
+        return str_replace('o-', '', $globalTaskId, $count);
     }
     
     
