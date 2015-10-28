@@ -27,9 +27,14 @@ if ($list !== NULL): ?>
             $class = isset($checked[$dish->pk_Dish]) ? 'class="success"' : '';
         }
         
+        // Show price for mains
+        $priceStr = '';
+        if ($dish->price != '' || $dish->price != NULL)
+            $priceStr = " -- \${$dish->price}";
+        
         echo "<tr $class>";
             echo isset($checked) ? "<td>$checkbox</td>" : '';
-            echo "<th><a href='/admin/dish/edit/{$dish->pk_Dish}'>$dish->name</a></th>";
+            echo "<td><b><a href='/admin/dish/edit/{$dish->pk_Dish}'>$dish->name</a></b> $priceStr</td>";
             echo "<td>$dish->label</td>";
             echo "<td>$dish->type</td>";
             echo "<td>$dish->temp</td>";
