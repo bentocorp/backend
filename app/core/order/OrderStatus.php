@@ -72,11 +72,11 @@ class OrderStatus {
                 return;
             
             // From: The current driver
-            $from = $row->fk_Driver == 0 ? NULL : $row->fk_Driver; // (treat 0 as NULL, just in case)
+            $from = $row->fk_Driver <= 0 ? NULL : $row->fk_Driver; // (treat 0 as NULL, just in case)
 
             // To: Intended assignment by the admin
             // (treat 0 as NULL)
-            $to = $data['pk_Driver']['new'] == 0 ? NULL : $data['pk_Driver']['new'];
+            $to = $data['pk_Driver']['new'] <= 0 ? NULL : $data['pk_Driver']['new'];
             
             # 1. Even if current driver doesn't differ from intended driver, set the order_queue properly.
             // Even though the from/to might be the same, the admin might be re-ordering
