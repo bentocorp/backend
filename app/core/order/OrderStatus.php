@@ -72,7 +72,7 @@ class OrderStatus {
                 return;
             
             // From: The current driver
-            $from = $row->fk_Driver <= 0 ? NULL : $row->fk_Driver; // (treat 0 as NULL, just in case)
+            $from = $row->fk_Driver <= 0 ? NULL : $row->fk_Driver; // (treat <= 0 as NULL, just in case)
 
             // To: Intended assignment by the admin
             // (treat 0 as NULL)

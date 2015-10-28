@@ -55,10 +55,15 @@ class OrderCtrl extends \BaseController {
         $orderStatus = new OrderStatus($pk_Order);
         $orderStatus->cancel();
         
-        $response = Redirect::back()->with('msg', 
-            array('type' => 'success', 'txt' => 'Order cancelled.'));
-        
-        return $response;
+        if (Bento::isAdminApiRequest()) {
+            return true;
+        }
+        else {
+            $response = Redirect::back()->with('msg', 
+                array('type' => 'success', 'txt' => 'Order cancelled.'));
+            
+            return $response;
+        }
     }
     
     
