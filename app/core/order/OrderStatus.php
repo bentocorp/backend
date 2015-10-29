@@ -84,7 +84,7 @@ class OrderStatus {
         
             if ($from == $to) 
             {
-                // From null to null doesn't need to do anything
+                // From null to null doesn't need to do anything (and at this point, we know that they're equal)
                 // A null insertAt index does nothing
                 if ($to !== NULL && $this->insertAt !== NULL) {
                     #$toDriver = new Driver(null, $to);

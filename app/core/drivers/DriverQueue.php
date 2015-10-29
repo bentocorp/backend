@@ -39,7 +39,7 @@ class DriverQueue {
     private $insertAt;
     private $insertIdx = NULL;
     
-    private $pk_Order;
+    private $pk_Order; // As the Global ID
     private $pk_OrderIdx = NULL;
     
     private $queueAr;
@@ -56,6 +56,7 @@ class DriverQueue {
     
     public function addOrder($pk_Order, $insertAt)
     {   
+        // Init
         $this->pk_Order = 'o-'.$pk_Order;
         $this->insertAt = $insertAt;
 
@@ -84,7 +85,13 @@ class DriverQueue {
         if ($this->isQueueEmpty())
             return;
         
+        // Init
         $this->pk_Order = 'o-'.$pk_Order;
+        
+        // Explode the string, and find the insert and task indices 
+        $this->buildAndSearchArray();
+
+        // Remove it
         $this->removeExistingId();
         
         return $this->getString();
