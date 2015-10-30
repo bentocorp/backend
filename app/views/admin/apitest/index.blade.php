@@ -174,6 +174,7 @@ Order
         "coupon_discount_cents": 500,
         "tax_cents": 137,
         "tip_cents": 200,
+        "tip_percentage": 15,
         "total_cents": "1537",
         "delivery_price": "2.75"
     },

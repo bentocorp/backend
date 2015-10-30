@@ -52,7 +52,7 @@ class StatusCtrl extends \BaseController {
         DB::delete('delete from DriverInventory');
         
         // Take all drivers off shift
-         DB::update('update Driver set on_shift = 0', array());
+         DB::update('update Driver set on_shift = 0, order_queue = NULL', array());
 
         // Close any open orders
         DB::update('update OrderStatus set `status` = "Delivered" where `status` IN (?,?,?)', array('Open', 'En Route', 'Assigned'));
