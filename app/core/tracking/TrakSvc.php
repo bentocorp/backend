@@ -11,6 +11,7 @@ class TrakSvc {
     private $organization;
     private $user;
     
+    
     public function __construct() {
         
         $this->apiUrl = $_ENV['Trak_API'];
@@ -59,19 +60,8 @@ class TrakSvc {
     }
     
     
-    public function addTask($order, $orderJson, $bentoBoxes) {
-        
-        // Add destination first
-        $destinationId = $this->addDestination($order);
-        #$destinationId = '';
-        
-        // Create recipient
-        $recip = $this->createRecipient();
-        
-        $recipString = $recip === NULL ? '' : "\"$recip\""; 
-        
-        $url = $this->apiUrl . '/tasks';
-        
+    public function makeOrderString($bentoBoxes)
+    {
         $orderStr = '';
         
         $boxCount = 1;
@@ -92,7 +82,7 @@ class TrakSvc {
 
         foreach ($bentoBoxes as $box) {
 
-            $main_name = $this->encodeStr($box->main_name);
+            $main_name  = $this->encodeStr($box->main_name);
             $side1_name = $this->encodeStr($box->side1_name);
             $side2_name = $this->encodeStr($box->side2_name);
             $side3_name = $this->encodeStr($box->side3_name);
@@ -121,6 +111,26 @@ class TrakSvc {
         // Remind the drivers about accuracy, mochi, soy sauce, and chopsticks
         $orderStr .= ">> Is everything accurate? \\n\\n";
         $orderStr .= ">> Don't forget:\\n + mochi!\\n + to ask which type of soy sauce\\n + to offer utensils \\n\\n";
+        
+        return $orderStr;
+    }
+    
+    
+    public function addTask($order, $orderJson, $bentoBoxes) {
+        
+        // Add destination first
+        $destinationId = $this->addDestination($order);
+        #$destinationId = '';
+        
+        // Create recipient
+        $recip = $this->createRecipient();
+        
+        $recipString = $recip === NULL ? '' : "\"$recip\""; 
+        
+        $url = $this->apiUrl . '/tasks';
+        
+        // Create the task string
+        $orderStr = $this->makeOrderString($bentoBoxes);
         
         $payload = '
             {

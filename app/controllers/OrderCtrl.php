@@ -478,8 +478,11 @@ class OrderCtrl extends \BaseController {
         try {
             $orderJson->pk_Order = $order->pk_Order;
             $orderJson->User = User::get();
+            $orderJson->OrderString = Trak::makeOrderString($bentoBoxes);
+            
             Queue::push('Bento\Jobs\DoNothing', json_encode($orderJson));
-        } catch (\Exception $e) {
+        } 
+        catch (\Exception $e) {
             Bento::alert($e, 'Queue Insertion Exception', 'af30d4ea-6f7c-4f80-89ca-972f8541ee2f');
         }
         
