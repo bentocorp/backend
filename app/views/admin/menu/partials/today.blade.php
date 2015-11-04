@@ -65,7 +65,7 @@ if ($hasMenus) {
                     // Show the price
                     $price = '';
                     if ($row->price != '' && $row->price != NULL)
-                        $price = "&nbsp; \${$row->price}";
+                        $price = "\${$row->price}";
                     
                     echo "<tr>";
                         echo "<td>$row->type</td>";
