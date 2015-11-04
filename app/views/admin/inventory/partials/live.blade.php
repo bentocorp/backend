@@ -5,6 +5,7 @@
       <tr>
         <th>Type</th>
         <th>Name</th>
+        <!-- <th>Price</th> -->
         <th>&nbsp;</th>
         <th>Live Inv.</th>
         <th>Driver Inv.</th>
@@ -48,9 +49,18 @@
             $lqty = $row->lqty;
         }
         
+        // Show the price
+        /*
+        $price = '';
+        if ($row->price != '' && $row->price != NULL)
+            $price = "&nbsp; \${$row->price}";
+         * 
+         */
+        
         echo "<tr>";
             echo "<td>$row->type</td>";
             echo "<td><span title='pk: $row->fk_item'>$row->name</span></td>";
+            //echo "<td><small>$price</small></td>";
             echo "<td>$row->label</td>";
             echo "<td class='$soldOut_class'>$lqty</td>";
             echo "<td>$row->dqty</td>";

@@ -9,6 +9,8 @@ use DB;
 class OrderCtrl extends \BaseController {
 
     /**
+     * Example:
+     * /adminapi/order/assign/o-139/-1/-1?api_token=123
      * 
      * @param string $globalTaskId Prefixed with the task type. 
      *      Either o for an `Order`, or g for a Generic Task (`generic_Order`)

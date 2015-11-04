@@ -8,7 +8,8 @@ if ($list !== NULL): ?>
     <thead>
       <tr>
         {{ isset($checked) ? '<th>&nbsp;</th>' : '' }}
-        <th>Name</th>
+        <th width="18%">Name</th>
+        <th>Price</th>
         <th>Label</th>
         <th>Type</th>
         <th>Temp</th>
@@ -30,11 +31,12 @@ if ($list !== NULL): ?>
         // Show price for mains
         $priceStr = '';
         if ($dish->price != '' || $dish->price != NULL)
-            $priceStr = " -- \${$dish->price}";
+            $priceStr = "\${$dish->price}";
         
         echo "<tr $class>";
             echo isset($checked) ? "<td>$checkbox</td>" : '';
-            echo "<td><b><a href='/admin/dish/edit/{$dish->pk_Dish}'>$dish->name</a></b> $priceStr</td>";
+            echo "<td><b><a href='/admin/dish/edit/{$dish->pk_Dish}'>$dish->name</a></b></td>";
+            echo "<td>$priceStr</td>";
             echo "<td>$dish->label</td>";
             echo "<td>$dish->type</td>";
             echo "<td>$dish->temp</td>";

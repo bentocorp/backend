@@ -47,6 +47,7 @@ if ($hasMenus) {
                   <tr>
                     <th>type</th>
                     <th>Name</th>
+                    <th>Price</th>
                     <th>&nbsp;</th>
                     <th>D. Inv.</th>
                   </tr>
@@ -61,9 +62,15 @@ if ($hasMenus) {
                             $row->DriverInventoryTotal
                           : '<span class="glyphicon glyphicon-remove"></span>';
 
+                    // Show the price
+                    $price = '';
+                    if ($row->price != '' && $row->price != NULL)
+                        $price = "&nbsp; \${$row->price}";
+                    
                     echo "<tr>";
                         echo "<td>$row->type</td>";
-                        echo "<td><span title='pk: $row->pk_Dish'>$row->name</span></td>";
+                        echo "<td><a href='/admin/dish/edit/$row->pk_Dish'><span title='pk: $row->pk_Dish'>$row->name</span></a></td>";
+                        echo "<td><small>$price</small></td>";
                         echo "<td>$row->label &nbsp;</td>";
                         echo "<td>$hasDriverInventory</td>";
                     echo "</tr>";

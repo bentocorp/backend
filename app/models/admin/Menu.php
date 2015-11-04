@@ -47,7 +47,7 @@ class Menu extends \Eloquent {
             // Get Menu_Items
             $sql2 = "
                 SELECT 
-                        d.pk_Dish, d.name, d.description, d.type, d.short_name, d.label,
+                        d.*,
                     (
                         # summate
                         select sum(qty) as total
