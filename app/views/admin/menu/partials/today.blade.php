@@ -46,7 +46,7 @@ if ($hasMenus) {
                 <thead>
                   <tr>
                     <th>type</th>
-                    <th>Name</th>
+                    <th>Name <span style="font-weight:normal;"><small>(max/bento)</small></span></th>
                     <th>Price</th>
                     <th>&nbsp;</th>
                     <th>D. Inv.</th>
@@ -66,10 +66,15 @@ if ($hasMenus) {
                     $price = '';
                     if ($row->price != '' && $row->price != NULL)
                         $price = "\${$row->price}";
+                        
+                    // Show max per bento
+                    $maxPerBento = '';
+                    if ($row->type == 'side')
+                        $maxPerBento = " <small>($row->max_per_order)</small>";
                     
                     echo "<tr>";
                         echo "<td>$row->type</td>";
-                        echo "<td><a href='/admin/dish/edit/$row->pk_Dish'><span title='pk: $row->pk_Dish'>$row->name</span></a></td>";
+                        echo "<td><a href='/admin/dish/edit/$row->pk_Dish'><span title='pk: $row->pk_Dish'>$row->name</span></a>$maxPerBento</td>";
                         echo "<td><small>$price</small></td>";
                         echo "<td>$row->label &nbsp;</td>";
                         echo "<td>$hasDriverInventory</td>";
