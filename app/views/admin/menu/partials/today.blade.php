@@ -49,6 +49,7 @@ if ($hasMenus) {
                     <th>Name <span style="font-weight:normal;"><small>(max/bento)</small></span></th>
                     <th>Price</th>
                     <th>&nbsp;</th>
+                    <th>Temp</th>
                     <th>D. Inv.</th>
                   </tr>
                 </thead>
@@ -77,6 +78,7 @@ if ($hasMenus) {
                         echo "<td><a href='/admin/dish/edit/$row->pk_Dish'><span title='pk: $row->pk_Dish'>$row->name</span></a>$maxPerBento</td>";
                         echo "<td><small>$price</small></td>";
                         echo "<td>$row->label &nbsp;</td>";
+                        echo "<td>$row->temp</td>";
                         echo "<td>$hasDriverInventory</td>";
                     echo "</tr>";
                 }
