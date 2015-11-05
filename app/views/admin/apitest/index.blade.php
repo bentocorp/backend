@@ -138,7 +138,7 @@ Order
     "OrderItems": [
         {
             "item_type": "CustomerBentoBox",
-            "unit_price": 12,
+            "unit_price": 10.00,
             "items": [
                 {"id": 11,  "type": "main"}, 
                 {"id": 1,  "type": "side1"},
@@ -149,7 +149,7 @@ Order
         },
         {
             "item_type": "CustomerBentoBox",
-            "unit_price": 12,
+            "unit_price": 12.00,
             "items": [
                 {"id": 9,  "type": "main"}, 
                 {"id": 5,  "type": "side1"}, 
@@ -171,19 +171,24 @@ Order
             "lat": "37.798220",
             "long": "-122.405606"
         },
+        "items_total": 22.00,
+        "delivery_price": "2.75",
         "coupon_discount_cents": 500,
-        "tax_cents": 137,
-        "tip_cents": 200,
+        "tax_percentage:" 8.75,
+        "tax_cents": 173,
+        "subtotal": 21.48,
         "tip_percentage": 15,
-        "total_cents": "1537",
-        "delivery_price": "2.75"
+        "tip_cents": 330,
+        "total_cents": "2478",
+        "total_cents_without_coupon": 3022
     },
     "Stripe": {
         "stripeToken": "tok_15Mt2kEmZcPNENoGjJw2am8L"
     },
     "CouponCode": "bentoyum26",
     "IdempotentToken": "some_uuid",
-    "Platform": "iOS"
+    "Platform": "iOS",
+    "AppVersion": "2.63"
 }
       </textarea>
       <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">
