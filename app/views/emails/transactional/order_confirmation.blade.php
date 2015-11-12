@@ -25,6 +25,13 @@
 
 <?php 
 
+/*
+ * $orderMgr = new OrderMgr($pk_Order);
+ * $orderMgr->printOrderItemListForEmail();
+ * 
+ * $orderMgr->printOrderTotalsForEmail();
+ */
+
 $boxCount = 1;
 
 foreach ($bentoBoxes as $box) {

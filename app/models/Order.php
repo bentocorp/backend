@@ -2,6 +2,7 @@
 
 
 use Bento\Model\CustomerBentoBox;
+use Bento\Order\Cashier;
 use DB;
 
 
@@ -92,7 +93,9 @@ class Order extends \Eloquent {
      */
     private function findPossibleDrivers() 
     {
-        $totals = CustomerBentoBox::calculateTotalsFromJson($this->getOrderJsonObj());
+        #$totals = CustomerBentoBox::calculateTotalsFromJson($this->getOrderJsonObj());
+        $cashier = new Cashier($this->getOrderJsonObj());
+        $totals = $cashier->getTotalsHash();
         #var_dump($totals); die(); #0
         
         $n = count($totals);
@@ -127,7 +130,9 @@ class Order extends \Eloquent {
     {
         // 1. Rollback the LiveInventory
         
-        $totals = CustomerBentoBox::calculateTotalsFromJson($this->getOrderJsonObj($pending));
+        #$totals = CustomerBentoBox::calculateTotalsFromJson($this->getOrderJsonObj($pending));
+        $cashier = new Cashier($this->getOrderJsonObj($pending));
+        $totals = $cashier->getTotalsHash();
               
         // Add back in
         DB::transaction(function() use ($totals)

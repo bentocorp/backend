@@ -32,7 +32,27 @@ class Dish extends \Eloquent {
         $sql = "
         select * from Menu_Item mi
         left join Dish d on (mi.fk_item = d.pk_Dish)
-        where fk_Menu = ?
+        where fk_Menu = ? AND d.type IN ('main', 'side')
+        ";
+        
+        $results = DB::select($sql, array($menuId));
+        
+        $keyedResults = array();
+        
+        foreach ($results as $row) {
+            $keyedResults[$row->pk_Dish] = $row;
+        }
+        
+        return $keyedResults;
+    }
+    
+    
+    public static function getAddonsByMenuId($menuId) {
+        
+        $sql = "
+        select * from Menu_Item mi
+        left join Dish d on (mi.fk_item = d.pk_Dish)
+        where fk_Menu = ? AND d.type IN ('addon')
         ";
         
         $results = DB::select($sql, array($menuId));

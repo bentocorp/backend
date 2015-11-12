@@ -130,21 +130,25 @@ Order
     </ul>
 
     <form action="/order" method="post">
-      data: (an example with two CustomerBentoBox)<br>
-      <b>NOTE: <code>stripeToken</code></b> must always be present. If the user is 
-        just using their existing card, set this to NULL.</b><br>
-      <textarea name="data" class="form-control admin-jsonTextarea">
+        <br>
+        <b>NOTE: <code>stripeToken</code></b> must always be present. If the user is 
+          just using their existing card, set this to NULL.<br>
+        <b>NOTE:</b> There will only ever be one (1) <code>AddonList</code>.<br>
+        <br>
+        An example with two CustomerBentoBox, and some addons. All total calculations should be accurate.<br>
+        data:<br>
+        <textarea name="data" class="form-control admin-jsonTextarea">
 {
     "OrderItems": [
         {
             "item_type": "CustomerBentoBox",
             "unit_price": 10.00,
             "items": [
-                {"id": 11,  "type": "main"}, 
+                {"id": 11, "type": "main"}, 
                 {"id": 1,  "type": "side1"},
                 {"id": 1,  "type": "side2"},
                 {"id": 5,  "type": "side3"}, 
-                {"id": 3, "type": "side4"}
+                {"id": 3,  "type": "side4"}
             ]
         },
         {
@@ -153,9 +157,16 @@ Order
             "items": [
                 {"id": 9,  "type": "main"}, 
                 {"id": 5,  "type": "side1"}, 
-                {"id": 4, "type": "side2"},
+                {"id": 4,  "type": "side2"},
                 {"id": 6,  "type": "side3"},
                 {"id": 5,  "type": "side4"} 
+            ]
+        },
+        {
+            "item_type": "AddonList",
+            "items": [
+                {"id": 20,  "qty": 1, "unit_price": 3.75},
+                {"id": 21,  "qty": 2, "unit_price": 2.75}
             ]
         }
     ],
@@ -171,16 +182,16 @@ Order
             "lat": "37.798220",
             "long": "-122.405606"
         },
-        "items_total": 22.00,
-        "delivery_price": "2.75",
+        "items_total": 31.25,
+        "delivery_price": 2.75,
         "coupon_discount_cents": 500,
-        "tax_percentage:" 8.75,
-        "tax_cents": 173,
-        "subtotal": 21.48,
+        "tax_percentage": 8.75,
+        "tax_cents": 254,
+        "subtotal": 31.54,
         "tip_percentage": 15,
-        "tip_cents": 330,
-        "total_cents": "2478",
-        "total_cents_without_coupon": 3022
+        "tip_cents": 469,
+        "total_cents": 3623,
+        "total_cents_without_coupon": 4166
     },
     "Stripe": {
         "stripeToken": "tok_15Mt2kEmZcPNENoGjJw2am8L"
@@ -190,9 +201,9 @@ Order
     "Platform": "iOS",
     "AppVersion": "2.63"
 }
-      </textarea>
-      <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">
-      <button type="submit" class="btn btn-default">Submit</button>
+        </textarea>
+        <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">
+        <button type="submit" class="btn btn-default">Submit</button>
     </form>
     <!-- </div> -->
 

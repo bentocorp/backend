@@ -15,11 +15,20 @@
     {
         var dishType = $('#type').val();
 
-        if (dishType == 'main')
+        // Require price for mains and add-ons
+        if (dishType == 'main' || dishType == 'addon')
             $('#price').removeAttr('disabled');
         else {
             $('#price').val('');
             $('#price').attr('disabled', true); 
+       }
+       
+       // Don't need max per bento for add-ons
+        if (dishType != 'addon')
+            $('#max_per_order').removeAttr('disabled');
+        else {
+            $('#max_per_order').val('99');
+            $('#max_per_order').attr('disabled', true); 
        }
     }
     
@@ -80,7 +89,7 @@ CRUD Dish
         
     <div class="form-group">
         {{ Form::label('type', 'Type', array('class' => 'col-sm-2 control-label')) }}
-        <div class="col-sm-5">{{ @Form::select('type', array('main' => 'main', 'side' => 'side'), $dish->type, array('class' => 'form-control')); }}</div>
+        <div class="col-sm-5">{{ @Form::select('type', array('main' => 'main', 'side' => 'side', 'addon' => 'addon'), $dish->type, array('class' => 'form-control')); }}</div>
     </div>
     
     <div class="form-group">

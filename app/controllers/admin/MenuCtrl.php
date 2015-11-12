@@ -77,8 +77,14 @@ class MenuCtrl extends \BaseController {
         $dishesInMenu = Dish::getDishesByMenuId($id);
         $data['dishesInMenu'] = $dishesInMenu;
         
-        $dishesAll = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->get();
+        $addonsInMenu = Dish::getAddonsByMenuId($id);
+        $data['addonsInMenu'] = $addonsInMenu;
+        
+        $dishesAll = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->whereIn('type', array('main','side'))->get();
         $data['dishesAll'] = $dishesAll;
+        
+        $addonsAll = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->whereIn('type', array('addon'))->get();
+        $data['addonsAll'] = $addonsAll;
         
         $data['mode'] = 'Editing';
         $data['title'] = $data['mode'].': '. "$menu->for_date $menu->name";

@@ -44,7 +44,7 @@ class OrderCtrl extends \BaseController {
      * and using idempotency.
      */
     public function postIndex() {
-        
+                
         // If the restaurant is not open, we're done!
         $status = Status::getOverall();
         
@@ -393,10 +393,14 @@ class OrderCtrl extends \BaseController {
         $order->long = $orderJson->OrderDetails->coords->long;
         
         $order->fk_User = $user->pk_User;
+        $order->fk_PendingOrder = $this->pendingOrder->pk_PendingOrder;
+        
+        // Money stuff
+        isset($orderJson->items_total) ? $order->items_total = $orderJson->items_total : '';
+        
         $order->amount = $orderJson->OrderDetails->total_cents / 100;
         $order->tax = $orderJson->OrderDetails->tax_cents / 100;
         $order->tip = $orderJson->OrderDetails->tip_cents / 100;
-        $order->fk_PendingOrder = $this->pendingOrder->pk_PendingOrder;
         
         $order->phone = $user->phone;
         
@@ -419,6 +423,7 @@ class OrderCtrl extends \BaseController {
         
         // Insert into CustomerBentoBox
         $this->insertCustomerBentoBoxes($orderJson, $order->pk_Order);
+        # $cashier->writeOrderToTables();
         
         // Bind the completed Order to the PendingOrder,
         // and mark it as no longer processing.

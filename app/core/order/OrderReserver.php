@@ -2,8 +2,9 @@
 
 
 use Bento\Model\PendingOrder;
-use Bento\Model\CustomerBentoBox;
 use Bento\core\InternalResponse;
+use Bento\Order\Cashier;
+use Bento\app\Bento;
 use DB;
 use User;
 use Illuminate\Database\QueryException;
@@ -52,7 +53,8 @@ class OrderReserver {
             // so let's continue trying to process the order.
 
             /* First calculate the totals */
-            $totals = CustomerBentoBox::calculateTotalsFromJson($this->orderJsonObj);
+            $cashier = new Cashier($this->orderJsonObj, $this->pendingOrder->pk_PendingOrder, $this->pendingOrder->fk_Order);
+            $totals = $cashier->getTotalsHash();
 
             /* Next, try to reserve the totals
              * 
@@ -89,7 +91,7 @@ class OrderReserver {
         {
             $this->fail();
             
-            Bento::alert($e, 'Uncaught Inventory Reservation Exception', 'db690417-5e9b-40ba-a6e7-f2441960e809', 
+            Bento::alert($e, '[HIGH] Uncaught Inventory Reservation Exception', 'db690417-5e9b-40ba-a6e7-f2441960e809', 
                     $this->orderJsonObj);
             
             return $this->response;
@@ -100,9 +102,10 @@ class OrderReserver {
     public function isDuplicate() {
         
         // Base case for recursion
+        // Will sleep 3 times, for 2 seconds each
         if ($this->totalWaits >= 2) 
         {
-            Bento::alert(null, 'Idempotent Processing Wait Limit Reached', '6c1bb462-569c-445f-b412-374e46a99904',
+            Bento::alert(null, '[HIGH] Idempotent Processing Wait Limit Reached', '6c1bb462-569c-445f-b412-374e46a99904',
                     $this->orderJsonObj);
             
             $this->response->setSuccess(false);

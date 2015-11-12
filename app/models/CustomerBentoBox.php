@@ -17,6 +17,8 @@ class CustomerBentoBox extends \Eloquent {
     protected $primaryKey = 'pk_CustomerBentoBox';
     
     
+    /**
+     * @deprecated
     public static function calculateTotalsFromJson($json) {
         
         $totals = array();
@@ -34,6 +36,8 @@ class CustomerBentoBox extends \Eloquent {
         
         return $totals;
     }
+     * 
+     */
     
     
     public static function getBoxesForSurvey($start, $end) {

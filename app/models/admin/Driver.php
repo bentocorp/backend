@@ -5,6 +5,7 @@ use Bento\Model\LiveInventory;
 use Bento\Model\CustomerBentoBox;
 use Bento\core\Util\DbUtil;
 use Bento\Drivers\DriverQueue;
+use Bento\Order\Cashier;
 use DB;
 
 
@@ -315,7 +316,9 @@ class Driver extends \Eloquent {
         
         $orderJsonObj = $order->getOrderJsonObj();
         
-        $totals = CustomerBentoBox::calculateTotalsFromJson($orderJsonObj);
+        #$totals = CustomerBentoBox::calculateTotalsFromJson($orderJsonObj);
+        $cashier = new Cashier($orderJsonObj);
+        $totals = $cashier->getTotalsHash();
         
         $id = $this->id();
         
@@ -353,7 +356,9 @@ class Driver extends \Eloquent {
         
         $orderJsonObj = $order->getOrderJsonObj();
         
-        $totals = CustomerBentoBox::calculateTotalsFromJson($orderJsonObj);
+        #$totals = CustomerBentoBox::calculateTotalsFromJson($orderJsonObj);
+        $cashier = new Cashier($orderJsonObj);
+        $totals = $cashier->getTotalsHash();
         
         $id = $this->id();
         

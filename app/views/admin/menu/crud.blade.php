@@ -53,11 +53,14 @@ CRUD Menu
     </div>
         
     <hr>
-    <h3>Dishes on this menu</h3>
+    <h3>Mains & Sides on this menu</h3>
 
     @include('admin.dish.partials.list', array('list' => $dishesAll, 'checked' => $dishesInMenu))
     
     <hr>
+    <h3>Add-ons on this menu</h3>
+    
+    @include('admin.dish.partials.list', array('list' => $addonsAll, 'checked' => $addonsInMenu))
     
     <div class="form-group">
       <div><button type="submit" class="btn btn-success pull-right">Save</button></div>

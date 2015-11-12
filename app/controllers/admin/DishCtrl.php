@@ -15,9 +15,11 @@ class DishCtrl extends \BaseController {
         $data = array();
                 
         // Get dishes
-        $dishes = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->get();
+        $dishes = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->whereIn('type', array('main','side'))->get();
+        $addons = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->whereIn('type', array('addon'))->get();
         #$dishes = Dish::all()->orderBy("name");
         $data['dishes'] = $dishes;
+        $data['addons'] = $addons;
            
         return View::make('admin.dish.index', $data);
     }
