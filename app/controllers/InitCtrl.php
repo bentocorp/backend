@@ -44,7 +44,7 @@ class InitCtrl extends \BaseController {
        
         ## App versions
         $return['ios_min_version'] = 2.64;
-        $return['android_min_version'] = 23;
+        $return['android_min_version'] = 27;
         
         
         ## Settings
