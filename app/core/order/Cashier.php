@@ -1,13 +1,14 @@
 <?php namespace Bento\Order;
 
 
-
 class Cashier {
 
-    private $orderJsonObj;
+    private $orderJsonObj = NULL;
     private $pk_PendingOrder;
     private $pk_Order;
     
+    private $lists = NULL;
+    private $isListsInit = false;
     private $CustomerBentoBoxList;
     private $AddonList;
     
@@ -17,6 +18,33 @@ class Cashier {
         $this->orderJsonObj = $orderJsonObj;
         $this->pk_PendingOrder = $pk_PendingOrder;
         $this->pk_Order = $pk_Order;
+    }
+    
+    
+    /**
+     * Build the objects, and put them into their corresponding lists
+     * @return none
+     */
+    private function listInit()
+    {
+        // Base case
+        if ($this->isListsInit)
+            return;
+        
+        $this->isListsInit = true;
+        
+        // Put the objects into the lists
+        foreach ($this->orderJsonObj->OrderItems as $orderItem)
+        {
+            // If list doesn't exist, make the list
+            if (!isset($this->AddonList[$orderItem->item_type])) {
+                $classname = "Bento\\Order\\ItemList\\$orderItem->item_type";
+                $this->AddonList[$orderItem->item_type] = new $classname($this->pk_Order);
+            }
+            
+            // Add the item
+            $this->AddonList[$orderItem->item_type]->addItem($orderItem);
+        }
     }
     
     
@@ -37,6 +65,16 @@ class Cashier {
         }
         
         return $totals;
+    }
+    
+    
+    public function writeItems() 
+    {
+        $this->listInit();
+        
+        foreach ($this->lists as $list) {
+            $list->writeItems();
+        }
     }
 
     

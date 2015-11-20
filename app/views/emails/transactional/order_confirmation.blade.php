@@ -27,8 +27,8 @@
 
 /*
  * $orderMgr = new OrderMgr($pk_Order);
- * $orderMgr->printOrderItemListForEmail();
  * 
+ * $orderMgr->printOrderItemListForEmail();
  * $orderMgr->printOrderTotalsForEmail();
  */
 

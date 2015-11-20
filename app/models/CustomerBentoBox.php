@@ -16,30 +16,7 @@ class CustomerBentoBox extends \Eloquent {
     protected $table = 'CustomerBentoBox';
     protected $primaryKey = 'pk_CustomerBentoBox';
     
-    
-    /**
-     * @deprecated
-    public static function calculateTotalsFromJson($json) {
-        
-        $totals = array();
-
-        // For each CustomerBentoBox
-        foreach ($json->OrderItems as $orderItem) {
-            // Now for each thing in the box
-            foreach($orderItem->items as $item) {
-                // Increment, or init
-                $totals[$item->id] = isset($totals[$item->id]) 
-                        ? $totals[$item->id] += 1  
-                        : 1;
-            }
-        }
-        
-        return $totals;
-    }
-     * 
-     */
-    
-    
+     
     public static function getBoxesForSurvey($start, $end) {
         
         $sql = "

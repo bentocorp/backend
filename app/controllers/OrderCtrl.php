@@ -10,6 +10,7 @@ use Bento\Tracking\Trak;
 use Bento\app\Bento;
 use Bento\Coupon\AppCoupon;
 use Bento\Order\OrderReserver;
+use Bento\Order\Cashier;
 use User;
 use Response;
 use Request; use Route;
@@ -396,11 +397,26 @@ class OrderCtrl extends \BaseController {
         $order->fk_PendingOrder = $this->pendingOrder->pk_PendingOrder;
         
         // Money stuff
-        isset($orderJson->items_total) ? $order->items_total = $orderJson->items_total : '';
         
-        $order->amount = $orderJson->OrderDetails->total_cents / 100;
+        # From the JSON
+        isset($orderJson->items_total) ? $order->items_total = $orderJson->items_total : '';
+        isset($orderJson->delivery_price) ? $order->delivery_price = $orderJson->delivery_price : '';
+        isset($orderJson->coupon_discount_cents) ? $order->coupon_discount_cents = $orderJson->coupon_discount_cents : '';
+        isset($orderJson->tax_percentage) ? $order->tax_percentage = $orderJson->tax_percentage : '';
+        isset($orderJson->tax_cents) ? $order->tax_cents = $orderJson->tax_cents : '';
+        isset($orderJson->subtotal) ? $order->subtotal = $orderJson->subtotal : '';
+        isset($orderJson->tip_percentage) ? $order->tip_percentage = $orderJson->tip_percentage : '';
+        isset($orderJson->tip_cents) ? $order->tip_cents = $orderJson->tip_cents : '';
+        isset($orderJson->total_cents) ? $order->total_cents = $orderJson->total_cents : '';
+        isset($orderJson->total_cents_without_coupon) ? $order->total_cents_without_coupon = $orderJson->total_cents_without_coupon : '';
+        
+        # Extra for the DB
+        $order->coupon_discount = $orderJson->OrderDetails->coupon_discount_cents / 100;
         $order->tax = $orderJson->OrderDetails->tax_cents / 100;
         $order->tip = $orderJson->OrderDetails->tip_cents / 100;
+        $order->amount = $orderJson->OrderDetails->total_cents / 100;
+        
+        // End Money stuff
         
         $order->phone = $user->phone;
         
@@ -422,8 +438,9 @@ class OrderCtrl extends \BaseController {
         $orderStatus->save();
         
         // Insert into CustomerBentoBox
-        $this->insertCustomerBentoBoxes($orderJson, $order->pk_Order);
-        # $cashier->writeOrderToTables();
+        #$this->insertCustomerBentoBoxes($orderJson, $order->pk_Order);
+        $cashier = new Cashier($orderJson, NULL, $order->pk_Order);
+        $cashier->writeItems();
         
         // Bind the completed Order to the PendingOrder,
         // and mark it as no longer processing.
@@ -512,27 +529,6 @@ class OrderCtrl extends \BaseController {
         if (!$user->has_ordered) {
             $user->has_ordered = 1;
             $user->save();
-        }
-    }
-    
-        
-    private function insertCustomerBentoBoxes($orderJson, $pk_Order) {
-        
-        // For each CustomerBentoBox
-        foreach ($orderJson->OrderItems as $orderItem) {
-            
-            // Make a CustomerBentoBox
-            $box = new CustomerBentoBox;
-            $box->fk_Order = $pk_Order;
-            
-            // Now for each thing in the box
-            foreach($orderItem->items as $item) {
-                $fk = "fk_$item->type";
-                $box->{$fk} = $item->id;
-            }
-            
-            // Save the box
-            $box->save();
         }
     }
     
