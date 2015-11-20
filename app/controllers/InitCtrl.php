@@ -6,6 +6,7 @@ use Bento\Admin\Model\Settings;
 use Request;
 use Route;
 use Response;
+use DB;
 
 class InitCtrl extends \BaseController {
 
@@ -43,8 +44,8 @@ class InitCtrl extends \BaseController {
         
        
         ## App versions
-        $return['ios_min_version'] = 2.64;
-        $return['android_min_version'] = 27;
+        $return['ios_min_version'] = DB::select('select * from `settings` where `key` = ?', array('ios_min_version'))[0]->value;
+        $return['android_min_version'] = DB::select('select * from `settings` where `key` = ?', array('android_min_version'))[0]->value;
         
         
         ## Settings
