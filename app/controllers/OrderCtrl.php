@@ -398,6 +398,8 @@ class OrderCtrl extends \BaseController {
         $order->tip = $orderJson->OrderDetails->tip_cents / 100;
         $order->fk_PendingOrder = $this->pendingOrder->pk_PendingOrder;
         
+        $order->phone = $user->phone;
+        
         // Save Stripe things only if a Stripe charge was made.
         // This happens when a coupon is used for a free bento, since in that case we don't send $0 to Stripe
         if ($stripeCharge !== NULL) {
