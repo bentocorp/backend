@@ -1,7 +1,10 @@
 <?php
-use Bento\Admin\Model\Orders;
+
+#use Bento\Admin\Model\Orders;
 use Bento\Model\Order;
+use Bento\Model\CustomerBentoBox;
 use Bento\app\Bento;
+
 
 try {
 ?>
@@ -31,7 +34,7 @@ if (count($openOrders) > 0):
         foreach ($openOrders as $row) {
             try {
                 
-                $bentoBoxes = Orders::getBentoBoxesByOrder($row->pk_Order);
+                $bentoBoxes = CustomerBentoBox::getBentoBoxesByOrder($row->pk_Order);
 
                 $order = new Order(null, $row->pk_Order);
                 $groupedDriversDropdown = $order->getDriversDropdown($driversDropdown);

@@ -5,19 +5,19 @@
 class CustomerBentoBox implements OrderItemInterface {
 
     
-    private $item;
+    private $itemJsonObj;
     
     
-    public function __construct($orderItem)
+    public function __construct(\stdClass $orderItemJsonObj)
     {
-        $this->item = $orderItem;
+        $this->itemJsonObj = $orderItemJsonObj;
     }
     
     
     public function calculateTotals(&$totals)
     {
         // Now for each thing in the box
-        foreach($this->item->items as $item) {
+        foreach($this->itemJsonObj->items as $item) {
             // Increment, or init
             $totals[$item->id] = isset($totals[$item->id]) 
                     ? $totals[$item->id] += 1  

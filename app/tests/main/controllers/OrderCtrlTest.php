@@ -55,6 +55,7 @@ class OrderCtrlTest extends TestCase {
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {
                                     "id": 1,
@@ -108,6 +109,7 @@ class OrderCtrlTest extends TestCase {
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -115,6 +117,7 @@ class OrderCtrlTest extends TestCase {
                         },
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -166,6 +169,7 @@ class OrderCtrlTest extends TestCase {
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -231,6 +235,7 @@ class OrderCtrlTest extends TestCase {
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -238,6 +243,7 @@ class OrderCtrlTest extends TestCase {
                         },
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 10.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -302,6 +308,7 @@ class OrderCtrlTest extends TestCase {
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -357,6 +364,7 @@ class OrderCtrlTest extends TestCase {
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -413,6 +421,7 @@ class OrderCtrlTest extends TestCase {
     "OrderItems": [
         {
             "item_type": "CustomerBentoBox",
+            "unit_price": 12.00,
             "items": [
                 {"id": 1, "type": "main", "name":"Soba Noodles with \"Chick'n\""},
                 {"id": 2, "type": "side1", "name":"Soba Noodles with \"Chick'n\""}
@@ -471,6 +480,7 @@ DATA;
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -515,6 +525,9 @@ DATA;
     }
     
     
+    /**
+     * @EmailTest
+     */
     public function testAdminUserCanOrderEvenIfRestaurantIsClosed() 
     {
         // Given:
@@ -528,15 +541,44 @@ DATA;
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
-                                {"id": 1, "type": "main"},
-                                {"id": 2, "type": "side1"}
+                                {"id": 8, "type": "main"},
+                                {"id": 1, "type": "side1"},
+                                {"id": 12, "type": "side2"},
+                                {"id": 5, "type": "side3"},
+                                {"id": 6, "type": "side4"}
+                            ]
+                        },
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "unit_price": 12.50,
+                            "items": [
+                                {"id": 8, "type": "main"},
+                                {"id": 1, "type": "side1"},
+                                {"id": 12, "type": "side2"}
+                            ]
+                        },
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "unit_price": 12.75,
+                            "items": [
+                                {"id": 8, "type": "main"},
+                                {"id": 1, "type": "side1"},
+                                {"id": 12, "type": "side2"}
+                            ]
+                        },
+                        {
+                            "item_type": "AddonList",
+                            "items": [
+                                {"id": 20,  "qty": 1, "unit_price": 3.75},
+                                {"id": 21,  "qty": 2, "unit_price": 2.75}
                             ]
                         }
                     ],
                     "OrderDetails": {
                         "address": {
-                            "number": "1111",
+                            "number": "1142",
                             "street": "Kearny st.",
                             "city": "San Francisco",
                             "state": "CA",
@@ -546,9 +588,16 @@ DATA;
                             "lat": "37.798220",
                             "long": "-122.405606"
                         },
-                        "tax_cents": 137,
-                        "tip_cents": 200,
-                        "total_cents": "1537"
+                        "items_total": 31.25,
+                        "delivery_price": 2.75,
+                        "coupon_discount_cents": 500,
+                        "tax_percentage": 8.75,
+                        "tax_cents": 254,
+                        "subtotal": 31.54,
+                        "tip_percentage": 15,
+                        "tip_cents": 469,
+                        "total_cents": 3623,
+                        "total_cents_without_coupon": 4166
                     },
                     "Stripe": {
                         "stripeToken": NULL
@@ -588,6 +637,7 @@ DATA;
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -642,6 +692,7 @@ DATA;
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -696,6 +747,7 @@ DATA;
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -795,6 +847,7 @@ DATA;
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -802,6 +855,7 @@ DATA;
                         },
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -861,6 +915,7 @@ DATA;
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -868,6 +923,7 @@ DATA;
                         },
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -935,6 +991,7 @@ DATA;
             "OrderItems": [
                 {
                     "item_type": "CustomerBentoBox",
+                    "unit_price": 12.00,
                     "items": [
                         {"id": 1, "type": "main"},
                         {"id": 2, "type": "side1"}
@@ -942,6 +999,7 @@ DATA;
                 },
                 {
                     "item_type": "CustomerBentoBox",
+                    "unit_price": 12.00,
                     "items": [
                         {"id": 1, "type": "main"},
                         {"id": 2, "type": "side1"}
@@ -1024,6 +1082,7 @@ DATA;
                     "OrderItems": [
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
@@ -1031,6 +1090,7 @@ DATA;
                         },
                         {
                             "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}

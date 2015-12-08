@@ -173,7 +173,42 @@
 							<!-- row -->
 							<tr mc:repeatable="repeatable-05">
 								<td class="textblock-01" style="padding: 25px 35px 28px;"> <!-- border-top: 1px solid #d7dbdb; -->
-									<?php $cashier->printEmailItems(); ?>
+									<?php $cashier->printEmailReceipt(); ?>
+                                                                        <table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:10px;">
+										<tr>
+											<td mc:edit="block-12" class="text-01" style="font: 28px/25px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
+												Main Name Bento<br>
+												<span style="font-size:14px;">Alaskan Roll, Chicken Gyoza, Cucumber Salad, Jasmine Rice</span>
+											</td>
+											<td width="10"></td>
+											<td mc:edit="block-13" valign="top" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">
+												$15
+											</td>
+										</tr>
+									</table>
+									<table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:10px;">
+										<tr>
+											<td mc:edit="block-12" class="text-01" style="font: 28px/25px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
+												Main Name Bento<br>
+												<span style="font-size:14px;">Alaskan Roll, Chicken Gyoza, Cucumber Salad, Jasmine Rice</span>
+											</td>
+											<td width="10"></td>
+											<td mc:edit="block-13" valign="top" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">
+												$10
+											</td>
+										</tr>
+									</table>
+									<table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:10px;">
+										<tr>
+											<td mc:edit="block-12" class="text-01" style="font: 28px/25px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
+												Green Tea
+											</td>
+											<td width="10"></td>
+											<td mc:edit="block-13" valign="top" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">
+												$2.75
+											</td>
+										</tr>
+									</table>
 								</td>
 							</tr>
 						</table>
@@ -198,7 +233,72 @@
 				<!-- Money block -->
 				<tr>
 					<td bgcolor="#ffffff">
-						<?php $cashier->printEmailTotals($order); ?>
+						<table width="100%" cellpadding="0" cellspacing="0">
+							<!-- row -->
+							<tr mc:repeatable="repeatable-05">
+								<td class="textblock-01" style="padding: 25px 35px 28px;"> <!-- border-top: 1px solid #d7dbdb; -->
+									<table width="100%" cellpadding="0" cellspacing="0">
+										<tr>
+											<td mc:edit="block-12" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
+												Delivery fee
+											</td>
+											<td width="10"></td>
+											<td mc:edit="block-13" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">
+												${{number_format($order->delivery_price, 2)}}
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<!-- row -->
+							<tr mc:repeatable="repeatable-06">
+								<td class="textblock-01" style="padding: 25px 35px 28px; border-top: 1px solid #d7dbdb;">
+									<table width="100%" cellpadding="0" cellspacing="0">
+										<tr>
+											<td mc:edit="block-14" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
+												Tax
+											</td>
+											<td width="10"></td>
+											<td mc:edit="block-15" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">
+												${{number_format($order->tax, 2)}}
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<!-- row -->
+							<tr mc:repeatable="repeatable-07">
+								<td class="textblock-01" style="padding: 25px 35px 28px; border-top: 1px solid #d7dbdb;">
+									<table width="100%" cellpadding="0" cellspacing="0">
+										<tr>
+											<td mc:edit="block-16" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
+												Tip
+											</td>
+											<td width="10"></td>
+											<td mc:edit="block-17" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">
+												${{number_format($order->tip, 2)}} ({{$order->tip_percentage}}%)
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<!-- row -->
+							<tr mc:repeatable="repeatable-08">
+								<td class="textblock-01" style="padding: 25px 35px 28px; border-top: 1px solid #d7dbdb;">
+									<table width="100%" cellpadding="0" cellspacing="0">
+										<tr>
+											<td mc:edit="block-18" class="text-01" style="font: bold 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
+												Total
+											</td>
+											<td width="10"></td>
+											<td mc:edit="block-19" class="text-01" style="font: bold 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">
+												${{number_format($order->amount, 2)}}
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 				<!-- block -->

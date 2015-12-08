@@ -1,18 +1,25 @@
 <?php namespace Bento\Order;
 
 
+/**
+ * The Cashier knows everything about an Order, and can manage all desired actions on it.
+ */
 class Cashier {
 
     private $orderJsonObj = NULL;
     private $pk_PendingOrder;
     private $pk_Order;
     
-    private $lists = NULL;
     private $isListsInit = false;
-    private $CustomerBentoBoxList;
-    private $AddonList;
+    private $Lists = NULL; # A hash of list types.
     
     
+    /**
+     * 
+     * @param \stdClass $orderJsonObj Required. The JSON is the easiest way to manipulate and parse an Order.
+     * @param int $pk_PendingOrder
+     * @param int $pk_Order
+     */
     public function __construct(\stdClass $orderJsonObj, $pk_PendingOrder = NULL, $pk_Order = NULL) 
     {
         $this->orderJsonObj = $orderJsonObj;
@@ -22,7 +29,11 @@ class Cashier {
     
     
     /**
-     * Build the objects, and put them into their corresponding lists
+     * Build the lists from the JSON 
+     * 
+     * Turn the JSON objects into proper code objects.
+     * Add each unique type into a {type}List to hold them.
+     * 
      * @return none
      */
     private function listInit()
@@ -36,15 +47,19 @@ class Cashier {
         // Put the objects into the lists
         foreach ($this->orderJsonObj->OrderItems as $orderItem)
         {
+            $listName = $orderItem->item_type.'List';
+            
             // If list doesn't exist, make the list
-            if (!isset($this->AddonList[$orderItem->item_type])) {
-                $classname = "Bento\\Order\\ItemList\\$orderItem->item_type";
-                $this->AddonList[$orderItem->item_type] = new $classname($this->pk_Order);
+            if (!isset($this->Lists[$listName])) {
+                $classname = "Bento\\Order\\ItemList\\$listName";
+                $this->Lists[$listName] = new $classname($this->pk_Order);
             }
             
             // Add the item
-            $this->AddonList[$orderItem->item_type]->addItem($orderItem);
+            $this->Lists[$listName]->addItem($orderItem);
         }
+        #var_dump($this->Lists);
+        #die('done listInit'); #0;
     }
     
     
@@ -72,21 +87,100 @@ class Cashier {
     {
         $this->listInit();
         
-        foreach ($this->lists as $list) {
+        foreach ($this->Lists as $list) {
             $list->writeItems();
         }
     }
 
-    
-    public function printOrderItemListForEmail() 
-    {
         
+    public function printEmailItems()
+    {
+        foreach ($this->Lists as $name => $list) {
+            if ($name != 'AddonListList') # Addons last
+             $list->printEmailReceipt();
+        }
+        
+        # Addons last
+        if (isset($this->Lists['AddonListList']))
+            $this->Lists['AddonListList']->printEmailReceipt();
     }
     
     
-    public function printOrderTotalsForEmail() 
+    public function printEmailTotals($order)
     {
+        $tip_percent = '';
+        if ($order->tip_percentage != 0)
+            $tip_percent = "($order->tip_percentage%)";
         
+        ?>
+        <table width="100%" cellpadding="0" cellspacing="0">
+                <!-- row -->
+                <tr mc:repeatable="repeatable-05">
+                        <td class="textblock-01" style="padding: 25px 35px 28px;"> <!-- border-top: 1px solid #d7dbdb; -->
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                                <td mc:edit="block-12" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
+                                                        Delivery fee
+                                                </td>
+                                                <td width="10"></td>
+                                                <td mc:edit="block-13" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">
+                                                        $<?php echo number_format($order->delivery_price, 2)?>
+                                                </td>
+                                        </tr>
+                                </table>
+                        </td>
+                </tr>
+                <!-- row -->
+                <tr mc:repeatable="repeatable-06">
+                        <td class="textblock-01" style="padding: 25px 35px 28px; border-top: 1px solid #d7dbdb;">
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                                <td mc:edit="block-14" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
+                                                        Tax
+                                                </td>
+                                                <td width="10"></td>
+                                                <td mc:edit="block-15" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">
+                                                        $<?php echo number_format($order->tax, 2)?>
+                                                </td>
+                                        </tr>
+                                </table>
+                        </td>
+                </tr>
+                <!-- row -->
+                <tr mc:repeatable="repeatable-07">
+                        <td class="textblock-01" style="padding: 25px 35px 28px; border-top: 1px solid #d7dbdb;">
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                                <td mc:edit="block-16" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
+                                                        Tip <span style="font-size:16px;"><?php echo $tip_percent ?></span>
+                                                </td>
+                                                <td width="10"></td>
+                                                <td mc:edit="block-17" class="text-01" style="font: 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">
+                                                        $<?php echo number_format($order->tip, 2)?>
+                                                </td>
+                                        </tr>
+                                </table>
+                        </td>
+                </tr>
+                <!-- row -->
+                <tr mc:repeatable="repeatable-08">
+                        <td class="textblock-01" style="padding: 25px 35px 28px; border-top: 1px solid #d7dbdb;">
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                                <td mc:edit="block-18" class="text-01" style="font: bold 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
+                                                        Total
+                                                </td>
+                                                <td width="10"></td>
+                                                <td mc:edit="block-19" class="text-01" style="font: bold 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">
+                                                        $<?php echo number_format($order->amount, 2)?>
+                                                </td>
+                                        </tr>
+                                </table>
+                        </td>
+                </tr>
+        </table>
+        <?php
     }
     
+        
 }

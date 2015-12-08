@@ -1,7 +1,7 @@
 <?php namespace Bento\Model;
 
 
-use Bento\Model\CustomerBentoBox;
+#use Bento\Model\CustomerBentoBox;
 use Bento\Order\Cashier;
 use DB;
 

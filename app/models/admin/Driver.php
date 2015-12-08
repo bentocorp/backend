@@ -2,7 +2,6 @@
 
 
 use Bento\Model\LiveInventory;
-use Bento\Model\CustomerBentoBox;
 use Bento\core\Util\DbUtil;
 use Bento\Drivers\DriverQueue;
 use Bento\Order\Cashier;

@@ -2,7 +2,7 @@
 
 
 use Bento\Model\Order;
-use Bento\Admin\Model\Orders;
+#use Bento\Admin\Model\Orders;
 use Bento\Model\OrderStatus;
 use Bento\Model\CustomerBentoBox;
 use Bento\Model\Status;
@@ -55,10 +55,10 @@ class OrderCtrl extends \BaseController {
             
             switch ($status) {
                 case 'closed':
-                    $errorMsg = "Whoops! It looks like we've just closed down for the night.";
+                    $errorMsg = "Whoops! It looks like we've just closed down for this meal.";
                     break;
                 case 'sold out':
-                    $errorMsg = "Whoops! It looks like we've just sold out of everything! Check back soon and we might have more.";
+                    $errorMsg = "Whoops! It looks like we've just sold out! Check back soon and we might have more.";
                     break;
             }
             
@@ -151,6 +151,10 @@ class OrderCtrl extends \BaseController {
         $orderReserver = new OrderReserver($data);
         $reserveStatus = $orderReserver->reserve();
         
+        
+        ## *******************************************************************
+        ## -- Begin Inventory Reservation Checks
+        
         // Check Idempotency
         // This means that this order is a duplicate
         if ($reserveStatus->getSuccess() == false && $reserveStatus->getStatusCode() == 23000) {
@@ -171,7 +175,7 @@ class OrderCtrl extends \BaseController {
             return Response::json($response, 410);
         }
         
-        // If inventory reservation failed for some unknown reason
+        // If inventory reservation failed for some other reason that we haven't written a case for
         else if ($reserveStatus->getSuccess() == false) {
             $orderReserver->fail();
             Bento::alert(null, 'Unknown Inventory Reservation Failure', '864543b5-5ea3-49d9-8f74-da68a93cbcbf', $data);
@@ -181,6 +185,10 @@ class OrderCtrl extends \BaseController {
         
         // Otherwise, everything's good. Keep going.
         $this->pendingOrder = $reserveStatus->bag->pendingOrder;
+        
+        ## -- End Inventory Reservation Checks
+        ## *******************************************************************
+        
         
         // ** Process payment
         
@@ -376,11 +384,18 @@ class OrderCtrl extends \BaseController {
     
     private function paymentSuccess($orderJson, $stripeCharge, $coupon) {
         
+        ## Declare vars
+        
         // Get the user
         $user = $this->user;
 
         // Insert into Order
         $order = new Order;
+
+        // Alias OrderDetails
+        $orderDetails = $orderJson->OrderDetails;
+        
+        ## Logic
         
         // VJC: Because some people are on an OLD VERSION
         #try {
@@ -399,21 +414,21 @@ class OrderCtrl extends \BaseController {
         // Money stuff
         
         # From the JSON
-        isset($orderJson->items_total) ? $order->items_total = $orderJson->items_total : '';
-        isset($orderJson->delivery_price) ? $order->delivery_price = $orderJson->delivery_price : '';
-        isset($orderJson->coupon_discount_cents) ? $order->coupon_discount_cents = $orderJson->coupon_discount_cents : '';
-        isset($orderJson->tax_percentage) ? $order->tax_percentage = $orderJson->tax_percentage : '';
-        isset($orderJson->tax_cents) ? $order->tax_cents = $orderJson->tax_cents : '';
-        isset($orderJson->subtotal) ? $order->subtotal = $orderJson->subtotal : '';
-        isset($orderJson->tip_percentage) ? $order->tip_percentage = $orderJson->tip_percentage : '';
-        isset($orderJson->tip_cents) ? $order->tip_cents = $orderJson->tip_cents : '';
-        isset($orderJson->total_cents) ? $order->total_cents = $orderJson->total_cents : '';
-        isset($orderJson->total_cents_without_coupon) ? $order->total_cents_without_coupon = $orderJson->total_cents_without_coupon : '';
+        isset($orderDetails->items_total) ? $order->items_total = $orderDetails->items_total : '';
+        isset($orderDetails->delivery_price) ? $order->delivery_price = $orderDetails->delivery_price : '';
+        isset($orderDetails->coupon_discount_cents) ? $order->coupon_discount_cents = $orderDetails->coupon_discount_cents : '';
+        isset($orderDetails->tax_percentage) ? $order->tax_percentage = $orderDetails->tax_percentage : '';
+        isset($orderDetails->tax_cents) ? $order->tax_cents = $orderDetails->tax_cents : '';
+        isset($orderDetails->subtotal) ? $order->subtotal = $orderDetails->subtotal : '';
+        isset($orderDetails->tip_percentage) ? $order->tip_percentage = $orderDetails->tip_percentage : '';
+        isset($orderDetails->tip_cents) ? $order->tip_cents = $orderDetails->tip_cents : '';
+        $order->total_cents = $orderDetails->total_cents;
+        isset($orderDetails->total_cents_without_coupon) ? $order->total_cents_without_coupon = $orderDetails->total_cents_without_coupon : '';
         
         # Extra for the DB
-        $order->coupon_discount = $orderJson->OrderDetails->coupon_discount_cents / 100;
-        $order->tax = $orderJson->OrderDetails->tax_cents / 100;
-        $order->tip = $orderJson->OrderDetails->tip_cents / 100;
+        isset($orderDetails->coupon_discount_cents) ? $order->coupon_discount = $orderJson->OrderDetails->coupon_discount_cents / 100 : '';
+        isset($orderDetails->tax_cents) ? $order->tax = $orderJson->OrderDetails->tax_cents / 100 : '';
+        isset($orderDetails->tip_cents) ? $order->tip = $orderJson->OrderDetails->tip_cents / 100 : '';
         $order->amount = $orderJson->OrderDetails->total_cents / 100;
         
         // End Money stuff
@@ -439,7 +454,7 @@ class OrderCtrl extends \BaseController {
         
         // Insert into CustomerBentoBox
         #$this->insertCustomerBentoBoxes($orderJson, $order->pk_Order);
-        $cashier = new Cashier($orderJson, NULL, $order->pk_Order);
+        $cashier = new Cashier($orderJson, $this->pendingOrder->pk_PendingOrder, $order->pk_Order);
         $cashier->writeItems();
         
         // Bind the completed Order to the PendingOrder,
@@ -457,7 +472,7 @@ class OrderCtrl extends \BaseController {
         
         // --- Do something stupidly expensive until we can fix it 
         /* The issue was that we didn't have the *name* of the item, so we had
-         * to then perform yet another DB lookup. This was subsequently fixed in the order API
+         * to then perform Yet Another DB Lookup. This was subsequently fixed in the order API
          * request sent by Ri, on request of Vincent. However, the fix has not been implemented in the code yet.
          * 
          * Given the fact that we HAVE to do this lookup in order to get the `label` 
@@ -466,7 +481,7 @@ class OrderCtrl extends \BaseController {
          * at that point, we might as well just switch to an async queue architecture rather than wasting
          * time with this sort of micro-optimization.
          */
-        $bentoBoxes = Orders::getBentoBoxesByOrder($order->pk_Order); 
+        $bentoBoxes = CustomerBentoBox::getBentoBoxesByOrder($order->pk_Order); 
                 
         // Put into Trak
         try {
@@ -514,9 +529,10 @@ class OrderCtrl extends \BaseController {
         // Send an order confirmation email
         Mail::send('emails.transactional.order_confirmation', array(
             'order' => $order, 
-            'orderJson' => $orderJson, 
+            #'orderJson' => $orderJson, 
             'user' => $user,
-            'bentoBoxes' => $bentoBoxes,
+            #'bentoBoxes' => $bentoBoxes,
+            'cashier' => $cashier,
             ), 
             function($message) use ($user)
             {
