@@ -1,6 +1,9 @@
 <?php namespace Bento\Order;
 
 
+use User;
+
+
 /**
  * The Cashier knows everything about an Order, and can manage all desired actions on it.
  */
@@ -13,6 +16,7 @@ class Cashier {
     private $isListsInit = false;
     private $Lists = NULL; # A hash of list types.
     
+    private $user;
     
     /**
      * 
@@ -25,6 +29,9 @@ class Cashier {
         $this->orderJsonObj = $orderJsonObj;
         $this->pk_PendingOrder = $pk_PendingOrder;
         $this->pk_Order = $pk_Order;
+        
+        // Get the user
+        $this->user = User::get();
     }
     
     
@@ -90,6 +97,54 @@ class Cashier {
         foreach ($this->Lists as $list) {
             $list->writeItems();
         }
+    }
+    
+    
+    /**
+     * Get the order string, for the Driver app
+     * @return string
+     */
+    public function getOrderString()
+    {
+        $orderStr = '';
+        
+
+        // If this is a Top Customer, tell the driver!
+        $topCustomerStr = ">> ࿉∥(⋆‿⋆)࿉∥ Top Customer! << \\n\\n";
+        if ($this->user->is_top_customer) {
+            $orderStr .= $topCustomerStr;
+        }
+
+        // If this is NEW customer, tell the driver!
+        $newCustomerStr = ">> *∥(◕‿◕)∥* 1st customer order!! << \\n\\n";
+        if (!$this->user->has_ordered) {
+            $orderStr .= $newCustomerStr;
+        }
+        
+        
+        // Print Bentos, Addons, etc.
+        foreach ($this->Lists as $name => $list) {
+            if ($name != 'AddonListList') # Addons last
+             $list->getOrderString($orderStr);
+        }
+        
+        # Addons last
+        if (isset($this->Lists['AddonListList']))
+            $this->Lists['AddonListList']->getOrderString($orderStr);
+        
+        
+        // If this is NEW customer, tell the driver!
+        if (!$this->user->has_ordered) {
+            $orderStr .= $newCustomerStr;
+        }
+        
+        // Remind the drivers about accuracy, mochi, soy sauce, and chopsticks
+        $orderStr .= ">> Is everything accurate? \\n\\n";
+        $orderStr .= ">> Don't forget:\\n + mochi!\\n + to ask which type of soy sauce\\n + to offer utensils \\n\\n";
+        $orderStr .= "Arigatō!";
+        
+        // Finally, return the string
+        return $orderStr;
     }
 
         

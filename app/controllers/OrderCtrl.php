@@ -453,9 +453,23 @@ class OrderCtrl extends \BaseController {
         $orderStatus->save();
         
         // Insert into CustomerBentoBox
-        #$this->insertCustomerBentoBoxes($orderJson, $order->pk_Order);
         $cashier = new Cashier($orderJson, $this->pendingOrder->pk_PendingOrder, $order->pk_Order);
         $cashier->writeItems();
+        
+        // --- Do something stupidly expensive until we can fix it 
+        /* The issue was that we didn't have the *name* of the item, so we had
+         * to then perform Yet Another DB Lookup. This was subsequently fixed in the order API
+         * request sent by Ri, on request of Vincent. However, the fix has not been implemented in the code yet.
+         * 
+         * Given the fact that we HAVE to do this lookup in order to get the `label` 
+         * (as that can't be sent through to the API, [unless we send it as part of the dish info]),
+         * I thought that it made sense to wait to fix this until it becomes a problem due to scale, as
+         * at that point, we might as well just switch to an async queue architecture rather than wasting
+         * time with this sort of micro-optimization.
+         */
+        #$bentoBoxes = CustomerBentoBox::getBentoBoxesByOrder($order->pk_Order); 
+        // The OrderString for Onfleet, Houston, etc.
+        $orderString = $cashier->getOrderString();
         
         // Bind the completed Order to the PendingOrder,
         // and mark it as no longer processing.
@@ -470,22 +484,10 @@ class OrderCtrl extends \BaseController {
         if ( $coupon !== NULL )
             $coupon->redeem($order->pk_Order);
         
-        // --- Do something stupidly expensive until we can fix it 
-        /* The issue was that we didn't have the *name* of the item, so we had
-         * to then perform Yet Another DB Lookup. This was subsequently fixed in the order API
-         * request sent by Ri, on request of Vincent. However, the fix has not been implemented in the code yet.
-         * 
-         * Given the fact that we HAVE to do this lookup in order to get the `label` 
-         * (as that can't be sent through to the API, [unless we send it as part of the dish info]),
-         * I thought that it made sense to wait to fix this until it becomes a problem due to scale, as
-         * at that point, we might as well just switch to an async queue architecture rather than wasting
-         * time with this sort of micro-optimization.
-         */
-        $bentoBoxes = CustomerBentoBox::getBentoBoxesByOrder($order->pk_Order); 
                 
         // Put into Trak
         try {
-            $trkResponse = Trak::addTask($order, $orderJson, $bentoBoxes);
+            $trkResponse = Trak::addTask($order, $orderJson, $orderString);
             #Trak::test(); #0
             #print_r($trkResponse); die(); #0
             
@@ -517,10 +519,10 @@ class OrderCtrl extends \BaseController {
         try {
             $orderJson->pk_Order = $order->pk_Order;
             $orderJson->User = User::get();
-            $orderJson->OrderString = Trak::makeOrderString($bentoBoxes);
+            $orderJson->OrderString = $orderString;
             
             Queue::push('Bento\Jobs\DoNothing', json_encode($orderJson));
-        } 
+        }
         catch (\Exception $e) {
             Bento::alert($e, 'Queue Insertion Exception', 'af30d4ea-6f7c-4f80-89ca-972f8541ee2f');
         }

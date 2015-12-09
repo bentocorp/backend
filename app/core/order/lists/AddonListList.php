@@ -85,6 +85,35 @@ class AddonListList implements OrderItemListInterface {
     }
     
     
+    public function getOrderString(& $orderStr)
+    {
+        // Warm up the rows
+        $this->rowsInit();
+        
+        // Exit if empty
+        if (count($this->rows) == 0)
+            return;
+        
+        $totalQty = 0;
+        $orderStrTmp = '';
+        
+        // Loop first to get the master total, then assemble 
+        foreach ($this->rows as $row)
+        {
+            $orderStrTmp .= "({$row->qty}x) $row->name \\n";
+            $totalQty += $row->qty;
+        }
+        
+        // Assemble
+        
+        $orderStr .= "余分 {$totalQty}x Add-ons: \\n ===== \\n";
+        
+        $orderStr .= $orderStrTmp;
+        
+        $orderStr .= "===== \\n\\n";
+    }
+    
+    
     private function rowsInit()
     {
         // Done if already warm from DB

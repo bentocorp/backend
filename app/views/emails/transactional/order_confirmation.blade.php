@@ -205,7 +205,7 @@
 				<tr>
 					<td mc:edit="block-20" class="textblock-01" style="padding: 25px 40px 27px; font: 22px/30px Arial, Verdana, Helvetica, sans-serif; color: #fff;" align="center" bgcolor="#8abb5a">
 						Made with &hearts; in our very own kitchen.<br>
-						Bento on!
+						Arigatō and Bento on!
 					</td>
 				</tr>
 				<!-- footer -->

@@ -99,6 +99,7 @@ return array(
     'Bento\\core\\Status' => $baseDir . '/app/core/Status.php',
     'Bento\\core\\Util\\DbUtil' => $baseDir . '/app/core/util/DbUtil.php',
     'Bento\\core\\Util\\NumUtil' => $baseDir . '/app/core/util/NumUtil.php',
+    'Bento\\core\\Util\\StrUtil' => $baseDir . '/app/core/util/StrUtil.php',
     'CreateFailedJobsTable' => $baseDir . '/app/database/migrations/2015_08_27_192336_create_failed_jobs_table.php',
     'CreatePasswordRemindersTable' => $baseDir . '/app/database/migrations/2015_03_07_000743_create_password_reminders_table.php',
     'CreateSessionTable' => $baseDir . '/app/database/migrations/2015_01_13_014144_create_session_table.php',

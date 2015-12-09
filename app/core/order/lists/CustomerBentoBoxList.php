@@ -4,6 +4,7 @@
 use Bento\Model\CustomerBentoBox;
 use Bento\Model\OrderItem;
 use Bento\core\Util\NumUtil;
+use Bento\core\Util\StrUtil;
 
 
 class CustomerBentoBoxList implements OrderItemListInterface {
@@ -100,6 +101,35 @@ class CustomerBentoBoxList implements OrderItemListInterface {
                 </tr>
             </table>
             <?php
+        }
+    }
+    
+    
+    public function getOrderString(& $orderStr)
+    {
+        // Warm up the rows
+        $this->rowsInit();
+        
+        $boxCount = 1;
+        $bentoBoxes = $this->rows;
+        $n = count($bentoBoxes);
+        
+        foreach ($bentoBoxes as $box) {
+
+            $main_name  = StrUtil::encodeForHouston($box->main_name);
+            $side1_name = StrUtil::encodeForHouston($box->side1_name);
+            $side2_name = StrUtil::encodeForHouston($box->side2_name);
+            $side3_name = StrUtil::encodeForHouston($box->side3_name);
+            $side4_name = StrUtil::encodeForHouston($box->side4_name);
+            
+            $orderStr .= "旦 BENTO $boxCount of $n: \\n ===== \\n";
+            $orderStr .= "$box->main_label - $main_name \\n";
+            $orderStr .= "$box->side1_label - $side1_name \\n"; 
+            $orderStr .= "$box->side2_label - $side2_name \\n";
+            $orderStr .= "$box->side3_label - $side3_name \\n";
+            $orderStr .= "$box->side4_label - $side4_name \\n ===== \\n\\n";
+            
+            $boxCount++;
         }
     }
     

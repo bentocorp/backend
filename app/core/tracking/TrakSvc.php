@@ -60,6 +60,10 @@ class TrakSvc {
     }
     
     
+    /**
+     * 
+     * @deprecated
+     */
     public function makeOrderString($bentoBoxes)
     {
         $orderStr = '';
@@ -116,7 +120,7 @@ class TrakSvc {
     }
     
     
-    public function addTask($order, $orderJson, $bentoBoxes) {
+    public function addTask($order, $orderJson, $orderString) {
         
         // Add destination first
         $destinationId = $this->addDestination($order);
@@ -128,17 +132,14 @@ class TrakSvc {
         $recipString = $recip === NULL ? '' : "\"$recip\""; 
         
         $url = $this->apiUrl . '/tasks';
-        
-        // Create the task string
-        $orderStr = $this->makeOrderString($bentoBoxes);
-        
+                
         $payload = '
             {
                 "merchant": "'.$this->organization.'",
                 "executor": "'.$this->organization.'",
                 "destination": "'.$destinationId.'",
                 "recipients": ['.$recipString.'],
-                "notes": "Order #'.$order->pk_Order.': \\n\\n'."$orderStr".'"
+                "notes": "Order #'.$order->pk_Order.': \\n\\n'."$orderString".'"
             }
         ';
         #echo $payload; #

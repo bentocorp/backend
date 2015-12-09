@@ -4,6 +4,8 @@
 use Bento\Model\Order;
 use Bento\Model\CustomerBentoBox;
 use Bento\app\Bento;
+use Bento\Model\OrderItem;
+use Bento\core\Util\NumUtil;
 
 
 try {
@@ -35,6 +37,8 @@ if (count($openOrders) > 0):
             try {
                 
                 $bentoBoxes = CustomerBentoBox::getBentoBoxesByOrder($row->pk_Order);
+                $addons = OrderItem::getItemsByOrder($row->pk_Order, 'Addon');
+                
 
                 $order = new Order(null, $row->pk_Order);
                 $groupedDriversDropdown = $order->getDriversDropdown($driversDropdown);
@@ -68,22 +72,32 @@ if (count($openOrders) > 0):
                   </form>
                 </tr>
                 <tr>
-                    <td colspan='8'>
+                    <td colspan='7'>
 
                         <table class="table table-condensed">
-
                             <tbody>
                                 <?php 
+                                // Bentos
                                 $boxCount = 1;
                                 foreach ($bentoBoxes as $box) {
                                     ?>
                                     <tr>
-                                      <th scope="row">Bento Box {{{$boxCount}}}</th>
-                                      <td>{{{$box->main_name}}} - {{$box->main_label}}</td>
-                                      <td>{{{$box->side1_name}}} - {{$box->side1_label}}</td>
-                                      <td>{{{$box->side2_name}}} - {{$box->side2_label}}</td>
-                                      <td>{{{$box->side3_name}}} - {{$box->side3_label}}</td>
-                                      <td>{{{$box->side4_name}}} - {{$box->side4_label}}</td>
+                                      <th scope="row">Bento Box {{$boxCount}}: ${{$box->unit_price_paid}}</th>
+                                      <td>{{$box->main_name}} - {{$box->main_label}}</td>
+                                      <td>{{$box->side1_name}} - {{$box->side1_label}}</td>
+                                      <td>{{$box->side2_name}} - {{$box->side2_label}}</td>
+                                      <td>{{$box->side3_name}} - {{$box->side3_label}}</td>
+                                      <td>{{$box->side4_name}} - {{$box->side4_label}}</td>
+                                    </tr>
+                                    <?php
+                                    $boxCount++;
+                                }
+                                
+                                // Addons
+                                foreach ($addons as $addon) {
+                                    ?>
+                                    <tr>
+                                      <td colspan="6">{{$addon->qty}}x {{$addon->name}}: ${{NumUtil::formatPriceForEmail($addon->qty * $addon->unit_price_paid)}} <small>({{$addon->qty}} @ ${{NumUtil::formatPriceForEmail($addon->unit_price_paid)}})</small></td>
                                     </tr>
                                     <?php
                                     $boxCount++;

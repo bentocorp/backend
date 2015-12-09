@@ -25,5 +25,10 @@ interface OrderItemListInterface {
      */
     # private function itemsInit();
     
+    /**
+     * Get the order string for the queue (showing in the driver app) and such.
+     * @param string $orderString
+     */
+    public function getOrderString(& $orderStr);
 }
 

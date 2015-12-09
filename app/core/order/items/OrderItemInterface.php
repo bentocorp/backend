@@ -3,7 +3,7 @@
 
 interface OrderItemInterface {
     
-    public function calculateTotals(&$totals);
+    public function calculateTotals(& $totals);
     
 }
 
