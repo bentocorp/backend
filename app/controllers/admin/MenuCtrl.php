@@ -34,10 +34,19 @@ class MenuCtrl extends \BaseController {
     
     public function getCreate() {
         
+        // Possible menu items
+        
         $dishesAll = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->get();
         $data['dishesAll'] = $dishesAll;
         
         $data['dishesInMenu'] = array();
+                
+        $addonsAll = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->whereIn('type', array('addon'))->get();
+        $data['addonsAll'] = $addonsAll;
+        
+        $data['addonsInMenu'] = array();
+        
+        // Other stuff
         
         $data['mode'] = 'Create New Menu';
         $data['title'] = $data['mode'];
@@ -74,17 +83,21 @@ class MenuCtrl extends \BaseController {
         $menu = Menu::find($id);
         $data['menu'] = $menu;
         
+        // Possible menu items
+                
+        $dishesAll = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->whereIn('type', array('main','side'))->get();
+        $data['dishesAll'] = $dishesAll;
+        
         $dishesInMenu = Dish::getDishesByMenuId($id);
         $data['dishesInMenu'] = $dishesInMenu;
+                
+        $addonsAll = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->whereIn('type', array('addon'))->get();
+        $data['addonsAll'] = $addonsAll;
         
         $addonsInMenu = Dish::getAddonsByMenuId($id);
         $data['addonsInMenu'] = $addonsInMenu;
         
-        $dishesAll = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->whereIn('type', array('main','side'))->get();
-        $data['dishesAll'] = $dishesAll;
-        
-        $addonsAll = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->whereIn('type', array('addon'))->get();
-        $data['addonsAll'] = $addonsAll;
+        // Other stuff
         
         $data['mode'] = 'Editing';
         $data['title'] = $data['mode'].': '. "$menu->for_date $menu->name";
