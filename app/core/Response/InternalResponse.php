@@ -1,16 +1,18 @@
 <?php namespace Bento\core\Response;
 
 
+use Response;
+
 
 class InternalResponse {
 
         
     private $statusCode;
-    private $success;
-    private $pubMsg;
+    private $success;   #boolean
+    private $pubMsg;    #string
     
-    # Your bag of stuff.
-    public  $bag;
+   // Your bag of stuff.
+    public $bag; # stdClass
     
     
     public function __construct() {
@@ -42,6 +44,29 @@ class InternalResponse {
     
     public function setPubMsg($pubMsg) {
         $this->pubMsg = $pubMsg;
+    }
+    
+    
+    public function getDerivedStatus()
+    {
+        return $this->getSuccess() ? 'success' : 'error' ;
+    }
+    
+    
+    public function getDerivedStatusClass()
+    {
+        return $this->getSuccess() ? 'success' : 'danger' ;
+    }
+    
+    
+    public function formatForRest()
+    {
+        $body = array (
+            'status' => $this->getDerivedStatus(),
+            'msg' => $this->getPubMsg(),
+        );
+        
+        return Response::json($body, $this->getStatusCode());
     }
     
 }

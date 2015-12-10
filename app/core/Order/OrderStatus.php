@@ -3,6 +3,7 @@
 use Bento\Drivers\DriverMgr;
 use Bento\Admin\Model\Driver;
 use Bento\Model\Order;
+use Bento\core\Response\InternalResponse;
 use DB;
 
 class OrderStatus {
@@ -167,18 +168,37 @@ class OrderStatus {
     
     public function cancel() {
         
-        DB::transaction(function() 
+        $internalResponse = new InternalResponse();
+        
+        DB::transaction(function() use ($internalResponse)
         {
             $pk_Order = $this->pk_Order;
 
             // Lock for read the current status
             $row = DB::select('select * from OrderStatus where fk_Order = ? FOR UPDATE', array($pk_Order))[0];
 
-            // If the current status is already cancelled, exit
+            // If the current status is already Cancelled, return ok and exit
             if ($row->status == 'Cancelled')
+            {             
+                $internalResponse->setStatusCode(200);
+                $internalResponse->setSuccess(true);
+                $internalResponse->setPubMsg('This order was already cancelled.');
+                
                 return;
+            }
             
-            // The status hasn't already been set to this, so execute
+            // If the current status is already Delivered, return error and exit
+            if ($row->status == 'Delivered')
+            {                
+                $internalResponse->setStatusCode(400);
+                $internalResponse->setSuccess(false);
+                $internalResponse->setPubMsg('This order cannot be cancelled, as it has already been delivered.');
+                
+                return;
+            }
+            
+            
+            // The status hasn't already been set to this, or isn't final, so execute
                 
             // Update the table
             $update = array(
@@ -203,7 +223,16 @@ class OrderStatus {
                 $driver->removeOrderFromQueue($pk_Order);
             }
             
+            // And finally, Success
+            $internalResponse->setStatusCode(200);
+            $internalResponse->setSuccess(true);
+            $internalResponse->setPubMsg('The order has been cancelled.');
+
+            return;
         });
+        
+        return $internalResponse;
     }
+    
     
 }

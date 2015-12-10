@@ -133,5 +133,17 @@ class AdminOrderCtrlTest extends TestCase {
     }
     
     
+    public function testCantCancelDeliveredOrder()
+    {
+        // Given a Delivered order
+        
+        // When I try to cancel it
+        
+        // I get 400
+        
+        // And the order is still set as Delivered
+    }
+    
+    
     
 }

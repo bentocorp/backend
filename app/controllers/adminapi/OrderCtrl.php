@@ -81,9 +81,10 @@ class OrderCtrl extends \BaseController {
                     400);
         
         $adminOrderCtrl = new AdminOrderCtrl;
-        $adminOrderCtrl->getCancel($pk_Order);
+        $response = $adminOrderCtrl->getCancel($pk_Order);
         
-        return Response::json('', 200);
+        #return Response::json('', 200);
+        return $response;
     }
     
     
