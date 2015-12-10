@@ -1,4 +1,4 @@
-<?php namespace Bento\core;
+<?php namespace Bento\core\Response;
 
 
 

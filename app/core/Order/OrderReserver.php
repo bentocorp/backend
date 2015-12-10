@@ -2,7 +2,7 @@
 
 
 use Bento\Model\PendingOrder;
-use Bento\core\InternalResponse;
+use Bento\core\Response\InternalResponse;
 use Bento\Order\Cashier;
 use Bento\app\Bento;
 use DB;
