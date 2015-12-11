@@ -411,7 +411,7 @@ class OrderCtrl extends \BaseController {
         $order->fk_User = $user->pk_User;
         $order->fk_PendingOrder = $this->pendingOrder->pk_PendingOrder;
         
-        // Money stuff
+        // ** Money stuff
         
         # From the JSON
         isset($orderDetails->items_total) ? $order->items_total = $orderDetails->items_total : '';
@@ -431,9 +431,15 @@ class OrderCtrl extends \BaseController {
         isset($orderDetails->tip_cents) ? $order->tip = $orderJson->OrderDetails->tip_cents / 100 : '';
         $order->amount = $orderJson->OrderDetails->total_cents / 100;
         
-        // End Money stuff
+        // ** End Money stuff
         
         $order->phone = $user->phone;
+        
+        $order->platform = $orderJson->Platform;
+        $order->app_version = $orderJson->AppVersion;
+        isset($orderJson->Eta->min) ? $order->eta_min = $orderJson->Eta->min : '';
+        isset($orderJson->Eta->max) ? $order->eta_max = $orderJson->Eta->max : '';
+        
         
         // Save Stripe things only if a Stripe charge was made.
         // This happens when a coupon is used for a free bento, since in that case we don't send $0 to Stripe

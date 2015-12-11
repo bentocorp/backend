@@ -49,6 +49,22 @@ class InitCtrl extends \BaseController {
         
         
         ## Settings
+        $settings = Settings::all();
+        $pubSettingsHash = array();
+        $privSettingsHash = array();
+        
+        // Put public stuff into the API return
+        foreach ($settings as $row)
+        {
+            if ($row->public)
+                $pubSettingsHash[$row->key] = $row->value;
+            else
+                $privSettingsHash[$row->key] = $row->value;
+        }
+        
+        $return['settings'] = $pubSettingsHash;
+        
+        /*
         $settings = Settings::where('public', '=', '1')->get(array('key', 'value'));
         $settingsHash = array();
         
@@ -57,7 +73,27 @@ class InitCtrl extends \BaseController {
         }
         
         $return['settings'] = $settingsHash;
+         * 
+         */
         
+        ## ETA
+        $sse = $privSettingsHash['sse_result'];
+        $sse_multiplier = $privSettingsHash['sse_minutesMultiplier'];
+        $eta_min = 0;
+        
+        if ($sse == '' || $sse == NULL || $sse == 0)
+            $eta_min = $sse_multiplier;
+        else
+            $eta_min = $sse;
+        
+        $eta_max = $eta_min + 10;
+        
+        $eta = array(
+            'eta_min' => (int) $eta_min,
+            'eta_max' => (int) $eta_max,
+        );
+        
+        $return['eta'] = $eta;
         
         ## Meal (Breakfast/Lunch/Dinner) Information
         $meals = array(            

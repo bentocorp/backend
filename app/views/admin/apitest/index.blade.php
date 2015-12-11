@@ -196,6 +196,10 @@ Order
     "Stripe": {
         "stripeToken": "tok_15Mt2kEmZcPNENoGjJw2am8L"
     },
+    "Eta": {
+        "min": "15",
+        "max": "25",
+    },
     "CouponCode": "bentoyum26",
     "IdempotentToken": "some_uuid",
     "Platform": "iOS",
