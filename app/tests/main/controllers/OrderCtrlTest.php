@@ -84,7 +84,8 @@ class OrderCtrlTest extends TestCase {
                         "tip_cents": 200,
                         "total_cents": "50"
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }',
             "api_token" => "456"
         );
@@ -140,7 +141,8 @@ class OrderCtrlTest extends TestCase {
                         "tip_cents": 200,
                         "total_cents": "50"
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "123"
@@ -195,7 +197,8 @@ class OrderCtrlTest extends TestCase {
                     "Stripe": {
                         "stripeToken": "badToken!"
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "456"
@@ -269,7 +272,8 @@ class OrderCtrlTest extends TestCase {
                     "Stripe": {
                         "stripeToken": NULL
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "123"
@@ -334,7 +338,8 @@ class OrderCtrlTest extends TestCase {
                     "Stripe": {
                         "stripeToken": NULL
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "123"
@@ -390,7 +395,8 @@ class OrderCtrlTest extends TestCase {
                     "Stripe": {
                         "stripeToken": NULL
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "123"
@@ -447,7 +453,8 @@ class OrderCtrlTest extends TestCase {
     "Stripe": {
         "stripeToken": NULL
     },
-    "IdempotentToken": "$idempotentTkn"
+    "IdempotentToken": "$idempotentTkn",
+    "Platform": "iOS"
 }      
 DATA;
         
@@ -506,7 +513,8 @@ DATA;
                     "Stripe": {
                         "stripeToken": NULL
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "123"
@@ -602,7 +610,8 @@ DATA;
                     "Stripe": {
                         "stripeToken": NULL
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "00123"
@@ -663,7 +672,8 @@ DATA;
                     "Stripe": {
                         "stripeToken": NULL
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "123"
@@ -718,7 +728,8 @@ DATA;
                     "Stripe": {
                         "stripeToken": NULL
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "789"
@@ -773,7 +784,8 @@ DATA;
                     "Stripe": {
                         "stripeToken": NULL
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "789"
@@ -815,7 +827,8 @@ DATA;
                     "Stripe": {
                         "stripeToken": NULL
                     },
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "123"
@@ -882,7 +895,8 @@ DATA;
                         "stripeToken": NULL
                     },
                     "CouponCode": "'.$coupon.'",
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "123"
@@ -950,7 +964,8 @@ DATA;
                         "stripeToken": NULL
                     },
                     "CouponCode": "'.$coupon.'",
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "123"
@@ -1026,7 +1041,8 @@ DATA;
                 "stripeToken": NULL
             },
             "CouponCode": "%s",
-            "IdempotentToken": "'.$idempotentTkn.'"
+            "IdempotentToken": "'.$idempotentTkn.'",
+            "Platform": "iOS"
         }';
         
         $parameters = array(
@@ -1117,7 +1133,8 @@ DATA;
                         "stripeToken": NULL
                     },
                     "CouponCode": "",
-                    "IdempotentToken": "'.$idempotentTkn.'"
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
                 }'
                 ,
             "api_token" => "123"

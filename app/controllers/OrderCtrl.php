@@ -436,7 +436,7 @@ class OrderCtrl extends \BaseController {
         $order->phone = $user->phone;
         
         $order->platform = $orderJson->Platform;
-        $order->app_version = $orderJson->AppVersion;
+        isset($orderJson->AppVersion) ? $order->app_version = $orderJson->AppVersion : '';
         isset($orderJson->Eta->min) ? $order->eta_min = $orderJson->Eta->min : '';
         isset($orderJson->Eta->max) ? $order->eta_max = $orderJson->Eta->max : '';
         
