@@ -163,9 +163,15 @@ class Cashier {
     
     public function printEmailTotals($order)
     {
+        // Tip Percent
         $tip_percent = '';
         if ($order->tip_percentage != 0)
             $tip_percent = "($order->tip_percentage%)";
+        
+        // Promo code
+        $promo_amount = '';
+        if ($order->coupon_discount > 0)
+            $promo_amount = "($$order->coupon_discount off)";
         
         ?>
         <table width="100%" cellpadding="0" cellspacing="0">
@@ -223,7 +229,7 @@ class Cashier {
                                 <table width="100%" cellpadding="0" cellspacing="0">
                                         <tr>
                                                 <td mc:edit="block-18" class="text-01" style="font: bold 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;">
-                                                        Total
+                                                        Total <span style="font-size:16px;"><?php echo $promo_amount ?></span>
                                                 </td>
                                                 <td width="10"></td>
                                                 <td mc:edit="block-19" class="text-01" style="font: bold 28px/35px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="right">

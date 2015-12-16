@@ -598,7 +598,7 @@ DATA;
                         },
                         "items_total": 31.25,
                         "delivery_price": 2.75,
-                        "coupon_discount_cents": 500,
+                        "coupon_discount_cents": 0,
                         "tax_percentage": 8.75,
                         "tax_cents": 254,
                         "subtotal": 31.54,
@@ -1168,6 +1168,115 @@ DATA;
         $pendingOrder = DB::select('select * from `PendingOrder` where fk_Order = ?', array($row->pk_Order))[0];
         
         $this->assertEquals(0, $pendingOrder->is_processing);
+    }
+    
+    
+    /**************************************************************************
+     * Test Emails
+     *************************************************************************/
+    
+    /**
+     * @EmailTest
+     */
+    public function testEmailWithPromoCode() 
+    {
+        // Given:
+        //  an order from an authorized user, 
+        //  who has a Stripe card on file with us, 
+        //  and is an admin,
+        
+        // And is using a promo code
+        $idempotentTkn = $this->getIdempotentToken();
+        $parameters = array(
+            "data" =>
+                '{
+                    "OrderItems": [
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
+                            "items": [
+                                {"id": 8, "type": "main"},
+                                {"id": 1, "type": "side1"},
+                                {"id": 12, "type": "side2"},
+                                {"id": 5, "type": "side3"},
+                                {"id": 6, "type": "side4"}
+                            ]
+                        },
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "unit_price": 12.50,
+                            "items": [
+                                {"id": 8, "type": "main"},
+                                {"id": 1, "type": "side1"},
+                                {"id": 12, "type": "side2"}
+                            ]
+                        },
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "unit_price": 12.75,
+                            "items": [
+                                {"id": 8, "type": "main"},
+                                {"id": 1, "type": "side1"},
+                                {"id": 12, "type": "side2"}
+                            ]
+                        },
+                        {
+                            "item_type": "AddonList",
+                            "items": [
+                                {"id": 20,  "qty": 1, "unit_price": 3.75},
+                                {"id": 21,  "qty": 2, "unit_price": 2.75}
+                            ]
+                        }
+                    ],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "1142",
+                            "street": "Kearny st.",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94133"
+                        },
+                        "coords": {
+                            "lat": "37.798220",
+                            "long": "-122.405606"
+                        },
+                        "items_total": 31.25,
+                        "delivery_price": 2.75,
+                        "coupon_discount_cents": 500,
+                        "tax_percentage": 8.75,
+                        "tax_cents": 254,
+                        "subtotal": 31.54,
+                        "tip_percentage": 15,
+                        "tip_cents": 469,
+                        "total_cents": 3623,
+                        "total_cents_without_coupon": 4166
+                    },
+                    "Stripe": {
+                        "stripeToken": NULL
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS"
+                }'
+                ,
+            "api_token" => "00123"
+        );
+        
+        // and a closed state
+        DB::update('update settings set `value` = "closed" where `key` = ?', array('status'));
+        
+        // and enough inventory for the order,
+        DB::table('LiveInventory')->truncate();
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(1, 100));
+        DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(2, 100));
+                
+        // When I attempt to order
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+        
+        // Clean up
+        DB::update('update settings set `value` = "open" where `key` = ?', array('status'));
     }
 
 }

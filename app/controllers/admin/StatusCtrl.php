@@ -55,12 +55,12 @@ class StatusCtrl extends \BaseController {
          DB::update('update Driver set on_shift = 0, order_queue = NULL', array());
 
         // Close any open Orders
-        DB::update('update OrderStatus set `status` = "Delivered" where `status` IN (?,?,?) AND fk_Driver IS NOT NULL', array('Open', 'En Route', 'Assigned'));
-        DB::update('update OrderStatus set `status` = "Cancelled" where `status` IN (?,?,?) AND fk_Driver IS NULL', array('Open', 'En Route', 'Assigned'));
+        DB::update('update OrderStatus set `status` = "Delivered" where `status` IN (?,?,?) AND (fk_Driver IS NOT NULL AND fk_Driver > 0)', array('Open', 'En Route', 'Assigned'));
+        DB::update('update OrderStatus set `status` = "Cancelled" where `status` IN (?,?,?) AND (fk_Driver IS NULL OR fk_Driver <= 0)', array('Open', 'En Route', 'Assigned'));
 
         // Close any open generic_Orders
-        DB::update('update generic_Order set `status` = "Delivered" where `status` IN (?,?,?) AND fk_Driver IS NOT NULL', array('Open', 'En Route', 'Assigned'));
-        DB::update('update generic_Order set `status` = "Cancelled" where `status` IN (?,?,?) AND fk_Driver IS NULL', array('Open', 'En Route', 'Assigned'));
+        DB::update('update generic_Order set `status` = "Delivered" where `status` IN (?,?,?) AND (fk_Driver IS NOT NULL AND fk_Driver > 0)', array('Open', 'En Route', 'Assigned'));
+        DB::update('update generic_Order set `status` = "Cancelled" where `status` IN (?,?,?) AND (fk_Driver IS NULL OR fk_Driver <= 0)', array('Open', 'En Route', 'Assigned'));
         
         return Redirect::back()
             ->with('msg', 
