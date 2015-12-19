@@ -116,6 +116,9 @@ CRUD Dish
     
     <div class="form-group">
         <?php @$default_max = $dish->max_per_order ? $dish->max_per_order : 99 ?>
+        <!-- "Default" in Laravel is an *always* case. It will *always* populate with what you set,
+              even if there is already a value in the DB. So we need additional logic when you want
+              a default value *only when* the DB is empty -->
         {{ Form::label('max_per_order', 'Max Per Bento', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::text('max_per_order', $default_max, array('class' => 'form-control')) }}</div>
     </div>

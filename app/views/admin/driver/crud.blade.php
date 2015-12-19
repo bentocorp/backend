@@ -21,22 +21,22 @@ CRUD Driver
     <?php if (isset($record)) echo Form::model($record) ?>
 
     <div class="form-group">
-        {{ Form::label('firstname', 'First Name', array('class' => 'col-sm-2 control-label')) }}
+        {{ Form::label('firstname', 'First Name *', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::text('firstname', null, array('class' => 'form-control')) }}</div>
     </div>
     
     <div class="form-group">
-        {{ Form::label('lasttname', 'Last Name', array('class' => 'col-sm-2 control-label')) }}
+        {{ Form::label('lasttname', 'Last Name *', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::text('lastname', null, array('class' => 'form-control')) }}</div>
     </div>
         
     <div class="form-group">
-        {{ Form::label('email', 'Email', array('class' => 'col-sm-2 control-label')) }}
+        {{ Form::label('email', 'Email *', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::text('email', null, array('class' => 'form-control')) }}</div>
     </div>
     
     <div class="form-group">
-        {{ Form::label('mobile_phone', 'Mobile Phone', array('class' => 'col-sm-2 control-label')) }}
+        {{ Form::label('mobile_phone', 'Mobile Phone *', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::text('mobile_phone', null, array('class' => 'form-control')) }}</div>
     </div>
     

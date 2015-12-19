@@ -452,15 +452,14 @@ class OrderCtrl extends \BaseController {
             $order->fk_Coupon = $coupon->getCode();
         
         $order->save(); // Finally, insert into the Order table
-                
-        // Insert into OrderStatus
-        $orderStatus = new OrderStatus;
-        $orderStatus->fk_Order = $order->pk_Order;
-        $orderStatus->save();
         
-        // Insert into CustomerBentoBox
+        
+        // Create a Cashier
         $cashier = new Cashier($orderJson, $this->pendingOrder->pk_PendingOrder, $order->pk_Order);
+        
+        // Write the items to the DB
         $cashier->writeItems();
+        
         
         // --- Do something stupidly expensive until we can fix it 
         /* The issue was that we didn't have the *name* of the item, so we had
@@ -477,6 +476,13 @@ class OrderCtrl extends \BaseController {
         // The OrderString for Onfleet, Houston, etc.
         $orderString = $cashier->getOrderString();
         
+        // Insert into OrderStatus
+        $orderStatus = new OrderStatus;
+        $orderStatus->fk_Order = $order->pk_Order;
+        $orderStatus->driver_text_blob = $orderString; # And save the string for later, so Houston can use it on a cold start
+        $orderStatus->save();
+        
+        
         // Bind the completed Order to the PendingOrder,
         // and mark it as no longer processing.
         $this->pendingOrder->fk_Order = $order->pk_Order;
@@ -491,7 +497,7 @@ class OrderCtrl extends \BaseController {
             $coupon->redeem($order->pk_Order);
         
                 
-        // Put into Trak
+        // Put into Onfleet
         try {
             $trkResponse = Trak::addTask($order, $orderJson, $orderString);
             #Trak::test(); #0
