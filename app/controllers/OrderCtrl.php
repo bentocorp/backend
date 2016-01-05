@@ -4,7 +4,7 @@
 use Bento\Model\Order;
 #use Bento\Admin\Model\Orders;
 use Bento\Model\OrderStatus;
-use Bento\Model\CustomerBentoBox;
+#use Bento\Model\CustomerBentoBox;
 use Bento\Model\Status;
 use Bento\Tracking\Trak;
 use Bento\app\Bento;
