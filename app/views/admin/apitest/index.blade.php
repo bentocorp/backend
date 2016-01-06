@@ -198,7 +198,7 @@ Order
     },
     "Eta": {
         "min": "15",
-        "max": "25",
+        "max": "25"
     },
     "CouponCode": "bentoyum26",
     "IdempotentToken": "some_uuid",

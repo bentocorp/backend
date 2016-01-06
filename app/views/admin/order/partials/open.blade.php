@@ -103,6 +103,17 @@ if (count($openOrders) > 0):
                                     $boxCount++;
                                 }
                                 ?>
+                                    
+                                <!-- // Totals -->
+                                <tr><td colspan="6">
+                                    <b>Items Total:</b> ${{$row->items_total}} &nbsp;&nbsp;
+                                    <b>Delivery fee:</b> ${{$row->delivery_price}} &nbsp;&nbsp;
+                                    <b>Coupon discount:</b> -${{$row->coupon_discount}} &nbsp;&nbsp;
+                                    <b>Tax:</b> ${{$row->tax}} ({{(float) $row->tax_percentage}}%) &nbsp;&nbsp;
+                                    <b>Tip:</b> ${{$row->tip}} ({{(float) $row->tip_percentage}}%) &nbsp;&nbsp;
+                                    <b>Total:</b> ${{$row->amount}} &nbsp;&nbsp;
+                                    <i><b>Pre-Promo Total:</b> ${{NumUtil::formatPriceFromCents($row->total_cents_without_coupon)}}</i> &nbsp;&nbsp;
+                                </td></tr>
                             </tbody>
                         </table>
                     </td>

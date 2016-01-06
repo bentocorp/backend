@@ -3,7 +3,7 @@
 
 @section('content')
 
-<h2>Pending Orders</h2>
+<h2>Pending Orders (last 100)</h2>
 
 <table class="table table-striped">
     <thead>

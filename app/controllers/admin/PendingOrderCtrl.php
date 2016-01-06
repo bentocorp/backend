@@ -12,7 +12,7 @@ class PendingOrderCtrl extends AdminBaseController {
     public function getIndex() {
         
         $data = array();
-        $pendingOrders = PendingOrder::withTrashed()->orderBy('created_at', 'desc')->get();
+        $pendingOrders = PendingOrder::withTrashed()->orderBy('created_at', 'desc')->take(100)->get();
         
         $data['pendingOrders'] = $pendingOrders;
         
@@ -24,7 +24,7 @@ class PendingOrderCtrl extends AdminBaseController {
         $pendingOrder = PendingOrder::find($pk);
         $pendingOrder->delete();
         
-        return Redirect::back()->with('msg', array('type' => 'success', 'txt' => 'Pending Order marked deleted.'));
+        return Redirect::back()->with('msg', array('type' => 'success', 'txt' => 'Pending Order marked as deleted.'));
     }
     
 }
