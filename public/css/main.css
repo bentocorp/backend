@@ -59,6 +59,12 @@ hr.hr-bento {
     border-top: 1px solid #B1BB40;
 }
 
+.label-light {
+    font-weight:normal !important; 
+    font-style:italic;
+}
+
+
 
 /* Sticky footer styles
 -------------------------------------------------- */

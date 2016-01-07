@@ -46,12 +46,17 @@ CRUD Menu
         {{ Form::label('for_date', 'For Date', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::text('for_date', null, array('class'=>'form-control', 'placeholder'=>'yyyy-mm-dd', 'required'=>true)) }}</div>
     </div>
-        
+    
     <div class="form-group">
-        {{ Form::label('i_notes', 'Internal Notes', array('class' => 'col-sm-2 control-label')) }}
+        {{ Form::label('oa', 'Available for Order Ahead?', array('class' => 'col-sm-2 control-label')) }}
+        <div class="col-sm-5">{{ Form::checkbox('oa', 1, null, array('style' => 'width:30px; height:30px;')); }}</div>
+    </div>
+    
+    <div class="form-group">
+        {{ Form::label('i_notes', 'Internal Notes', array('class' => 'col-sm-2 control-label label-light')) }}
         <div class="col-sm-5">{{ Form::textarea('i_notes', null, array('class' => 'form-control')) }}</div>
     </div>
-        
+            
     <hr>
     <h3>Mains & Sides on this menu</h3>
 

@@ -18,7 +18,7 @@ $todaysStats = Stats::getTodaysStats();
     <?php
     foreach($todaysStats as $key => $val)
     {
-        echo "<li style='text-transform: capitalize;'>$key</li>";
+        echo "<li><cap>$key</cap></li>";
         echo "<ul>";
         foreach ($val as $thingSold) {
             echo "<li>$thingSold->item_type: $thingSold->TotalSold</li>";
