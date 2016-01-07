@@ -3,8 +3,8 @@
 namespace Bento\Admin\Model;
 
 use Bento\Admin\Model\Menu_Item;
+use Bento\Timestamp\Clock;
 use DB;
-use Carbon\Carbon;
 
 
 class Menu extends \Eloquent {
@@ -138,9 +138,9 @@ class Menu extends \Eloquent {
     }
     
     
-    public static function getDateForTodaysMenu($format = 'Ymd') 
+    public static function getDateForTodaysMenu() 
     {    
-        $date = Carbon::now('America/Los_Angeles')->format($format);
+        $date = Clock::getLocalTimestamp();
  
         return $date;
     }

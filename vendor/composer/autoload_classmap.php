@@ -89,6 +89,8 @@ return array(
     'Bento\\Payment\\StripeMgr' => $baseDir . '/app/core/Payment/StripeMgr.php',
     'Bento\\Payment\\StripeMgrSvc' => $baseDir . '/app/core/Payment/StripeMgrSvc.php',
     'Bento\\Providers\\OtherServiceProviders' => $baseDir . '/app/providers/OtherServiceProviders.php',
+    'Bento\\Stats\\Stats' => $baseDir . '/app/core/Stats.php',
+    'Bento\\Timestamp\\Clock' => $baseDir . '/app/core/Timestamp/Clock.php',
     'Bento\\Tracking\\TrackingServiceProviders' => $baseDir . '/app/core/Tracking/TrackingServiceProviders.php',
     'Bento\\Tracking\\Trak' => $baseDir . '/app/core/Tracking/Trak.php',
     'Bento\\Tracking\\TrakSvc' => $baseDir . '/app/core/Tracking/TrakSvc.php',

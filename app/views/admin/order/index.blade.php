@@ -12,5 +12,13 @@ Open Orders
 -->
 @include('admin.order.partials.open', array())
 
+
+<!--
+******************************************************************************
+Today's Orders
+******************************************************************************
+-->
+@include('admin.order.partials.today', array())
+
   
 @stop
