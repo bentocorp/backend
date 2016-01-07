@@ -213,5 +213,16 @@ $(document).ready(function() {
         $(this).addClass('disabled');
     });
     // ** end disabling
+    
+    
+    // Timezone conversions
+    $(".utcToLoc").each(function(){
+        
+        var utc = $(this).html();
+        var createdUtc = moment.tz(utc, "UTC");
+        var createdLoc = createdUtc.tz("America/Los_Angeles");
+        
+        $(this).html(createdLoc.format('YYYY-MM-DD HH:mm:ss z'));
+    });
           
 });
