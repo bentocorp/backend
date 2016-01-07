@@ -9,13 +9,15 @@ use Bento\core\Util\NumUtil;
 
 
 try {
+    
+    $openOrderQty = count($openOrders);
 ?>
 
-<h1>Open Orders</h1>
+<h1>Open Orders ({{$openOrderQty}})</h1>
 <p class="text-primary"><b>Bold Name</b> = Top customer</p>
 
 <?php
-if (count($openOrders) > 0):
+if ($openOrderQty > 0):
 ?>
 
 <table class="table">

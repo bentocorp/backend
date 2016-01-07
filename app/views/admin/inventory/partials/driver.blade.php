@@ -2,12 +2,14 @@
 
 use Bento\Admin\Model\Driver;
 
+$driverOsQty = count($currentDrivers);
+
 ?>
 
-<h1>Drivers on Shift</h1>
+<h1>Drivers on Shift ({{$driverOsQty}})</h1>
 
 <?php
-if (count($currentDrivers) > 0):
+if ($driverOsQty > 0):
 ?>
 
     <p><b>Note:</b> Only one person should be editing this at a time. Another admin must always refresh first.</p>
