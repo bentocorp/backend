@@ -44,6 +44,8 @@ $mealModeName = $mealMode->name;
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/moment-with-locales.min.js"></script>
+    <script src="/js/moment-timezone-with-data.min.js"></script>
     <script src="/js/main.js"></script>
     
   </head>

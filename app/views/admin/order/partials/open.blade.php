@@ -24,7 +24,7 @@ if (count($openOrders) > 0):
         <th>id</th>
         <th>Customer</th>
         <th>Address</th>
-        <th style="width:140px;">Phone /<br><small>Created</small></th>
+        <th style="width:157px;">Phone /<br><small>Created</small></th>
         <th style="text-align:center;">Status</th>
         <th>Driver</th>
         <th>&nbsp;</th>
@@ -57,12 +57,18 @@ if (count($openOrders) > 0):
                     $trak_alert = '<span class="label label-danger"><big>Onfleet Error!</big></span><br>';
 
                 ?>
+                <script>
+                var createdUtc = moment.tz("{{ $row->order_created_at }}", "UTC");
+                var createdLoc = createdUtc.tz("America/Los_Angeles");
+                //console.log(createdLoc.format('YYYY-MM-DD HH:mm:ss z'));
+                </script>
+                
                 <tr class="{{$tableClass}}">
                   <form action="/admin/order/set-driver/{{{$row->pk_Order}}}" method="post">
                     <th scope="row">{{{ $row->pk_Order }}}</th>
                     <td><?php echo $trak_alert?>{{ $user_name }}<br><small>${{$row->amount}} {{$row->fk_Coupon}}</small></td>
                     <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}<br><small>{{ $row->user_email }}</small></td>
-                    <td>{{{ $row->user_phone }}}<br><small>{{ $row->order_created_at }}</small></td>
+                    <td>{{{ $row->user_phone }}}<br><small><script>document.write(createdLoc.format('YYYY-MM-DD HH:mm:ss z'));</script></small></td>
                     <td align="center">
                         <?php echo $row->status; #echo Form::select('status', $orderStatusDropdown, $row->status)?><br>
                         <a href="/admin/order/cancel/{{$row->pk_Order}}" title="Cancel" role="button" class="btn btn-default btn-xs" onclick="return confirm('Cancel {{$row->user_name}}\u2019s order?')"><span class="glyphicon glyphicon-remove"></span></a>
@@ -103,17 +109,6 @@ if (count($openOrders) > 0):
                                     $boxCount++;
                                 }
                                 ?>
-                                    
-                                <!-- // Totals -->
-                                <tr><td colspan="6">
-                                    <b>Items Total:</b> ${{$row->items_total}} &nbsp;&nbsp;
-                                    <b>Delivery fee:</b> ${{$row->delivery_price}} &nbsp;&nbsp;
-                                    <b>Coupon discount:</b> -${{$row->coupon_discount}} &nbsp;&nbsp;
-                                    <b>Tax:</b> ${{$row->tax}} ({{(float) $row->tax_percentage}}%) &nbsp;&nbsp;
-                                    <b>Tip:</b> ${{$row->tip}} ({{(float) $row->tip_percentage}}%) &nbsp;&nbsp;
-                                    <b>Total:</b> ${{$row->amount}} &nbsp;&nbsp;
-                                    <i><b>Pre-Promo Total:</b> ${{NumUtil::formatPriceFromCents($row->total_cents_without_coupon)}}</i> &nbsp;&nbsp;
-                                </td></tr>
                             </tbody>
                         </table>
                     </td>
