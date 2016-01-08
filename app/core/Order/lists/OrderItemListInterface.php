@@ -30,5 +30,22 @@ interface OrderItemListInterface {
      * @param string $orderString
      */
     public function getOrderString(& $orderStr);
+    
+    /**
+     * Get the total amount of Bentos, Addons, etc.
+     */
+    public function getTotalQty();
+    
+    /**
+     * Get some helpful text about what this list holds. Like "Bento" or "Add-on".
+     * Non-plural
+     */
+    public function getContentsName();
+    
+    /**
+     * Get some helpful text about what this list holds. Like "Bento" or "Add-on".
+     * Non-plural
+     */
+    public function getContentsNamePlural();
 }
 

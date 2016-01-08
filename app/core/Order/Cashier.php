@@ -121,16 +121,29 @@ class Cashier {
             $orderStr .= $newCustomerStr;
         }
         
+        $checklist = '';
         
         // Print Bentos, Addons, etc.
         foreach ($this->Lists as $name => $list) {
-            if ($name != 'AddonListList') # Addons last
-             $list->getOrderString($orderStr);
+            if ($name != 'AddonListList') { # Addons last
+                $list->getOrderString($orderStr); # Add to str by reference
+                
+                // Checklist
+                $total = $list->getTotalQty();
+                $name = $list->getContentsNamePlural();
+                $checklist .= "[ ] {$total}x $name \\n";
+            }
         }
         
         # Addons last
-        if (isset($this->Lists['AddonListList']))
+        if (isset($this->Lists['AddonListList'])) {
             $this->Lists['AddonListList']->getOrderString($orderStr);
+            
+            // Checklist
+            $total = $this->Lists['AddonListList']->getTotalQty();
+            $name  = $this->Lists['AddonListList']->getContentsNamePlural();
+            $checklist .= "[ ] {$total}x $name \\n";
+        }
         
         
         // If this is NEW customer, tell the driver!
@@ -139,9 +152,12 @@ class Cashier {
         }
         
         // Remind the drivers about accuracy, mochi, soy sauce, and chopsticks
-        $orderStr .= ">> Is everything accurate? \\n\\n";
-        $orderStr .= ">> Don't forget:\\n + mochi!\\n + to ask which type of soy sauce\\n + to offer utensils \\n\\n";
-        $orderStr .= "Arigatō!";
+        $orderStr .= "Checklist: \\n";
+        $orderStr .= $checklist;
+        $orderStr .= "[ ] Accuracy \\n";
+        $orderStr .= "[ ] Mochi, ask which type of soy sauce, wasabi, offer utensils \\n";
+        
+        $orderStr .= "\\nArigatō!";
         
         // Finally, return the string
         return $orderStr;

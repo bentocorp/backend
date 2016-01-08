@@ -19,10 +19,25 @@ class CustomerBentoBoxList implements OrderItemListInterface {
     private $isRowsWarm = false;
     private $rows = NULL;
     
+    private $totalQty = 0;
+    
     
     public function __construct($pk_Order) 
     {
         $this->pk_Order = $pk_Order;
+    }
+    
+    
+    public function getTotalQty() {
+        return $this->totalQty;
+    }
+    
+    public function getContentsName() {
+        return "Bento";
+    }
+    
+    public function getContentsNamePlural() {
+        return "Bentos";
     }
     
     
@@ -113,6 +128,8 @@ class CustomerBentoBoxList implements OrderItemListInterface {
         $boxCount = 1;
         $bentoBoxes = $this->rows;
         $n = count($bentoBoxes);
+        
+        $this->totalQty = $n;
         
         foreach ($bentoBoxes as $box) {
 

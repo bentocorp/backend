@@ -17,10 +17,25 @@ class AddonListList implements OrderItemListInterface {
     private $isRowsWarm = false;
     private $rows = NULL;
     
+    private $totalQty = 0;
+    
     
     public function __construct($pk_Order) 
     {
         $this->pk_Order = $pk_Order;
+    }
+    
+    
+    public function getTotalQty() {
+        return $this->totalQty;
+    }
+    
+    public function getContentsName() {
+        return "Add-on";
+    }
+    
+    public function getContentsNamePlural() {
+        return "Add-ons";
     }
     
     
@@ -103,6 +118,9 @@ class AddonListList implements OrderItemListInterface {
             $orderStrTmp .= "({$row->qty}x) $row->name \\n";
             $totalQty += $row->qty;
         }
+        
+        // Save total add-ons
+        $this->totalQty = $totalQty;
         
         // Assemble
         
