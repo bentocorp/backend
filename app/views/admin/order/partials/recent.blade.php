@@ -42,9 +42,9 @@ if ($recentOrderQty > 0):
                 
 
                 $order = new Order(null, $row->pk_Order);
-                $groupedDriversDropdown = $order->getDriversDropdown($driversDropdown);
+                #$groupedDriversDropdown = $order->getDriversDropdown($driversDropdown);
 
-                $tableClass = count($groupedDriversDropdown['Possible Drivers']) > 1 ? 'info' : 'warning' ;
+                #$tableClass = count($groupedDriversDropdown['Possible Drivers']) > 1 ? 'info' : 'warning' ;
 
                 // Set the user's name
                 if ($row->is_top_customer)
@@ -58,7 +58,7 @@ if ($recentOrderQty > 0):
                     $trak_alert = '<span class="label label-danger"><big>Onfleet Error!</big></span><br>';
 
                 ?>
-                <tr class="{{$tableClass}}">
+                <tr>
                     <th scope="row">{{{ $row->pk_Order }}}</th>
                     <td><?php echo $trak_alert?>{{ $user_name }}<br><small>${{$row->amount}} {{$row->fk_Coupon}}</small></td>
                     <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}<br><small>{{ $row->user_email }}</small></td>
