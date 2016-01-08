@@ -129,7 +129,7 @@ if ($recentOrderQty > 0):
 
 <?php
 else:
-    echo '<div class="alert alert-info" role="alert">All clear sir. No open orders.</div>';
+    echo '<div class="alert alert-info" role="alert">Nothing here yet.</div>';
 endif;
 
 }

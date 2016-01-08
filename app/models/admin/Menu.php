@@ -4,6 +4,7 @@ namespace Bento\Admin\Model;
 
 use Bento\Admin\Model\Menu_Item;
 use Bento\Timestamp\Clock;
+use Bento\Model\MenuInventory;
 use DB;
 
 
@@ -151,6 +152,9 @@ class Menu extends \Eloquent {
         // Collect MenuItems
         $menuItems = $this->collectMenuItems($data);
         
+        // Collect MenuInventory
+        $menuInv = $this->collectMenuInventory($data);
+        
         // Set type to fixed for lunch
         // VJC 2015-06-03: Commenting out so Joseph can test the different flows for lunch/dinner
         #if ($data['fk_MealType'] == 2)
@@ -162,6 +166,9 @@ class Menu extends \Eloquent {
         // Insert into MenuItems
         Menu_Item::setDishes($menu->pk_Menu, $menuItems);
         
+        // Insert into MenuInventory
+        MenuInventory::setInventory($menu->pk_Menu, $menuInv);
+        
         return $menu;
     }
     
@@ -170,6 +177,9 @@ class Menu extends \Eloquent {
         
         // Collect MenuItems
         $menuItems = $this->collectMenuItems($data);
+        
+        // Collect MenuInventory
+        $menuInv = $this->collectMenuInventory($data);
         
         // Set type to fixed for lunch
         #if ($data['fk_MealType'] == 2)
@@ -186,6 +196,9 @@ class Menu extends \Eloquent {
         
         // Insert into MenuItems
         Menu_Item::setDishes($id, $menuItems);
+        
+        // Insert into MenuInventory
+        MenuInventory::setInventory($id, $menuInv);
     }
     
     
@@ -195,6 +208,15 @@ class Menu extends \Eloquent {
         unset($data['dish']);
         
         return $menuItems;
+    }
+    
+    
+    private function collectMenuInventory(& $data) 
+    {
+        $menuInv = isset($data['oa_qty']) ? $data['oa_qty'] : array();
+        unset($data['oa_qty']);
+        
+        return $menuInv;
     }
         
         

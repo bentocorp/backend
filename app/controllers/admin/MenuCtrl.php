@@ -6,6 +6,7 @@ use Bento\Admin\Model\Menu;
 use Bento\Admin\Model\Dish;
 use Bento\core\Status;
 use Bento\Model\MealType;
+use Bento\Model\MenuInventory;
 use View;
 use Redirect;
 
@@ -105,6 +106,10 @@ class MenuCtrl extends \BaseController {
         // Get the meal modes for the dropdown
         $mealModes = Status::getMealModesForDropdown();
         $data['mealModesAr'] = $mealModes;
+        
+        // Get the MenuInventory
+        $menuInv = MenuInventory::getInventory($id);
+        $data['menuInv'] = $menuInv;
         
         return View::make('admin.menu.crud', $data);
     }

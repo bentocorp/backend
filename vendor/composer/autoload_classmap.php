@@ -70,6 +70,7 @@ return array(
     'Bento\\Model\\LiveInventory' => $baseDir . '/app/models/LiveInventory.php',
     'Bento\\Model\\MealType' => $baseDir . '/app/models/MealType.php',
     'Bento\\Model\\Menu' => $baseDir . '/app/models/Menu.php',
+    'Bento\\Model\\MenuInventory' => $baseDir . '/app/models/MenuInventory.php',
     'Bento\\Model\\Order' => $baseDir . '/app/models/Order.php',
     'Bento\\Model\\OrderItem' => $baseDir . '/app/models/OrderItem.php',
     'Bento\\Model\\OrderStatus' => $baseDir . '/app/models/OrderStatus.php',
