@@ -33,6 +33,7 @@ interface OrderItemListInterface {
     
     /**
      * Get the total amount of Bentos, Addons, etc.
+     * MUST be called AFTER getOrderString()
      */
     public function getTotalQty();
     

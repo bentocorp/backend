@@ -108,6 +108,11 @@ class Cashier {
     {
         $orderStr = '';
         
+        // Order Number
+        $orderStr .= "Order #{$this->pk_Order}: \\n\\n";
+        
+        // Summary
+        $orderStr .= "%summary% \\n";
 
         // If this is a Top Customer, tell the driver!
         $topCustomerStr = ">> ࿉∥(⋆‿⋆)࿉∥ Top Customer! << \\n\\n";
@@ -151,7 +156,10 @@ class Cashier {
             $orderStr .= $newCustomerStr;
         }
         
-        // Remind the drivers about accuracy, mochi, soy sauce, and chopsticks
+        // TOP: Insert order summary
+        $orderStr = str_replace('%summary%', $checklist, $orderStr);
+        
+        // BOTTOM: Remind the drivers about accuracy, mochi, soy sauce, and chopsticks
         $orderStr .= "Checklist: \\n";
         $orderStr .= $checklist;
         $orderStr .= "[ ] Accuracy \\n";
