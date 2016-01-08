@@ -100,13 +100,13 @@ class InitCtrl extends \BaseController {
             "2" => array(
                 "order" => "2",
                 "name" => "lunch",
-                "startTime" => "11:30:00",
+                "startTime" => "11:00:00",
                 ),
             
             "3" => array(
                 "order" => "3",
                 "name" => "dinner",
-                "startTime" => "16:30:00",
+                "startTime" => "17:00:00",
                 ),
         );
         $return['meals'] = $meals;
