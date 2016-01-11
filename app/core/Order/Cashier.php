@@ -112,7 +112,7 @@ class Cashier {
         $orderStr .= "Order #{$this->pk_Order}: \\n\\n";
         
         // Summary
-        $orderStr .= "%summary% \\n";
+        $orderStr .= "Checklist: \\n %summary% \\n";
 
         // If this is a Top Customer, tell the driver!
         $topCustomerStr = ">> ࿉∥(⋆‿⋆)࿉∥ Top Customer! << \\n\\n";
@@ -136,7 +136,7 @@ class Cashier {
                 // Checklist
                 $total = $list->getTotalQty();
                 $name = $list->getContentsNamePlural();
-                $checklist .= "[ ] {$total}x $name \\n";
+                $checklist .= "[ ] {$total} $name \\n";
             }
         }
         
@@ -147,7 +147,7 @@ class Cashier {
             // Checklist
             $total = $this->Lists['AddonListList']->getTotalQty();
             $name  = $this->Lists['AddonListList']->getContentsNamePlural();
-            $checklist .= "[ ] {$total}x $name \\n";
+            $checklist .= "[ ] {$total} $name \\n";
         }
         
         

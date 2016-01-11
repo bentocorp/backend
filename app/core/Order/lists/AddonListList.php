@@ -115,7 +115,7 @@ class AddonListList implements OrderItemListInterface {
         // Loop first to get the master total, then assemble 
         foreach ($this->rows as $row)
         {
-            $orderStrTmp .= "({$row->qty}x) $row->name \\n";
+            $orderStrTmp .= "({$row->qty}) $row->name \\n";
             $totalQty += $row->qty;
         }
         
