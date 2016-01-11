@@ -112,7 +112,8 @@ class Cashier {
         $orderStr .= "Order #{$this->pk_Order}: \\n\\n";
         
         // Summary
-        $orderStr .= "Summary Checklist: \\n %summary% \\n";
+        $orderStr .= "Summary Checklist: \\n";
+        $orderStr .= "%summary% \\n";
 
         // If this is a Top Customer, tell the driver!
         $topCustomerStr = ">> ࿉∥(⋆‿⋆)࿉∥ Top Customer! << \\n\\n";
