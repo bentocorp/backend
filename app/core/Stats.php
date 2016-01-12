@@ -1,4 +1,4 @@
-<?php namespace Bento\Stats;
+<?php namespace Bento\core\Stats;
 
 
 use Bento\Timestamp\Clock;

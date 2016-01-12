@@ -29,8 +29,8 @@ class Menu extends \Eloquent {
         // Get the Menu            
         $sql = "SELECT m.*,
                     mt.name meal_name,
-                    mt.order meal_order,
-                    mt.startTime meal_start
+                    mt.order meal_order
+                    #mt.startTime meal_start
                 FROM Menu m 
                 left join MealType mt on (m.fk_MealType = mt.pk_MealType)
                 WHERE m.for_date = ? AND m.published

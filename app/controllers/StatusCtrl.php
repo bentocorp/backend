@@ -30,7 +30,7 @@ class StatusCtrl extends \BaseController {
     
     
     /**
-     * Get current status of each menu item
+     * Get current status (inventory, etc.) of each menu item
      * 
      * @return json 
      */

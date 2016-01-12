@@ -5,7 +5,7 @@ Today's Stats
 ******************************************************************************
 -->
 <?php
-use Bento\Stats\Stats;
+use Bento\core\Stats\Stats;
 
 $todaysStats = Stats::getTodaysStats();
 ?>
