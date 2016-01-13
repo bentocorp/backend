@@ -14,13 +14,18 @@ class Clock {
      * 
      * @param string $tzname The standard timezone name that you want the current time for
      * @param string $format The Date format
-     * @return date | time | timestamp
+     * @return date | time | timestamp. Y-m-d by default.
      */
     public static function getLocalTimestamp($tzname = 'America/Los_Angeles', $format = 'Y-m-d') 
     {    
         $date = Carbon::now($tzname)->format($format);
  
         return $date;
+    }
+    
+    public static function getLocalCarbon($tzname = 'America/Los_Angeles') 
+    {    
+        return Carbon::now($tzname);
     }
     
         

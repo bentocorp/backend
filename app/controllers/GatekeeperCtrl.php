@@ -4,7 +4,7 @@
 use Bento\core\Gatekeeper\Gatekeeper;
 use Bento\core\Logic\Frontend;
 use Response;
-use Bento\core\Gatekeeper\GeoFence; #0
+#use Bento\core\Gatekeeper\GeoFence; #0
 
 
 class GatekeeperCtrl extends \BaseController {
@@ -35,8 +35,6 @@ class GatekeeperCtrl extends \BaseController {
         {
             $response['hasService'] = true;
             $response['servicesAvailable'] = $gatekeeper->listAvailableServices();
-
-            ### Menus
 
             ### FE Logic
             ### Better to encapsulate the logic here in the backend.

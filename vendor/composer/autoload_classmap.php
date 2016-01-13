@@ -104,6 +104,8 @@ return array(
     'Bento\\core\\Gatekeeper\\Gatekeeper' => $baseDir . '/app/core/Gatekeeper/Gatekeeper.php',
     'Bento\\core\\Gatekeeper\\GeoFence' => $baseDir . '/app/core/Gatekeeper/GeoFence.php',
     'Bento\\core\\Logic\\Frontend' => $baseDir . '/app/core/Logic/Frontend.php',
+    'Bento\\core\\Logic\\MaitreD' => $baseDir . '/app/core/Logic/MaitreD.php',
+    'Bento\\core\\OrderAhead\\Menu' => $baseDir . '/app/core/OrderAhead/Menu.php',
     'Bento\\core\\Response\\InternalResponse' => $baseDir . '/app/core/Response/InternalResponse.php',
     'Bento\\core\\Stats\\Stats' => $baseDir . '/app/core/Stats.php',
     'Bento\\core\\Status' => $baseDir . '/app/core/Status.php',

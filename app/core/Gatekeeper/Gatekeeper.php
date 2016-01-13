@@ -4,6 +4,7 @@
 use Bento\Model\Area;
 use Bento\Model\OrderAheadZone;
 use Bento\core\Gatekeeper\GeoFence;
+use Bento\core\OrderAhead\Menu as OrderAheadMenu;
 
 
 class Gatekeeper {
@@ -33,7 +34,8 @@ class Gatekeeper {
         // Show more stuff for OrderAhead
         if( isset($services['OrderAhead']) ) {
             $services['OrderAhead'] = array(
-                'kitchen' => $this->oaZone->fk_Kitchen,
+                'kitchen'   => $this->oaZone->fk_Kitchen ,
+                'availableMenus'     => OrderAheadMenu::getMenus() ,
             );
         }
         
