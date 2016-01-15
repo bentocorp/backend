@@ -2,10 +2,16 @@
 
 namespace Bento\Model;
 
+use Bento\Timestamp\Clock;
+use Bento\core\Logic\MaitreD;
+use Bento\Admin\Model\Settings;
 use DB;
 use Cache;
 use Carbon\Carbon;
 
+/**
+ * On-demand Menu
+ */
 class Menu extends \Eloquent {
 
     /**
@@ -64,8 +70,8 @@ class Menu extends \Eloquent {
 
             // Create some friendly date text
             $carbon = new Carbon($menu->for_date);
-            $dayText = $carbon->format('l F jS');
-            $builtMenu['Menu']->day_text = $dayText;
+            $builtMenu['Menu']->day_text = $carbon->format('l F jS');
+            $builtMenu['Menu']->day_text2 = $carbon->format('l M jS');
             
             // Add to return
             $return['menus'][$menu->meal_name] = $builtMenu;
@@ -85,7 +91,7 @@ class Menu extends \Eloquent {
 
         // Get the Menu            
         $sql = 'SELECT m.pk_Menu, m.name, m.for_date, m.bgimg, m.menu_type, m.fk_MealType meal_type, 
-                    mt.name meal_name, mt.order meal_order
+                    mt.name meal_name, mt.order meal_order, mt.displayStartTime
                 FROM Menu m
                 LEFT JOIN MealType mt ON (mt.pk_MealType = m.fk_MealType)
                 WHERE m.for_date = ? AND m.published AND m.od_avail
@@ -100,7 +106,7 @@ class Menu extends \Eloquent {
         // Get the NEXT Menu
         $sql = <<<SQL
         SELECT m.pk_Menu, m.name, m.for_date, m.bgimg, m.menu_type, m.fk_MealType meal_type,
-                mt.name meal_name
+                mt.name meal_name, mt.order meal_order, mt.displayStartTime
         FROM Menu m
         LEFT JOIN MealType mt ON (mt.pk_MealType = m.fk_MealType)
         WHERE m.for_date = (
@@ -110,6 +116,64 @@ class Menu extends \Eloquent {
 SQL;
         
         return self::getMenu($sql, $date, 'next');
+    }
+    
+    
+    public static function getCountToday()
+    {
+        $today = Clock::getLocalTimestamp();
+        
+        $sql = "select count(*) cnt from Menu where for_date = '$today' AND od_avail";
+        
+        return DB::select($sql)[0]->cnt;
+    }
+    
+    
+    public static function hasMenuForCurrentMealType()
+    {
+        $today = Clock::getLocalTimestamp(); # Y-m-d
+        
+        // Determine current MealType
+        $md = MaitreD::get();
+        $mealType = $md->determineCurrentMealType();
+        
+        $sql = "select * from Menu where for_date = '$today' AND fk_MealType = $mealType AND od_avail";
+        $result = DB::select($sql);
+        #var_dump($result); die(); #0;
+        
+        if (count($result) == 0)
+            return false;
+        else
+            return true;
+    }
+    
+    
+    /*
+     * Upcoming Late Menu Definition:
+     * OD Menus for today, where the menu's startTime+bufferMins is greater than the current time, order by startTime ASC
+     * Get the first one
+     */
+    public static function getUpcomingLateMenu()
+    {
+        $today = Clock::getLocalTimestamp(); # Y-m-d
+        $curTime = Clock::getLocalCarbon()->toTimeString();
+        $bufferMins = Settings::find('buffer_minutes')->value;
+        #echo count($bufferMins); #0
+        #var_dump($bufferMins); #0
+        
+        $sql = '
+            select *, mt.name as mealName, date_add(mt.StartTime, INTERVAL ? MINUTE) as bufferTime
+            from Menu m
+            left join MealType mt on (m.fk_MealType = mt.pk_MealType)
+            where 
+                    date_add(mt.StartTime, INTERVAL ? MINUTE) >= ? AND 
+                    for_date = ?
+            ORDER BY startTime ASC
+        ';
+        $result = DB::select($sql, array($bufferMins, $bufferMins, $curTime, $today));
+        #var_dump($result); #0
+        
+        return $result;
     }
         
 }

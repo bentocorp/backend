@@ -1,8 +1,7 @@
-<?php
+<?php namespace Bento\core;
 
-namespace Bento\core;
 
-use Bento\Model\Status as ApiStatus;
+use Bento\Model\Status as StatusMdl;
 use Bento\Admin\Model\Settings;
 use Bento\Model\MealType;
 use DB;
@@ -10,12 +9,26 @@ use DB;
 
 class Status {
 
-        
+    
+    public static function get()
+    {
+        return StatusMdl::getOverall();
+    }
+    
+    
     public static function open() {
         
         $setting = Settings::find('status');
         $setting->value = 'open';
         $setting->save();
+    }
+    
+    
+    public static function isOpen() 
+    {
+        $setting = Settings::find('status');
+        
+        return $setting->value == 'open' ? true : false;
     }
     
     
@@ -27,6 +40,14 @@ class Status {
     }
     
     
+    public static function isClosed() 
+    {
+        $setting = Settings::find('status');
+        
+        return $setting->value == 'closed' ? true : false;
+    }
+    
+    
     public static function soldout() {
         
         $setting = Settings::find('status');
@@ -35,9 +56,17 @@ class Status {
     }
     
     
+    public static function isSoldout() 
+    {
+        $setting = Settings::find('status');
+        
+        return $setting->value == 'sold out' ? true : false;
+    }
+    
+    
     public static function getClass() {
         
-        $status = ApiStatus::overall()->value;
+        $status = StatusMdl::overall()->value;
 
         $statusClass = '';
 
@@ -59,7 +88,7 @@ class Status {
     
     public static function getMsg() {
         
-        $status = ApiStatus::overall()->value;
+        $status = StatusMdl::overall()->value;
 
         $statusMsg = '';
 
@@ -96,7 +125,7 @@ class Status {
     
     public static function getMealModesForDropdown() {
         
-        $mealTypes = MealType::all();
+        $mealTypes = MealType::getRows();
         
         $return = array();
         

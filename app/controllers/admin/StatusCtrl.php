@@ -4,6 +4,7 @@ namespace Bento\Admin\Ctrl;
 
 use Bento\core\Status;
 use Bento\Admin\Model\Settings;
+use Bento\Model\Menu as OdMenu;
 use Redirect;
 use DB;
 use Input;
@@ -13,7 +14,18 @@ use Input;
 class StatusCtrl extends \BaseController {
 
         
-    public function getOpen() {
+    public function getOpen($override = false) {
+        #die('here');
+        $hasMenuForCurrentMealType = OdMenu::hasMenuForCurrentMealType();
+        
+        $overrideBtn = '<a href="/admin/status/open/true" onclick="return confirm(\'Override?\')" class="btn btn-warning">Override</a>';
+        
+        // Don't open if there's no menu for this meal
+        if (!$hasMenuForCurrentMealType && !$override) {
+            return Redirect::back()
+                ->with('msg', 
+                array('type' => 'danger', 'txt' => "<b>Can't Open!</b> There is no menu for the current meal time. &nbsp; $overrideBtn"));
+        }
         
         Status::open();
         

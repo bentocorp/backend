@@ -28,5 +28,27 @@ class Clock {
         return Carbon::now($tzname);
     }
     
+    
+    public static function getTimezone()
+    {
+        return 'America/Los_Angeles';
+    }
+    
+    
+    /**
+     * 
+     * @param string $date Y-m-d
+     * @return boolean
+     */
+    public static function isTomorrow($date) 
+    {
+        $tomorrow = Carbon::tomorrow(self::getTimezone())->format('Y-m-d');
+        
+        if ($tomorrow == $date)
+            return true;
+        else
+            return false;
+    }
+    
         
 }

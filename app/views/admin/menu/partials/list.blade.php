@@ -25,11 +25,19 @@ if ($menuList !== NULL): ?>
         
         $menuName = $menu->name == '' ? $menu->for_date : $menu->name;
 
+        $isOd = '';
+        if ($menu->od_avail)
+            $isOd = '(OD)';
+        
+        $isOa = '';
+        if ($menu->oa_avail)
+            $isOa = '(OA)';
+        
         echo "<tr>";
             echo "<th>$menu->for_date</th>";
             echo "<td><cap>$menu->meal_name</cap></td>";
             echo "<td><a href='/admin/menu/edit/{$menu->pk_Menu}'>$menuName</a></td>";
-            echo "<td>$menu->menu_type</td>";
+            echo "<td>$menu->menu_type $isOd $isOa</td>";
             echo "<td>$menu->created_at</td>";
             echo "<td>$menu->updated_at</td>";
         echo "</tr>";

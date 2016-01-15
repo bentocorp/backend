@@ -17,14 +17,27 @@ if (count($menusApi['menus']) > 0) {
     if ( isset($menusApi['menus'][$mealName]) ) {
 
         $menu = $menusApi['menus'][$mealName];
-
+        
         unset($menusApi['menus'][$mealName]); // Remove it from the array so it isn't listed twice
     }
 }
 
+// Display od/oa
+$isOd = '';
+$isOa = '';
+if ( $menu !== false ) {
+    #var_dump($menu); die(); #0;
+    
+    if ($menu['Menu']->od_avail)
+        $isOd = '(OD)';
+
+    if ($menu['Menu']->oa_avail)
+        $isOa = '(OA)';
+}
+
 ?>
 
-<h1>Today's <cap>{{$mealName}}</cap> Menu <small>{{$todaysLocalDate}}</small></h1>
+<h1>Today's <cap>{{$mealName}}</cap> Menu {{$isOd}} {{$isOa}} <small>{{$todaysLocalDate}}</small></h1>
 
 <b>Note:</b> Menus for the mobile app are cached for up to five minutes.<br>
 <br>

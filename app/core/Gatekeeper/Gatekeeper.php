@@ -5,6 +5,7 @@ use Bento\Model\Area;
 use Bento\Model\OrderAheadZone;
 use Bento\core\Gatekeeper\GeoFence;
 use Bento\core\OrderAhead\Menu as OrderAheadMenu;
+use Bento\core\Logic\MaitreD;
 
 
 class Gatekeeper {
@@ -13,6 +14,7 @@ class Gatekeeper {
     private $long;
 
     private $services = array();
+    private $myZones = array();
     
     private $area = NULL; # Eloquent/Area
     private $oaZone = NULL; # Eloquent/OrderAheadZone
@@ -26,26 +28,39 @@ class Gatekeeper {
         $this->determineAvailableServices();
     }
     
+    
+    public function getMyZones()
+    {
+        return $this->myZones;
+    }
+    
         
     public function listAvailableServices()
-    {
-        $services = $this->services;
-        
-        // Show more stuff for OrderAhead
-        if( isset($services['OrderAhead']) ) {
-            $services['OrderAhead'] = array(
-                'kitchen'   => $this->oaZone->fk_Kitchen ,
-                'availableMenus'     => OrderAheadMenu::getMenus() ,
-            );
-        }
-        
-        return $services;
+    {        
+        return $this->services;
     }
     
         
     public function hasService() 
     {
         return count($this->services) > 0 ? true : false;
+    }
+    
+    
+    public function isInAnyZone() 
+    {
+        return count($this->myZones) > 0 ? true : false;
+    }
+    
+    
+    public function hasOrderAhead()
+    {
+        $services = $this->services;
+        
+        if( isset($services['OrderAhead']) )
+            return true;
+        else
+            return false;
     }
     
     
@@ -74,6 +89,44 @@ class Gatekeeper {
         // Am I in order_ahead?
         if( $this->isInOrderAhead() )
             $this->services['OrderAhead'] = true;
+        
+        $this->processServices();
+    }
+    
+    private function processServices()
+    {
+        $services = &$this->services;
+        $availableMenus = OrderAheadMenu::getMenus();
+        
+        # OrderAhead
+        # Show more stuff for OrderAhead, IF it has menus
+        # ToDo: Have a service resolver to handle this sort of thing in an encapsulated way
+        if( isset($services['OrderAhead']) )
+        {
+            if ($availableMenus !== NULL)
+            {
+                $services['OrderAhead'] = array(
+                    'kitchen' => $this->oaZone->fk_Kitchen ,
+                    'availableMenus' => $availableMenus ,
+                );
+            }
+            else 
+                unset($services['OrderAhead']);
+        }
+    }
+    
+    
+    private function isInOnDemand() 
+    {
+        $odZone = $this->whichOdZone();
+        
+        // We know we're in an area. In an OD zone?
+        if ($odZone !== NULL) {
+            $this->myZones['OnDemand'] = true;
+            return true; # yep
+        }
+        else 
+            return false; # nope
     }
     
     
@@ -82,8 +135,10 @@ class Gatekeeper {
         $oaZone = $this->whichOaZone();
         
         // We know we're in an area. In an OA zone?
-        if ($oaZone !== NULL)
+        if ($oaZone !== NULL) {
+            $this->myZones['OrderAhead'] = true;
             return true; # yep
+        }
         else 
             return false; # nope
     }
@@ -99,6 +154,21 @@ class Gatekeeper {
         
         $whichRow = $this->findInEloquentPolygons($areas);
         
+        return $whichRow;
+    }
+    
+    
+    private function whichOdZone()
+    {
+        // Determine current MealType
+        $md = MaitreD::get();
+        $mealType = $md->determineCurrentMealType();
+        
+        // Get the OdZone
+        // some query...
+        
+        $whichRow = $this->findInEloquentPolygons($zone);
+                
         return $whichRow;
     }
     
