@@ -93,7 +93,7 @@ class Menu {
      * Get Order Ahead menus based on today's date
      * @return type
      */
-    public static function getMenus() {
+    public static function getMenus($fk_Kitchen) {
         
         $md = MaitreD::get();
         $today = Clock::getLocalTimestamp();
@@ -124,6 +124,7 @@ class Menu {
                 WHERE 
                     ($todayQ $futureQ)  
                     AND m.published AND m.oa_avail
+                    AND m.fk_Kitchen = $fk_Kitchen
                 ORDER BY m.for_date ASC, mt.`order` ASC";
 
         return self::getMenu($sql);
