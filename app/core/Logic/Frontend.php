@@ -109,9 +109,10 @@ class Frontend {
         if (Status::isOpen()) 
         {
             $widget->selected = true;
-            $widget->title = "Today's $cmtName";
+            $widget->title = "Today's ".ucfirst($cmtName);
             $widget->text = $nowAvail;
             $widget->menuPreview = NULL;
+            $widget->mealMode = $cmtName;
         }
         // No: 
         else
