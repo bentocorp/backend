@@ -22,6 +22,7 @@ class GatekeeperCtrl extends \BaseController {
             #'t' => 'hi24', #0;
             'hasService' => false,
             'AvailableServices' => array(),
+            'MyZones' => NULL,
             'MealTypes' => MealType::getList(),
             'appState' => NULL,
                 # See Frontend->getState()

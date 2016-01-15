@@ -6,6 +6,7 @@ use Bento\Model\OrderAheadZone;
 use Bento\core\Gatekeeper\GeoFence;
 use Bento\core\OrderAhead\Menu as OrderAheadMenu;
 use Bento\core\Logic\MaitreD;
+use Bento\Admin\Model\Settings;
 
 
 class Gatekeeper {
@@ -18,6 +19,7 @@ class Gatekeeper {
     
     private $area = NULL; # Eloquent/Area
     private $oaZone = NULL; # Eloquent/OrderAheadZone
+    private $odZone = NULL; # String {lunch, dinner}
     
     
     public function __construct($lat, $long)
@@ -83,8 +85,8 @@ class Gatekeeper {
             $this->area = $area;
             
         // Am I in on_demand?
-        #if( $this->isInOnDemand() )
-            #$this->services['OnDemand'] = true;
+        if( $this->isInOnDemand() )
+            $this->services['OnDemand'] = true;
         
         // Am I in order_ahead?
         if( $this->isInOrderAhead() )
@@ -160,16 +162,22 @@ class Gatekeeper {
     
     private function whichOdZone()
     {
-        // Determine current MealType
+        // Determine current MealType name
         $md = MaitreD::get();
-        $mealType = $md->determineCurrentMealType();
+        $mealName = $md->determineCurrentMealName();
+        #echo $mealName; #0
         
         // Get the OdZone
-        // some query...
+        $zone = Settings::find("serviceArea_$mealName");
+        #var_dump($zone); die(); #0
         
-        $whichRow = $this->findInEloquentPolygons($zone);
+        $inZone = $this->findInPolygon($zone->value);
+        
+        // Record it
+        if ($inZone !== NULL)
+            $this->odZone = $mealName;
                 
-        return $whichRow;
+        return $inZone;
     }
     
     
@@ -191,8 +199,12 @@ class Gatekeeper {
     /**
      * Determine if a point is in a list of polygons, that exist as rows in the DB.
      * The polygon must be stored in a "polygon" DB field.
+     * 
+     * Assumes KML.
+     * 
      * @param array of Eloquent $rows
-     * @return Eloquent object
+     * 
+     * @return Eloquent object | NULL
      */
     private function findInEloquentPolygons($rows)
     {
@@ -209,6 +221,27 @@ class Gatekeeper {
         }
         
         return $row;
+    }
+    
+    
+    /**
+     * Determine if a point is in a polygon.
+     * Assumes KML.
+     * 
+     * @param string KML polygon
+     * 
+     * @return Eloquent object | NULL
+     */
+    private function findInPolygon($polygon)
+    {
+        $polyArr = explode(' ', $polygon);
+
+        $isInArea = GeoFence::isInsidePolygon($this->getPointString(), $polyArr, true);
+
+        if ($isInArea)
+            return true;
+        else
+            return NULL;
     }
 
 

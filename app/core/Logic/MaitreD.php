@@ -78,7 +78,7 @@ class MaitreD {
      * This function will determine what mode the app is assuming for TODAY, based on
      * the current time.
      * 
-     *  @return string
+     *  @return int
      *      # {meal_id}: Today's current pk_MealType
      */
     public function determineCurrentMealType()
@@ -118,6 +118,17 @@ class MaitreD {
         // Catchall for inbetween times.
         // This is a hack, and it's mostly for OnDemand.
         return 3;
+    }
+    
+    /*
+     * Same as above, but it returns the name
+     */
+    public function determineCurrentMealName()
+    {
+        $cmt = $this->determineCurrentMealType();
+        $meals = MealType::getList();
+        
+        return $meals->hash->$cmt->name;
     }
     
     

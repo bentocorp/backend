@@ -101,7 +101,7 @@ class Frontend {
         
         // Get Current Meal State
         $cmt = $md->determineCurrentMealType();
-        $cmtName = $mealTypes->hash->$cmt;
+        $cmtName = $mealTypes->hash->$cmt->name;
 
         # Are we open?
         
@@ -140,6 +140,7 @@ class Frontend {
                     $request = Request::create("/menu/$today", 'GET');
                     $instance = json_decode(Route::dispatch($request)->getContent());
                     $mealName = $upcomingToday->mealName;
+                    #var_dump($instance); die(); #0
                     
                     // Show local opening time
                     $openingAt = Carbon::parse($upcomingToday->displayStartTime, Clock::getTimezone())->format('h:ia');
@@ -147,15 +148,17 @@ class Frontend {
                     // Are we late?
                     if ( strtotime(Clock::getLocalCarbon()->toTimeString()) > strtotime($upcomingToday->displayStartTime) ) {
                         // Get the next 5 minute mark
-                        $now = time();     
+                        $now = time();
+                        #var_dump($now); die(); #0
                         $nextFive = ceil($now/300)*300;
                         #$carbon = new Carbon($nextFive, 'UTC');
-                        $openingAt = Carbon::parse($nextFive, 'UTC')->setTimezone(Clock::getTimezone())->format('h:ia');
+                        #die($now); #0
+                        $openingAt = Carbon::createFromFormat('U', $nextFive, 'UTC')->setTimezone(Clock::getTimezone())->format('h:ia');
                     }
                      
                     $widget->title = "Today's $cmtName";
-                    $widget->text ="Opening at $openingAt for on-demand service";
-                    $widget->menuPreview = $instance->{'/menu/{date}'}->menus->$mealName;
+                    $widget->text ="Opening at $openingAt for on-demand service.";
+                    $widget->menuPreview = $instance->menus->$mealName;
                 }
                 // No: Is there a /menu/next menu?
                 else
@@ -181,11 +184,11 @@ class Frontend {
                             // e.g.: Monday's
                             $dayTitle = Carbon::parse($nextDate, Clock::getTimezone())->format('l') . "'s";
                             // e.g.: Mon Feb 5th
-                            $dayTitle = Carbon::parse($nextDate, Clock::getTimezone())->format('D M jS');
+                            $dayText = Carbon::parse($nextDate, Clock::getTimezone())->format('D M jS');
                         }
                         
                         $widget->title = "$dayTitle $meal";
-                        $widget->text = "Opening $dayText at $openingAt";
+                        $widget->text = "Opening $dayText at $openingAt.";
                         $widget->menuPreview = $nextMenu;
                     }
                     // No: OD is not available at all, and the OD widget is NULL.
