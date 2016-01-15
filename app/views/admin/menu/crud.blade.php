@@ -19,10 +19,11 @@
         oaChecked = $('#oa_avail').is(':checked');
         //console.log('oaChange');
         
-        // Require qty for things on the menu
+        // Required OA fields 
         if (oaChecked) {
             $("#menu-list tr").each(function()
             {
+                // Require qty for things on the menu
                 //console.log('Analyzing a row');
                 // Only for things on the menu
                 var onmenu = $(this).find(".dish-onmenu").is(':checked');
@@ -34,12 +35,21 @@
                 }
                 else
                     input.attr('disabled', true);
+                
+                // Require OA time
+                $("#oa_times").show();
+                $("#oa_times input[name='oa_times']").removeAttr('disabled');
             });
         }
         // Else remove for all
         else {
+            // Un-Require qty for things on the menu
             //console.log('Clearing all');
             $(".menu-oa-qty-in").attr('disabled', true);
+            
+            // Un-Require OA time
+            $("#oa_times").hide();
+            $("#oa_times input[name='oa_times']").attr('disabled', true);
         }
        
     }
@@ -130,6 +140,14 @@ CRUD Menu
         <div class="col-sm-5">{{ Form::checkbox('oa_avail', 1, null, array('style' => 'width:30px; height:30px;')); }}</div>
     </div>
     
+    <div class="form-group" id="oa_times">
+        {{ Form::label('oa_times', 'Time Slots', array('class' => 'col-sm-2 control-label')) }}
+        <div class="col-sm-5">
+          <p>Lunch: {{ Form::radio('oa_times', '11:00-11:30,11:30-12:00,12:00-12:30,12:30-13:00,13:00-13:30,13:30-14:00', null, array('class' => '', 'required'=>true)); }} 11:00-11:30,11:30-12:00,12:00-12:30,12:30-13:00,13:00-13:30,13:30-14:00<p>
+          <p>Dinner: {{ Form::radio('oa_times', '17:00-18:00,18:00-19:00,19:00-20:00,20:00-21:00', null, array('class' => '', 'required'=>true)); }} 17:00-18:00,18:00-19:00,19:00-20:00,20:00-21:00</p>
+        </div>
+    </div>
+    
     <div class="form-group">
         {{ Form::label('i_notes', 'Internal Notes', array('class' => 'col-sm-2 control-label label-light')) }}
         <div class="col-sm-5">{{ Form::textarea('i_notes', null, array('class' => 'form-control')) }}</div>
@@ -146,7 +164,7 @@ CRUD Menu
     @include('admin.dish.partials.list', array('list' => $addonsAll, 'checked' => $addonsInMenu))
     
     <div class="form-group">
-      <div><button type="submit" class="btn btn-success pull-right">Save</button></div>
+      <div><button type="submit" class="btn btn-success pull-right" tabindex="10">Save</button></div>
     </div>
     
     

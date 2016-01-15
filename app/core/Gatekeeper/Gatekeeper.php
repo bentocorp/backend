@@ -109,6 +109,7 @@ class Gatekeeper {
             {
                 $services['OrderAhead'] = array(
                     'kitchen' => $this->oaZone->fk_Kitchen ,
+                    'zone' => $this->oaZone->pk_OrderAheadZone ,
                     'availableMenus' => $availableMenus ,
                 );
             }
