@@ -7,6 +7,7 @@ use Request;
 use Route;
 use Response;
 use DB;
+use Input;
 
 /**
  * v2 of /init (/init2)
