@@ -20,9 +20,10 @@ class GatekeeperCtrl extends \BaseController {
         
         $response = array(
             #'t' => 'hi24', #0;
+            'isInAnyZone' => NULL,
+            'MyZones' => NULL,
             'hasService' => false,
             'AvailableServices' => array(),
-            'MyZones' => NULL,
             'MealTypes' => MealType::getList(),
             'appState' => NULL,
                 # See Frontend->getState()
@@ -36,9 +37,10 @@ class GatekeeperCtrl extends \BaseController {
         $gatekeeper = new Gatekeeper($lat, $long);
         
         ## Am I in any service area zones?
-        $myZones = $gatekeeper->getMyZones();
         $isInZone = $gatekeeper->isInAnyZone();
+        $myZones = $gatekeeper->getMyZones();
         
+        $response['isInAnyZone'] = $isInZone;
         $response['MyZones'] = $myZones;
         
         
