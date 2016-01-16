@@ -25,7 +25,7 @@ class Init2Ctrl extends \BaseController {
         
         $copy = Input::get('copy', 1); # Want app copy?
         $date = Input::get('date', 0); # Want menus?
-        $gatekeeper = Input::get('gatekeeper', 1); # Shall we determine what services are available based on your location?
+        $gatekeeper = Input::get('gatekeeper', 0); # Shall we determine what services are available based on your location?
             $lat  = Input::get('lat', NULL);
             $long = Input::get('long', NULL);
             

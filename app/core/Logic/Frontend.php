@@ -91,7 +91,6 @@ class Frontend {
         $today = Clock::getLocalTimestamp();
 
         // Setup widget
-        
         $widget = new \stdClass();
         
         $widget->selected = NULL;
@@ -102,6 +101,7 @@ class Frontend {
         // Get Current Meal State
         $cmt = $md->determineCurrentMealType();
         $cmtName = $mealTypes->hash->$cmt->name;
+        $cmtNameCap = ucfirst($cmtName);
 
         # Are we open?
         
@@ -109,7 +109,7 @@ class Frontend {
         if (Status::isOpen()) 
         {
             $widget->selected = true;
-            $widget->title = "Today's ".ucfirst($cmtName);
+            $widget->title = "Today's $cmtNameCap";
             $widget->text = $nowAvail;
             $widget->menuPreview = NULL;
             $widget->mealMode = $cmtName;
@@ -122,8 +122,18 @@ class Frontend {
             // IF soldout: "{Sold out text}"
             if (Status::isSoldout())
             {
-                $widget->title = "Today's $cmtName";
+                $widget->title = "Today's $cmtNameCap";
                 $widget->text = AppCopy::getValue('sold-out-text');
+                
+                // Include the menu to preview back to the frontend
+                // /menu/{date}
+                $widget->menuPreview = NULL;
+                try {
+                    $request = Request::create("/menu/$today", 'GET');
+                    $instance = json_decode(Route::dispatch($request)->getContent());
+                    $widget->menuPreview = $instance->menus->$cmtName;
+                }
+                catch (\Exception $e) {}
             }
             // Otherwise, we're closed
             else
@@ -157,7 +167,7 @@ class Frontend {
                         $openingAt = Carbon::createFromFormat('U', $nextFive, 'UTC')->setTimezone(Clock::getTimezone())->format('h:ia');
                     }
                      
-                    $widget->title = "Today's $cmtName";
+                    $widget->title = "Today's $cmtNameCap";
                     $widget->text ="Opening at $openingAt for on-demand service.";
                     $widget->menuPreview = $instance->menus->$mealName;
                 }
