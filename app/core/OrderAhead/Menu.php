@@ -43,8 +43,8 @@ class Menu {
         foreach ($menus as $menu) 
         {
             // Hide the pk
-            $pk_Menu = $menu->pk_Menu;
-            unset($menu->pk_Menu);
+            $pk_Menu = $menu->menu_id;
+            unset($menu->pk_Menu); # Just in case, but not really needed
             
             // Hide the oa_times string (we're parsing it latah)
             $oa_times = $menu->oa_times;
@@ -117,7 +117,7 @@ class Menu {
         $futureQ = " $or (m.for_date > '$today' && m.for_date <= '$futureDate') ";
 
         // Get the Menu            
-        $sql = "SELECT m.pk_Menu, m.name, m.for_date, m.bgimg, m.menu_type, m.fk_MealType meal_type, m.oa_times,
+        $sql = "SELECT m.pk_Menu menu_id, m.name, m.for_date, m.bgimg, m.menu_type, m.fk_MealType meal_type, m.oa_times,
                     mt.name meal_name, mt.`order` meal_order
                 FROM Menu m
                 LEFT JOIN MealType mt ON (mt.pk_MealType = m.fk_MealType)
