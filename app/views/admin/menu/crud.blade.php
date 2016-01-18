@@ -156,12 +156,12 @@ CRUD Menu
     <hr>
     <h3>Mains & Sides on this menu</h3>
 
-    @include('admin.dish.partials.list', array('list' => $dishesAll, 'checked' => $dishesInMenu))
+    @include('admin.dish.partials.list', array('list' => $dishesAll, 'checked' => $dishesInMenu, 'mode' => 'crud'))
     
     <hr>
     <h3>Add-ons on this menu</h3>
     
-    @include('admin.dish.partials.list', array('list' => $addonsAll, 'checked' => $addonsInMenu))
+    @include('admin.dish.partials.list', array('list' => $addonsAll, 'checked' => $addonsInMenu, 'mode' => 'crud'))
     
     <div class="form-group">
       <div><button type="submit" class="btn btn-success pull-right" tabindex="10">Save</button></div>

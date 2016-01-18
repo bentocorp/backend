@@ -138,5 +138,14 @@ class UserCtrl extends \BaseController {
         return Response::json('', 200);
     }
     
+    
+    /*
+     * Get a user's upcoming orders, and their last 10 completed orders
+     */
+    public function getOrderhistory()
+    {
+        
+    }
+    
         
 }

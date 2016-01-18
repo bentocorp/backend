@@ -2,6 +2,7 @@
 
 <?php
 
+$mode = isset($mode) ? $mode : NULL;
 
 if ($list !== NULL): ?>
 <table class="table table-hover table-striped" id="menu-list">
@@ -11,7 +12,7 @@ if ($list !== NULL): ?>
         <th>Type</th>
         <th width="18%">Name</th>
         <th>Price</th>
-        {{ isset($menuInv) ? '<th>Order Ahead<br>Qty</th>' : '' }}
+        {{ ($mode=='crud') ? '<th>Order Ahead<br>Qty</th>' : '' }}
         <th>Label</th>
         <th>Temp</th>
         <th>Max Per Bento</th>
@@ -31,11 +32,18 @@ if ($list !== NULL): ?>
         }
         
         // The qty for Menu List View
-        if (isset($menuInv))
+        if ($mode == 'crud')
         {
-            $dishOaQty = isset($menuInv[$dish->pk_Dish]) ? $menuInv[$dish->pk_Dish] : '';
-            $dishOaQtyInput = "<input value='$dishOaQty' type='number' required tabindex='1' min='0' max='9999' class='f_slim-input nospin menu-oa-qty-in' name='oa_qty[$dish->pk_Dish]' id='menu-oa-qty-$dish->pk_Dish' />";
+            if (isset($menuInv))
+                $dishOaQty = isset($menuInv[$dish->pk_Dish]) ? $menuInv[$dish->pk_Dish] : '';
+            else
+                $dishOaQty = '';
+
+            $dishOaQtyInput = "<input value='$dishOaQty' type='number' required tabindex='1' min='0' max='9999' "
+                    . "class='f_slim-input nospin menu-oa-qty-in' name='oa_qty[$dish->pk_Dish]' id='menu-oa-qty-$dish->pk_Dish' />";
         }
+
+        
         
         // Show price for mains
         $priceStr = '';
@@ -47,7 +55,7 @@ if ($list !== NULL): ?>
             echo "<td>$dish->type</td>";
             echo "<td><b><a href='/admin/dish/edit/{$dish->pk_Dish}'>$dish->name</a></b></td>";
             echo "<td>$priceStr</td>";
-            echo isset($menuInv) ? "<td>$dishOaQtyInput</td>" : '';
+            echo ($mode=='crud') ? "<td>$dishOaQtyInput</td>" : '';
             echo "<td>$dish->label</td>";
             echo "<td>$dish->temp</td>";
             echo "<td>$dish->max_per_order</td>";

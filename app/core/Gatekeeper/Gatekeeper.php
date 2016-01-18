@@ -98,13 +98,14 @@ class Gatekeeper {
     private function processServices()
     {
         $services = &$this->services;
-        $availableOaMenus = OrderAheadMenu::getMenus($this->oaZone->fk_Kitchen);
         
         # OrderAhead
         # Show more stuff for OrderAhead, IF it has menus
         # ToDo: Have a service resolver to handle this sort of thing in an encapsulated way
         if( isset($services['OrderAhead']) )
         {
+            $availableOaMenus = OrderAheadMenu::getMenus($this->oaZone->fk_Kitchen);
+            
             if ($availableOaMenus !== NULL)
             {
                 $services['OrderAhead'] = array(
