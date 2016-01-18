@@ -85,7 +85,7 @@ class Gatekeeper {
             $this->area = $area;
             
         // Am I in on_demand?
-        if( $this->isInOnDemand() )
+        if( $this->isInOnDemand() ) 
             $this->services['OnDemand'] = true;
         
         // Am I in order_ahead?
@@ -123,6 +123,7 @@ class Gatekeeper {
     private function isInOnDemand() 
     {
         $odZone = $this->whichOdZone();
+        #var_dump($odZone); die(); #0
         
         // We know we're in an area. In an OD zone?
         if ($odZone !== NULL) {
@@ -167,13 +168,14 @@ class Gatekeeper {
         // Determine current MealType name
         $md = MaitreD::get();
         $mealName = $md->determineCurrentMealName();
-        #echo $mealName; #0
+        #echo $mealName; die(); #0
         
         // Get the OdZone
         $zone = Settings::find("serviceArea_$mealName");
-        #var_dump($zone); die(); #0
+        #var_dump($zone->value); die(); #0
         
         $inZone = $this->findInPolygon($zone->value);
+        #var_dump($inZone); die(); #0
         
         // Record it
         if ($inZone !== NULL)
@@ -232,13 +234,15 @@ class Gatekeeper {
      * 
      * @param string KML polygon
      * 
-     * @return Eloquent object | NULL
+     * @return boolean
      */
     private function findInPolygon($polygon)
     {
         $polyArr = explode(' ', $polygon);
+        #var_dump($polyArr); die(); #0
 
         $isInArea = GeoFence::isInsidePolygon($this->getPointString(), $polyArr, true);
+        #var_dump($isInArea); die(); #0
 
         if ($isInArea)
             return true;
