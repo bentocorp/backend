@@ -118,8 +118,11 @@ class OrderStatus {
                     ->where('fk_Order', $pk_Order)
                     ->update($update);
 
-            // Update driver inventories based on this new assignment (if any)
-            $this->updateDriverInventories($from, $to);
+            // IF on-demand, Update driver inventories based on this new assignment (if any)
+            $order = Order::find($pk_Order);
+            if ($order->order_type == 1) {
+                $this->updateDriverInventories($from, $to);
+            }
         });
     }
     
