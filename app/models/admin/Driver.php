@@ -46,7 +46,7 @@ class Driver extends \Eloquent {
     public static function getCurrentDrivers() {
         
         // Get from db           
-        $sql = "select * from Driver where on_shift
+        $sql = "select * from Driver where on_shift = 1
             #SELECT d.* 
             #FROM DriverInventory di
             #left join Driver d on (di.fk_Driver = d.pk_Driver)

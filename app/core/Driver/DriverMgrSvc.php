@@ -29,7 +29,7 @@ class DriverMgrSvc {
              DB::update("update Driver set on_shift = 1 where pk_Driver in ($in)", array());
 
             // 2. Get who is intended to be off shift
-            $desiredOffShiftDrivers = DB::select("select * from Driver where pk_Driver NOT in ($in) AND on_shift");
+            $desiredOffShiftDrivers = DB::select("select * from Driver where pk_Driver NOT in ($in) AND on_shift = 1");
             
             $this->removeDriverListFromShift($desiredOffShiftDrivers);
         }
