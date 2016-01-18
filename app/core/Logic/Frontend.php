@@ -22,17 +22,16 @@ class Frontend {
      * 
         AppState Decision Tree:
 
-        Out of zone?
-        Yes: map,no_service_wall
-        No: -> HasServices
+        + Out of zone?
+            + Yes: map,no_service_wall
+            + No: HasServices?
+                + Yes: HasOAService?
+                    + Yes: Build
+                    + No: Use OD state
+                + No: OD open and has a menu set?
+                    + Yes: Give existing map,no_service_wall
+                    + No: closed_wall
 
-        HasServices?
-        Yes: -> HasOAService?
-        No: closed_wall
-
-        HasOAService?
-        Yes: Build
-        No: Use OD state
      * 
      * return strings:
         # map,no_service_wall: Nothing is available. Execute the existing map <-> bummer wall logic.
@@ -42,40 +41,60 @@ class Frontend {
      */
     public static function getState($hasOrderAhead, $isInZone, $hasService)
     {
-        // Out of any zone? We're done.
-        if (!$isInZone)
-            return 'map,no_service_wall';
+        $status = Status::get();
+        $odMenuCountToday = OdMenu::getCountToday();
+        
+        // OD open?
+        
+        // Yes: Give normal map,no_service_wall
+        #if ($status == 'open' && $odMenuCountToday > 0)
+            #return 'map,no_service_wall';
+        // No: 
+        #else 
+        #{
+            // Out of any zone? 
 
-        // HasServices?
-        // Yes:
-        if ($hasService)
-        {
-            // HasOAService?
-            // Yes: If there's OA available, let them order!
-            if ($hasOrderAhead)
-                return 'build';
-            // No: Use OD state
-            else 
+            // Yes: We're done.
+            if (!$isInZone)
+                return 'map,no_service_wall';
+            // No: HasServices?
+            else
             {
-                $status = Status::get();
-                $odMenuCountToday = OdMenu::getCountToday();
+                // Yes:
+                if ($hasService)
+                {
+                    // HasOAService?
 
-                if ($status == 'open' && $odMenuCountToday > 0)
-                    return 'build';
-                else if ($status == 'closed')
-                    return 'closed_wall';
-                else if ($status == 'sold out')
-                    return 'soldout_wall';
-                else
-                    return 'closed_wall1'; # catch-all case
-            }
+                    // Yes: If there's OA available, let them order!
+                    if ($hasOrderAhead)
+                        return 'build';
+                    // No: Use OD state
+                    else 
+                    {
+                        if ($status == 'open' && $odMenuCountToday > 0)
+                            return 'build';
+                        else if ($status == 'closed')
+                            return 'closed_wall';
+                        else if ($status == 'sold out')
+                            return 'soldout_wall';
+                        else
+                            return 'closed_wall1'; # catch-all case
+                    }
+                }
+                // No:
+                // Otherwise there isn't, and just show walls.
+                // (This is primarily an edge case, for perhaps around the holidays when
+                // we might not have OA menus within n days for you to order ahead from.
+                else 
+                {
+                    // Make an exception if OD is open
+                    if ($status != 'closed' && $odMenuCountToday > 0)
+                        return 'map,no_service_wall';
+                    else
+                        return 'closed_wall2';
+                }
+            #}
         }
-        // No:
-        // Otherwise there isn't, and just show walls.
-        // (This is primarily an edge case, for perhaps around the holidays when
-        // we might not have OA menus within n days for you to order ahead from.
-        else
-            return 'closed_wall2';
     }
     
     
