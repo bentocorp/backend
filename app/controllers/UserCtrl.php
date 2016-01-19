@@ -4,6 +4,7 @@ namespace Bento\Ctrl;
 
 use Bento\Auth\FacebookAuth;
 use Bento\Auth\MainAuth;
+use Bento\core\Librarian;
 use Input;
 use Response;
 use User;
@@ -140,11 +141,31 @@ class UserCtrl extends \BaseController {
     
     
     /*
-     * Get a user's upcoming orders, and their last 10 completed orders
+     * Get a user's upcoming orders, and their last few completed orders
      */
     public function getOrderhistory()
     {
+        $user = User::get();
+        $pk_User = $user->pk_User;
+        $return = new \stdClass();
         
+        // Anything not Delivered or Cancelled
+        $return->InProgress = new \stdClass();
+            $return->InProgress->title = 'In Progress';
+            $return->InProgress->data = Librarian::getInProgress($pk_User);
+        
+        // Upcoming stuff
+        $return->Upcoming = new \stdClass();
+            $return->Upcoming->title = 'Upcoming';
+            $return->Upcoming->data = Librarian::getUpcoming($pk_User);
+            
+        // The last few completed orders
+        $return->Completed = new \stdClass();
+            $return->Completed->title = 'Completed';
+            $return->Completed->data = Librarian::getCompleted($pk_User);
+       
+            
+        return Response::json($return, 200);
     }
     
         
