@@ -36,6 +36,12 @@ class Gatekeeper {
         return $this->myZones;
     }
     
+    
+    public function removeService($service)
+    {
+        unset($this->services[$service]);
+    }
+    
         
     public function listAvailableServices()
     {        

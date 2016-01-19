@@ -47,6 +47,14 @@ class GatekeeperCtrl extends \BaseController {
         ## If so, give back what's available
         if ($isInZone) 
         {
+            // Build the selection dropdown for the frontend.
+            // This also determines whether or not OD is truly available.
+            $response['appOnDemandWidget'] = Frontend::getOnDemandWidget();
+            
+            // If no OD, make sure it's not available
+            if ($response['appOnDemandWidget'] === NULL)
+                $gatekeeper->removeService('OnDemand');
+
             ## Determine if service is available
              # Just because you're in a zone, doesn't mean that stuff is available!!
              # Important Example: I am in OA zone, BUT there are NO OA menus available,
@@ -55,9 +63,6 @@ class GatekeeperCtrl extends \BaseController {
             
             $response['hasService'] = $hasService;
             $response['AvailableServices'] = $gatekeeper->listAvailableServices();
-            
-            // Build the selection dropdown for the frontend. 
-            $response['appOnDemandWidget'] = Frontend::getOnDemandWidget();
         }
         ## Otherwise, no service
         else {
@@ -66,7 +71,7 @@ class GatekeeperCtrl extends \BaseController {
         
         // Determine the app state for the frontend. 
         $response['appState'] = Frontend::getState($gatekeeper->hasOrderAhead(), $isInZone, $gatekeeper->hasService());
-        
+                
         return Response::json($response);
     }
 
