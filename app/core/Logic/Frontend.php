@@ -159,6 +159,7 @@ class Frontend {
             {
                 // Is there an ULM for today? (account for buffer time)
                 $ulm = OdMenu::getUpcomingLateMenu();
+                #var_dump($ulm); die();
                 
                 // Yes: title="Today's {LM MealType}", text="Opening at timenow()+5mins for on-demand service"
                 if (count($ulm) > 0)

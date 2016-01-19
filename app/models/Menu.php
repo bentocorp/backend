@@ -166,8 +166,8 @@ SQL;
             from Menu m
             left join MealType mt on (m.fk_MealType = mt.pk_MealType)
             where 
-                    date_add(mt.StartTime, INTERVAL ? MINUTE) >= ? AND 
-                    for_date = ?
+                date_add(mt.StartTime, INTERVAL ? MINUTE) >= ? AND 
+                for_date = ? AND od_avail
             ORDER BY startTime ASC
         ';
         $result = DB::select($sql, array($bufferMins, $bufferMins, $curTime, $today));
