@@ -51,7 +51,7 @@ class GatekeeperCtrl extends \BaseController {
             // This also determines whether or not OD is truly available.
             $response['appOnDemandWidget'] = Frontend::getOnDemandWidget();
             
-            // If no OD, make sure it's not available
+            // If no OD, make sure it's not available!
             if ($response['appOnDemandWidget'] === NULL)
                 $gatekeeper->removeService('OnDemand');
 

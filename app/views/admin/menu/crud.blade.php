@@ -130,13 +130,13 @@ CRUD Menu
     
     <div class="form-group">
         {{ Form::hidden('od_avail', 0) }}
-        {{ Form::label('od_avail', 'Available for On-Demand?', array('class' => 'col-sm-2 control-label')) }}
+        {{ Form::label('od_avail', 'Menu Available for On-Demand?', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::checkbox('od_avail', 1, null, array('style' => 'width:30px; height:30px;')); }}</div>
     </div>
     
     <div class="form-group">
         {{ Form::hidden('oa_avail', 0) }}
-        {{ Form::label('oa_avail', 'Available for Order Ahead?', array('class' => 'col-sm-2 control-label')) }}
+        {{ Form::label('oa_avail', 'Menu Available for Order Ahead?', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">{{ Form::checkbox('oa_avail', 1, null, array('style' => 'width:30px; height:30px;')); }}</div>
     </div>
     
