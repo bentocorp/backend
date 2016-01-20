@@ -113,7 +113,7 @@ if ($openOrderQty > 0):
                                 ?>
                                     
                                 <!-- // Totals -->
-                                <tr><td colspan="6">
+                                <tr><td colspan="6"><small>
                                     <b>Items Total:</b> ${{$row->items_total}} &nbsp;&nbsp;
                                     <b>Delivery fee:</b> ${{$row->delivery_price}} &nbsp;&nbsp;
                                     <b>Coupon discount:</b> -${{$row->coupon_discount}} &nbsp;&nbsp;
@@ -121,7 +121,8 @@ if ($openOrderQty > 0):
                                     <b>Tip:</b> ${{$row->tip}} ({{(float) $row->tip_percentage}}%) &nbsp;&nbsp;
                                     <b>Total:</b> ${{$row->amount}} &nbsp;&nbsp;
                                     <i><b>Pre-Promo Total:</b> ${{NumUtil::formatPriceFromCents($row->total_cents_without_coupon)}}</i> &nbsp;&nbsp;
-                                </td></tr>
+                                    <b>OS:</b> {{$row->platform}} &nbsp;&nbsp;
+                                </small></td></tr>
                             </tbody>
                         </table>
                     </td>

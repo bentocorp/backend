@@ -33,6 +33,7 @@ class OrderCtrlTest extends TestCase {
         
         // and an authorized user
         $parameters['api_token'] = '123';
+        $parameters['data'] = json_encode(new \stdClass());
         
         // When I attempt to order
         $crawler = $this->client->request('POST', '/order', $parameters);
@@ -147,6 +148,9 @@ class OrderCtrlTest extends TestCase {
                 ,
             "api_token" => "123"
         );
+        
+        // and we're open
+        DB::update('update settings set `value` = "open" where `key` = ?', array('status'));
         
         // and not enough inventory for the order,
         DB::table('LiveInventory')->truncate();
@@ -1278,5 +1282,84 @@ DATA;
         // Clean up
         DB::update('update settings set `value` = "open" where `key` = ?', array('status'));
     }
+    
+    
+    /**************************************************************************
+     * Order Ahead
+     *************************************************************************/
 
+    public function testOrderAhead_BasicSuccess() 
+    {
+        // Given an order ahead from an authorized user who has a Stripe card on file with us,
+        $idempotentTkn = $this->getIdempotentToken();
+        $parameters = array(
+            "data" =>
+                '{
+                    "OrderItems": [
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        },
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "unit_price": 10.00,
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        }
+                    ],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "1111",
+                            "street": "Kearny st.",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94133"
+                        },
+                        "coords": {
+                            "lat": "37.798220",
+                            "long": "-122.405606"
+                        },
+                        "tax_cents": 137,
+                        "tip_cents": 200,
+                        "total_cents": "1537"
+                    },
+                    "Stripe": {
+                        "stripeToken": NULL
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS",
+                    
+                    "order_type": "2",
+                    "kitchen": "1",
+                    "OrderAheadZone": "1",
+                    "for_date": "2455-09-15",
+                    "scheduled_window_start": "13:00",
+                    "scheduled_window_end": "14:00",
+                    "MenuId": "17"
+                }'
+                ,
+            "api_token" => "123"
+        );
+        
+        // and enough inventory for the order,
+        #DB::table('LiveInventory')->truncate();
+        #DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(1, 100));
+        #DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(2, 100));
+        
+        
+        
+        // When I attempt to order
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+        
+    }
+    
 }

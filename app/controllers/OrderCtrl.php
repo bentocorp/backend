@@ -11,6 +11,7 @@ use Bento\app\Bento;
 use Bento\Coupon\AppCoupon;
 use Bento\Order\OrderReserver;
 use Bento\Order\Cashier;
+use Bento\Model\Kitchen;
 use User;
 use Response;
 use Request; use Route;
@@ -45,33 +46,42 @@ class OrderCtrl extends \BaseController {
      * and using idempotency.
      */
     public function postIndex() {
-                
-        // If the restaurant is not open, we're done!
-        $status = Status::getOverall();
+            
+        // Get data
+        $data = json_decode(Input::get('data'));
         
-        if ($status != 'open' && !User::get()->is_admin) {
-            
-            $errorMsg = '';
-            
-            switch ($status) {
-                case 'closed':
-                    $errorMsg = "Whoops! It looks like we've just closed down for this meal.";
-                    break;
-                case 'sold out':
-                    $errorMsg = "Whoops! It looks like we've just sold out! Check back soon and we might have more.";
-                    break;
+        // Default the order_type
+        if (!isset($data->order_type))
+            $data->order_type = 1;
+        
+
+        // For on-demand only
+        if ($data->order_type == 1)
+        {
+            // For on-demand, if the restaurant is not open, we're done!
+            $status = Status::getOverall();
+
+            if ($status != 'open' && !User::get()->is_admin) 
+            {
+                $errorMsg = '';
+
+                switch ($status) {
+                    case 'closed':
+                        $errorMsg = "Whoops! It looks like we've just closed down for this meal.";
+                        break;
+                    case 'sold out':
+                        $errorMsg = "Whoops! It looks like we've just sold out! Check back soon and we might have more.";
+                        break;
+                }
+
+                return Response::json(array("error" => $errorMsg), 423);
             }
-            
-            return Response::json(array("error" => $errorMsg), 423);
         }
         
         // Vars
         $stripeCharge = false;
         $couponFromOrder = NULL;
-        
-        // Get data
-        $data = json_decode(Input::get('data'));
-        
+                
         // Get the User
         $user = $this->user;
     
@@ -156,26 +166,36 @@ class OrderCtrl extends \BaseController {
         ## -- Begin Inventory Reservation Checks
         
         // Check Idempotency
-        // This means that this order is a duplicate
-        if ($reserveStatus->getSuccess() == false && $reserveStatus->getStatusCode() == 23000) {
+        // ERROR: This means that this order is a duplicate
+        if ($reserveStatus->getSuccess() == false && $reserveStatus->getStatusCode() == 23000) 
+        {
             Bento::alert(null, 'Duplicate Order / Idempotent Error', '33dccd84-ecbd-4d21-bbf6-eb5441a73dc7', $data);
             return Response::json('', 200);
         }
         
-        // If inventory reservation failed, because we are out of something.
-        else if ($reserveStatus->getSuccess() == false && $reserveStatus->getStatusCode() == 410) {
+        // ERROR: If inventory reservation failed, because we are out of something.
+        else if ($reserveStatus->getSuccess() == false && $reserveStatus->getStatusCode() == 410) 
+        {
             // Since the inventory is incorrect in the client, conveniently send it back to them
+            // OD inventory
             $menuStatus = Status::menu();
             
-            $response = array(
-                'error' => 'Some of our inventory in your order just sold out!',
-                'MenuStatus' => $menuStatus
-                );
+            // OA inventory
+            $lat = $data->OrderDetails->coords->lat;
+            $long = $data->OrderDetails->coords->long;
+            $request = Request::create("/gatekeeper/here/$lat/$long", 'GET');
+            $gatekeeperInstance = json_decode(Route::dispatch($request)->getContent());
             
+            $response = array(
+                'error' => 'Some of our inventory in your order just sold out! Please adjust your order as indicated.',
+                'MenuStatus' => $menuStatus,
+                '/gatekeeper/here/{lat}/{long}' => $gatekeeperInstance,
+                );
+              
             return Response::json($response, 410);
         }
         
-        // If inventory reservation failed for some other reason that we haven't written a case for
+        // ERROR: If inventory reservation failed for some other reason that we haven't written a case for
         else if ($reserveStatus->getSuccess() == false) {
             $orderReserver->fail();
             Bento::alert(null, 'Unknown Inventory Reservation Failure', '864543b5-5ea3-49d9-8f74-da68a93cbcbf', $data);
@@ -183,7 +203,7 @@ class OrderCtrl extends \BaseController {
             return Response::json(array("error" => "Something's gone wrong. We've been notified! (cbf)."), 500);
         }
         
-        // Otherwise, everything's good. Keep going.
+        // SUCCESS: Otherwise, everything's good. Keep going.
         $this->pendingOrder = $reserveStatus->bag->pendingOrder;
         
         ## -- End Inventory Reservation Checks
@@ -430,7 +450,6 @@ class OrderCtrl extends \BaseController {
         isset($orderDetails->tax_cents) ? $order->tax = $orderJson->OrderDetails->tax_cents / 100 : '';
         isset($orderDetails->tip_cents) ? $order->tip = $orderJson->OrderDetails->tip_cents / 100 : '';
         $order->amount = $orderJson->OrderDetails->total_cents / 100;
-        
         // ** End Money stuff
         
         $order->phone = $user->phone;
@@ -439,6 +458,25 @@ class OrderCtrl extends \BaseController {
         isset($orderJson->AppVersion) ? $order->app_version = $orderJson->AppVersion : '';
         isset($orderJson->Eta->min) ? $order->eta_min = $orderJson->Eta->min : '';
         isset($orderJson->Eta->max) ? $order->eta_max = $orderJson->Eta->max : '';
+        
+        // ** Order Ahead / Scheduled delivery stuff
+        if ( isset($orderJson->order_type) && $orderJson->order_type == 2 )
+        {
+            $order->order_type = $orderJson->order_type;
+            $order->fk_Kitchen = $orderJson->kitchen;
+            $order->fk_OrderAheadZone = $orderJson->OrderAheadZone;
+            $order->for_date = $orderJson->for_date;
+            $order->scheduled_window_start = "$orderJson->for_date $orderJson->scheduled_window_start";
+            $order->scheduled_window_end = "$orderJson->for_date $orderJson->scheduled_window_end";
+            $order->fk_Menu = $orderJson->MenuId;
+            
+            // Use the kitchen's timezone
+            $kitchen = Kitchen::find($orderJson->kitchen);
+            $order->scheduled_timezone = $kitchen->tzName;
+        }
+        // Default TZ for OD service (actually, let's just leave it to NULL)
+        #else if ( (isset($orderJson->order_type) && $orderJson->order_type == 1) || !isset($orderJson->order_type) )
+            #$order->scheduled_timezone = 'America/Los_Angeles';
         
         
         // Save Stripe things only if a Stripe charge was made.

@@ -24,7 +24,7 @@ class StatusCtrl extends \BaseController {
         if (!$hasMenuForCurrentMealType && !$override) {
             return Redirect::back()
                 ->with('msg', 
-                array('type' => 'danger', 'txt' => "<b>Can't Open!</b> There is no menu for the current meal time. &nbsp; $overrideBtn"));
+                array('type' => 'danger', 'txt' => "<b>Can't Open!</b> There is no on-demand menu for the current meal time. &nbsp; $overrideBtn"));
         }
         
         Status::open();

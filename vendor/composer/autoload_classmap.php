@@ -71,6 +71,7 @@ return array(
     'Bento\\Model\\CouponRequest' => $baseDir . '/app/models/CouponRequest.php',
     'Bento\\Model\\CouponUserHash' => $baseDir . '/app/models/CouponUserHash.php',
     'Bento\\Model\\CustomerBentoBox' => $baseDir . '/app/models/CustomerBentoBox.php',
+    'Bento\\Model\\Kitchen' => $baseDir . '/app/models/Kitchen.php',
     'Bento\\Model\\LiveInventory' => $baseDir . '/app/models/LiveInventory.php',
     'Bento\\Model\\MealType' => $baseDir . '/app/models/MealType.php',
     'Bento\\Model\\Menu' => $baseDir . '/app/models/Menu.php',

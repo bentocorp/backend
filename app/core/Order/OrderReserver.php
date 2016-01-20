@@ -48,7 +48,20 @@ class OrderReserver {
             // ## First, detect a duplicate order
             if ($this->isDuplicate())
                 return $this->response;
-
+            
+            // For now, if OA, return success
+            // Todo: Fix this
+            if ($this->orderJsonObj->order_type == 2) 
+            {
+                // Testing
+                #$this->fail();
+                #$this->response->setStatusCode(410);
+                
+                // Real
+                $this->success();
+                return $this->response;
+            }
+                
             // ## At this point, we're sure that there isn't a duplicate order,
             // so let's continue trying to process the order.
 
@@ -70,6 +83,7 @@ class OrderReserver {
                     }
                 });
             }
+            // There's not enough OD inventory
             catch(QueryException $e) {
                 // Hard delete the pending order. We don't need it.
                 $this->fail();

@@ -120,8 +120,10 @@ Order
         should be updated, and the return includes the inventory:<br>
         <pre>
 {
-    "Error":"Some of our inventory just sold out!",
-    "MenuStatus:" [same array as /status/menu]  
+    "Error": "Some of our inventory just sold out!",
+    "MenuStatus": [same array as /status/menu],
+    "/gatekeeper/here/{lat}/{long}": (Called with the lat/log from the order),
+    
 }
         </pre>
       </li>
@@ -131,6 +133,7 @@ Order
 
     <form action="/order" method="post">
         <br>
+        <b>NOTE:</b> <code>order_type=1</code> means an on-demand order.
         <b>NOTE: <code>stripeToken</code></b> must always be present. If the user is 
           just using their existing card, set this to NULL.<br>
         <b>NOTE:</b> There will only ever be one (1) <code>AddonList</code>.<br>
@@ -203,7 +206,15 @@ Order
     "CouponCode": "bentoyum26",
     "IdempotentToken": "some_uuid",
     "Platform": "iOS",
-    "AppVersion": "2.63"
+    "AppVersion": "2.63",
+    
+    "order_type": "1",
+    "kitchen": "1",
+    "OrderAheadZone": "1",
+    "for_date": "2455-09-15",
+    "scheduled_window_start": "13:00",
+    "scheduled_window_end": "14:00",
+    "MenuId": "17"
 }
         </textarea>
         <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">

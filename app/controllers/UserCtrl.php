@@ -147,22 +147,25 @@ class UserCtrl extends \BaseController {
     {
         $user = User::get();
         $pk_User = $user->pk_User;
-        $return = new \stdClass();
+        $return = array();
         
-        // Anything not Delivered or Cancelled
-        $return->InProgress = new \stdClass();
-            $return->InProgress->title = 'In Progress';
-            $return->InProgress->data = Librarian::getInProgress($pk_User);
+        // Anything not Delivered or Cancelled 
+        $obj = new \stdClass();
+        $obj->title = 'In Progress';
+        $obj->items = Librarian::getInProgress($pk_User);
+        $return[] = $obj;
         
         // Upcoming stuff
-        $return->Upcoming = new \stdClass();
-            $return->Upcoming->title = 'Upcoming';
-            $return->Upcoming->data = Librarian::getUpcoming($pk_User);
+        $obj = new \stdClass();
+        $obj->title = 'Upcoming';
+        $obj->items = Librarian::getUpcoming($pk_User);
+        $return[] = $obj;
             
         // The last few completed orders
-        $return->Completed = new \stdClass();
-            $return->Completed->title = 'Completed';
-            $return->Completed->data = Librarian::getCompleted($pk_User);
+        $obj = new \stdClass();
+        $obj->title = 'Completed';
+        $obj->items = Librarian::getCompleted($pk_User);
+        $return[] = $obj;
        
             
         return Response::json($return, 200);
