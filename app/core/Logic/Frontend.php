@@ -174,7 +174,7 @@ class Frontend {
                     #var_dump($instance); die(); #0
                     
                     // Show local opening time
-                    $openingAt = Carbon::parse($upcomingToday->displayStartTime, Clock::getTimezone())->format('h:ia');
+                    $openingAt = Carbon::parse($upcomingToday->displayStartTime, Clock::getTimezone())->format('g:ia');
                     
                     // Are we late?
                     if ( strtotime(Clock::getLocalCarbon()->toTimeString()) > strtotime($upcomingToday->displayStartTime) ) {
@@ -184,7 +184,7 @@ class Frontend {
                         $nextFive = ceil($now/300)*300;
                         #$carbon = new Carbon($nextFive, 'UTC');
                         #die($now); #0
-                        $openingAt = Carbon::createFromFormat('U', $nextFive, 'UTC')->setTimezone(Clock::getTimezone())->format('h:ia');
+                        $openingAt = Carbon::createFromFormat('U', $nextFive, 'UTC')->setTimezone(Clock::getTimezone())->format('g:ia');
                     }
                      
                     $widget->title = "Today's $cmtNameCap";
@@ -203,7 +203,7 @@ class Frontend {
                     {
                         $nextMenu = $md->findNextMenuFromApi($instance);
                         $nextDate = $nextMenu->Menu->for_date;
-                        $openingAt = Carbon::parse($nextMenu->Menu->displayStartTime, Clock::getTimezone())->format('h:ia');
+                        $openingAt = Carbon::parse($nextMenu->Menu->displayStartTime, Clock::getTimezone())->format('g:ia');
                         $meal = ucfirst($nextMenu->Menu->meal_name);
                         
                         // Tomorrow/{day} text logic

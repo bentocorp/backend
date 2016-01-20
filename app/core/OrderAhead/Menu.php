@@ -53,7 +53,8 @@ class Menu {
             // Get Menu_Items            
             $sql2 = "
                 SELECT d.pk_Dish itemId, d.name, d.description, d.type, d.image1, d.max_per_order, d.price,
-                    (select qty from MenuInventory minv where minv.fk_Menu = ? AND minv.fk_item = d.pk_Dish) qty
+                    (select qty from MenuInventory minv where minv.fk_Menu = ? AND minv.fk_item = d.pk_Dish) qty,
+                    99 as max_per_bento
                     #IF(d.type != 'side', d.price, NULL) as price
                 FROM Menu_Item mi
                 LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)

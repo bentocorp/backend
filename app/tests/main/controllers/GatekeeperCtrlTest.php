@@ -14,6 +14,11 @@ class GatekeeperCtrlTest extends TestCase {
     }
     
     
+    public function tearDown() {
+        Carbon::setTestNow();
+    }
+    
+    
     public function testOutsideAnyArea()
     {
         // Given a point outside of any area (the ocean)

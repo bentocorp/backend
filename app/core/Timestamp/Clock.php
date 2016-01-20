@@ -50,5 +50,15 @@ class Clock {
             return false;
     }
     
+    public static function isToday($date) 
+    {
+        $today = Carbon::today(self::getTimezone())->format('Y-m-d');
+        
+        if ($today == $date)
+            return true;
+        else
+            return false;
+    }
+    
         
 }

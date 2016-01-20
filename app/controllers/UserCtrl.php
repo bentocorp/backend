@@ -151,19 +151,19 @@ class UserCtrl extends \BaseController {
         
         // Anything not Delivered or Cancelled 
         $obj = new \stdClass();
-        $obj->title = 'In Progress';
+        $obj->sectionTitle = 'In Progress';
         $obj->items = Librarian::getInProgress($pk_User);
         $return[] = $obj;
         
         // Upcoming stuff
         $obj = new \stdClass();
-        $obj->title = 'Upcoming';
+        $obj->sectionTitle = 'Scheduled';
         $obj->items = Librarian::getUpcoming($pk_User);
         $return[] = $obj;
             
         // The last few completed orders
         $obj = new \stdClass();
-        $obj->title = 'Completed';
+        $obj->sectionTitle = 'Delivered';
         $obj->items = Librarian::getCompleted($pk_User);
         $return[] = $obj;
        
