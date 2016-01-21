@@ -5,6 +5,7 @@ namespace Bento\core\OrderAhead;
 
 use Bento\core\Logic\MaitreD;
 use Bento\Timestamp\Clock;
+use Bento\Admin\Model\Settings;
 use DB;
 #use Cache;
 use Carbon\Carbon;
@@ -152,6 +153,9 @@ class Menu {
         // Get each range
         $ranges = explode(',' , $timesStr);
         
+        // Get OA deliv price. Later we can do some custom stuff per delivery window
+        $delivPrice = Settings::find('oa_delivery_price')->value;
+        
         foreach ($ranges as $range)
         {
             // Get each time
@@ -165,6 +169,7 @@ class Menu {
             $obj->start = $start;
             $obj->end = $end;
             $obj->available = true;
+            $obj->delivery_price = $delivPrice;
             
             // Push onto return array
             $retAr[] = $obj;
