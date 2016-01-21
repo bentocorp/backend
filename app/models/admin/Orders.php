@@ -6,9 +6,15 @@ use Bento\core\Util\DbUtil;
 use Bento\Timestamp\Clock;
 use DB;
 
+/**
+ * OnDemand Orders (o.order_type = 1)
+ */
 class Orders {
 
 
+    /*
+     * OD
+     */
     public static function getOpenOrders() {
         
         // Get from db 
@@ -17,6 +23,7 @@ class Orders {
             select
                 o.*,
                 o.created_at as order_created_at,
+                os.updated_at as order_updated_at,
                 os.`status`, os.trak_status,
                 concat(u.firstname, ' ', u.lastname) as user_name,
                 u.phone as user_phone, u.email as user_email,
@@ -28,6 +35,7 @@ class Orders {
             left join Driver d on (os.fk_Driver = d.pk_Driver)
             left join User u on (o.fk_User = u.pk_User)
             where os.status NOT IN ('Delivered', 'Cancelled')
+                AND o.order_type = 1
             ORDER BY order_created_at DESC
         ";
         $rows = DB::select($sql, array());
@@ -36,6 +44,9 @@ class Orders {
     }
     
     
+    /*
+     * OD
+     */
     public static function getTodaysOrders()
     {
         $todaysDate = Clock::getLocalTimestamp();
@@ -45,6 +56,7 @@ class Orders {
             select
                 o.*,
                 o.created_at as order_created_at,
+                os.updated_at as order_updated_at,
                 os.`status`, os.trak_status,
                 concat(u.firstname, ' ', u.lastname) as user_name,
                 u.phone as user_phone, u.email as user_email,
@@ -60,6 +72,7 @@ class Orders {
                 # (local time, local timezone, timezone to convert to)
                 AND o.created_at >= CONVERT_TZ('$todaysDate 00:00:00','America/Los_Angeles','UTC')  
                 AND o.created_at <= CONVERT_TZ('$todaysDate 23:59:59','America/Los_Angeles','UTC') 
+                AND o.order_type = 1
             ORDER BY order_created_at DESC
         ";
         $rows = DB::select($sql, array());

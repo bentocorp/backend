@@ -92,6 +92,7 @@ return array(
     'Bento\\Order\\Item\\OrderItemInterface' => $baseDir . '/app/core/Order/items/OrderItemInterface.php',
     'Bento\\Order\\OrderReserver' => $baseDir . '/app/core/Order/OrderReserver.php',
     'Bento\\Order\\OrderStatus' => $baseDir . '/app/core/Order/OrderStatus.php',
+    'Bento\\Order\\OrderType' => $baseDir . '/app/core/Order/OrderType.php',
     'Bento\\Payment\\PaymentServiceProviders' => $baseDir . '/app/core/Payment/PaymentServiceProviders.php',
     'Bento\\Payment\\StripeMgr' => $baseDir . '/app/core/Payment/StripeMgr.php',
     'Bento\\Payment\\StripeMgrSvc' => $baseDir . '/app/core/Payment/StripeMgrSvc.php',

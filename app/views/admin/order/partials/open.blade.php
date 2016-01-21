@@ -5,7 +5,8 @@ use Bento\Model\Order;
 use Bento\Model\CustomerBentoBox;
 use Bento\app\Bento;
 use Bento\Model\OrderItem;
-use Bento\core\Util\NumUtil;
+use Bento\core\Util\NumUtil; # This is actually used. The editor doesn't understand it in {{}}
+use Bento\Order\OrderType;
 
 
 try {
@@ -26,7 +27,7 @@ if ($openOrderQty > 0):
         <th>id</th>
         <th>Customer</th>
         <th>Address</th>
-        <th style="width:157px;">Phone /<br><small>Created</small></th>
+        <th style="width:157px;"><small>Created</small> /<br><small>ETA Promise</small></th>
         <th style="text-align:center;">Status</th>
         <th>Driver</th>
         <th>&nbsp;</th>
@@ -58,6 +59,9 @@ if ($openOrderQty > 0):
                 if ($row->trak_status != '200')
                     $trak_alert = '<span class="label label-danger"><big>Onfleet Error!</big></span><br>';
 
+                // OrderType
+                $orderType = OrderType::getAbbrNameFromId($row->order_type);
+
                 ?>
                 <script>
                 //var createdUtc = moment.tz("{{ $row->order_created_at }}", "UTC");
@@ -66,11 +70,11 @@ if ($openOrderQty > 0):
                 </script>
                 
                 <tr class="{{$tableClass}}">
-                  <form action="/admin/order/set-driver/{{{$row->pk_Order}}}" method="post">
-                    <th scope="row">{{{ $row->pk_Order }}}</th>
-                    <td><?php echo $trak_alert?>{{ $user_name }}<br><small>${{$row->amount}} {{$row->fk_Coupon}}</small></td>
+                  <form action="/admin/order/set-driver/{{$row->pk_Order}}" method="post">
+                    <th scope="row">{{ $row->pk_Order }}<br>{{$orderType}}</th>
+                    <td><?php echo $trak_alert?>{{ $user_name }} <br>{{ $row->user_phone }} <br><small>${{$row->amount}} {{$row->fk_Coupon}}</small></td>
                     <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}<br><small>{{ $row->user_email }}</small></td>
-                    <td>{{{ $row->user_phone }}}<br><small class="utcToLoc">{{$row->order_created_at}}</small></td>
+                    <td><small class="utcToLoc">{{$row->order_created_at}}</small> <br><small>{{$row->eta_min}}-{{$row->eta_max}}mins.</small></td>
                     <td align="center">
                         <?php echo $row->status; #echo Form::select('status', $orderStatusDropdown, $row->status)?><br>
                         <a href="/admin/order/cancel/{{$row->pk_Order}}" title="Cancel" role="button" class="btn btn-default btn-xs" onclick="return confirm('Cancel {{$row->user_name}}\u2019s order?')"><span class="glyphicon glyphicon-remove"></span></a>

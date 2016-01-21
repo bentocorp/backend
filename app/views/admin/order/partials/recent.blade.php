@@ -5,7 +5,9 @@ use Bento\Model\Order;
 use Bento\Model\CustomerBentoBox;
 use Bento\app\Bento;
 use Bento\Model\OrderItem;
-use Bento\core\Util\NumUtil;
+use Bento\core\Util\NumUtil; # This is actually used. The editor doesn't understand it in {{}}
+use Bento\Order\OrderType;
+
 
 
 try {
@@ -26,7 +28,7 @@ if ($recentOrderQty > 0):
         <th>id</th>
         <th>Customer</th>
         <th>Address</th>
-        <th style="width:157px;">Phone /<br><small>Created</small></th>
+        <th style="width:157px;"><small>Created</small> /<br><small>ETA Promise</small> /<br><small>Completed</small></th>
         <th style="text-align:center;">Status</th>
         <th>Driver</th>
       </tr>
@@ -57,12 +59,15 @@ if ($recentOrderQty > 0):
                 if ($row->trak_status != '200')
                     $trak_alert = '<span class="label label-danger"><big>Onfleet Error!</big></span><br>';
 
+                // OrderType
+                $orderType = OrderType::getAbbrNameFromId($row->order_type);
+                
                 ?>
                 <tr>
-                    <th scope="row">{{{ $row->pk_Order }}}</th>
-                    <td><?php echo $trak_alert?>{{ $user_name }}<br><small>${{$row->amount}} {{$row->fk_Coupon}}</small></td>
+                    <th scope="row">{{ $row->pk_Order }}<br>{{$orderType}}</th>
+                    <td><?php echo $trak_alert?>{{ $user_name }} <br>{{ $row->user_phone }} <br><small>${{$row->amount}} {{$row->fk_Coupon}}</small></td>
                     <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}<br><small>{{ $row->user_email }}</small></td>
-                    <td>{{{ $row->user_phone }}}<br><small class="utcToLoc">{{$row->order_created_at}}</small></td>
+                    <td><small class="utcToLoc">{{$row->order_created_at}}</small> <br><small>{{$row->eta_min}}-{{$row->eta_max}}mins.</small> <br><small class="utcToLoc">{{$row->order_updated_at}}</small></td>
                     <td align="center">
                         <?php echo $row->status;?><br>
                     </td>
@@ -102,7 +107,7 @@ if ($recentOrderQty > 0):
                                 ?>
                                     
                                 <!-- // Totals -->
-                                <tr><td colspan="6">
+                                <tr><td colspan="6"><small>
                                     <b>Items Total:</b> ${{$row->items_total}} &nbsp;&nbsp;
                                     <b>Delivery fee:</b> ${{$row->delivery_price}} &nbsp;&nbsp;
                                     <b>Coupon discount:</b> -${{$row->coupon_discount}} &nbsp;&nbsp;
@@ -110,7 +115,8 @@ if ($recentOrderQty > 0):
                                     <b>Tip:</b> ${{$row->tip}} ({{(float) $row->tip_percentage}}%) &nbsp;&nbsp;
                                     <b>Total:</b> ${{$row->amount}} &nbsp;&nbsp;
                                     <i><b>Pre-Promo Total:</b> ${{NumUtil::formatPriceFromCents($row->total_cents_without_coupon)}}</i> &nbsp;&nbsp;
-                                </td></tr>
+                                    <b>OS:</b> {{$row->platform}} &nbsp;&nbsp;
+                                </small></td></tr>
                             </tbody>
                         </table>
                     </td>

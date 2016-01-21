@@ -1,5 +1,7 @@
 <?php
 
+#use User;
+
 class OrderCtrlTest extends TestCase {
 
 
@@ -86,7 +88,11 @@ class OrderCtrlTest extends TestCase {
                         "total_cents": "50"
                     },
                     "IdempotentToken": "'.$idempotentTkn.'",
-                    "Platform": "iOS"
+                    "Platform": "iOS",
+                    "Eta": {
+                        "min": "15",
+                        "max": "25"
+                    }
                 }',
             "api_token" => "456"
         );
@@ -277,7 +283,11 @@ class OrderCtrlTest extends TestCase {
                         "stripeToken": NULL
                     },
                     "IdempotentToken": "'.$idempotentTkn.'",
-                    "Platform": "iOS"
+                    "Platform": "iOS",
+                    "Eta": {
+                        "min": "15",
+                        "max": "25"
+                    }
                 }'
                 ,
             "api_token" => "123"
@@ -343,7 +353,11 @@ class OrderCtrlTest extends TestCase {
                         "stripeToken": NULL
                     },
                     "IdempotentToken": "'.$idempotentTkn.'",
-                    "Platform": "iOS"
+                    "Platform": "iOS",
+                    "Eta": {
+                        "min": "15",
+                        "max": "25"
+                    }
                 }'
                 ,
             "api_token" => "123"
@@ -400,7 +414,11 @@ class OrderCtrlTest extends TestCase {
                         "stripeToken": NULL
                     },
                     "IdempotentToken": "'.$idempotentTkn.'",
-                    "Platform": "iOS"
+                    "Platform": "iOS",
+                    "Eta": {
+                        "min": "15",
+                        "max": "25"
+                    }
                 }'
                 ,
             "api_token" => "123"
@@ -458,7 +476,11 @@ class OrderCtrlTest extends TestCase {
         "stripeToken": NULL
     },
     "IdempotentToken": "$idempotentTkn",
-    "Platform": "iOS"
+    "Platform": "iOS",
+    "Eta": {
+        "min": "15",
+        "max": "25"
+    }
 }      
 DATA;
         
@@ -518,7 +540,11 @@ DATA;
                         "stripeToken": NULL
                     },
                     "IdempotentToken": "'.$idempotentTkn.'",
-                    "Platform": "iOS"
+                    "Platform": "iOS",
+                    "Eta": {
+                        "min": "15",
+                        "max": "25"
+                    }
                 }'
                 ,
             "api_token" => "123"
@@ -615,7 +641,11 @@ DATA;
                         "stripeToken": NULL
                     },
                     "IdempotentToken": "'.$idempotentTkn.'",
-                    "Platform": "iOS"
+                    "Platform": "iOS",
+                    "Eta": {
+                        "min": "15",
+                        "max": "25"
+                    }
                 }'
                 ,
             "api_token" => "00123"
@@ -677,7 +707,11 @@ DATA;
                         "stripeToken": NULL
                     },
                     "IdempotentToken": "'.$idempotentTkn.'",
-                    "Platform": "iOS"
+                    "Platform": "iOS",
+                    "Eta": {
+                        "min": "15",
+                        "max": "25"
+                    }
                 }'
                 ,
             "api_token" => "123"
@@ -733,7 +767,11 @@ DATA;
                         "stripeToken": NULL
                     },
                     "IdempotentToken": "'.$idempotentTkn.'",
-                    "Platform": "iOS"
+                    "Platform": "iOS",
+                    "Eta": {
+                        "min": "15",
+                        "max": "25"
+                    }
                 }'
                 ,
             "api_token" => "789"
@@ -749,6 +787,10 @@ DATA;
         
         // Then I get ok
         $this->assertResponseStatus(200);
+        
+        // And indeed, this user has no Stripe info on file
+        $user = User::find(4);
+        $this->assertEquals(NULL, $user->stripe_customer_obj);
     }
     
     
