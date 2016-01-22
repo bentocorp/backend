@@ -101,7 +101,7 @@ class Frontend {
     /*
      * See also: https://github.com/bentocorp/backend/wiki/Logic:-App-On-Demand-Widget
      */
-    public static function getOnDemandWidget()
+    public static function getOnDemandWidget($myZones)
     {
         // Vars
         $md = MaitreD::get();
@@ -122,6 +122,11 @@ class Frontend {
         $cmtName = $mealTypes->hash->$cmt->name;
         $cmtNameCap = ucfirst($cmtName);
 
+        # Are we in OD?
+        # If we aren't in OD zone, we're done
+        if ( !isset($myZones['OnDemand']) )
+            return NULL;
+        
         # Are we open?
         
         // Yes:

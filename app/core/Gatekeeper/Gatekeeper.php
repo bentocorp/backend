@@ -37,30 +37,36 @@ class Gatekeeper {
     }
     
     
-    public function removeService($service)
-    {
-        unset($this->services[$service]);
-    }
-    
-        
-    public function listAvailableServices()
-    {        
-        return $this->services;
-    }
-    
-        
-    public function hasService() 
-    {
-        return count($this->services) > 0 ? true : false;
-    }
-    
-    
     public function isInAnyZone() 
     {
         return count($this->myZones) > 0 ? true : false;
     }
     
     
+    public function getOaZone()
+    {
+        return $this->oaZone;
+    }
+    
+            
+    public function listAvailableServices()
+    {        
+        return $this->services;
+    }
+    
+
+    public function hasService() 
+    {
+        return count($this->services) > 0 ? true : false;
+    }
+    
+    
+    public function removeService($service)
+    {
+        unset($this->services[$service]);
+    }
+    
+            
     public function hasOrderAhead()
     {
         $services = $this->services;
@@ -69,12 +75,6 @@ class Gatekeeper {
             return true;
         else
             return false;
-    }
-    
-    
-    public function getOaZone()
-    {
-        return $this->oaZone;
     }
     
     

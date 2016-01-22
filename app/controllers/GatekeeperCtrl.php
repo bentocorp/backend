@@ -21,9 +21,9 @@ class GatekeeperCtrl extends \BaseController {
         $response = array(
             #'t' => 'hi24', #0;
             'isInAnyZone' => NULL,
-            'MyZones' => NULL,
+            'MyZones' => new \stdClass(), # Default for JSON. Internally, a hashed array.
             'hasService' => false,
-            'AvailableServices' => new \stdClass(),
+            'AvailableServices' => new \stdClass(), # Default for JSON. Internally, a hashed array.
             'MealTypes' => MealType::getList(),
             'appState' => NULL,
                 # See Frontend->getState()
@@ -43,13 +43,14 @@ class GatekeeperCtrl extends \BaseController {
         $response['isInAnyZone'] = $isInZone;
         $response['MyZones'] = $myZones;
         
+        #var_dump($myZones); die(); #0;
         
         ## If so, give back what's available
         if ($isInZone) 
         {
             // Build the selection dropdown for the frontend.
             // This also determines whether or not OD is truly available.
-            $response['appOnDemandWidget'] = Frontend::getOnDemandWidget();
+            $response['appOnDemandWidget'] = Frontend::getOnDemandWidget($myZones);
             
             // If no OD, make sure it's not available!
             if ($response['appOnDemandWidget'] === NULL)

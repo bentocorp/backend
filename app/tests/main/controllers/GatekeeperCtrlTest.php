@@ -177,5 +177,25 @@ class GatekeeperCtrlTest extends TestCase {
         $this->assertEquals(false, isset($json->AvailableServices->OrderAhead));
         
     }
+    
+    
+    /**************************************************************************
+     * Test appOnDemandWidget
+     *************************************************************************/
 
+    public function testNoWidgetIfNotInOd()
+    {
+        // Given a user outside of OD
+        
+        // But the store is open
+        
+        // When I query gatekeeper
+        
+        // Then OD is not a zone,
+        
+        // OD is not in AvailableServices,
+        
+        // and the appOnDemandWidget is NULL
+    }
+    
 }
