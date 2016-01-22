@@ -23,7 +23,7 @@ class GatekeeperCtrl extends \BaseController {
             'isInAnyZone' => NULL,
             'MyZones' => NULL,
             'hasService' => false,
-            'AvailableServices' => array(),
+            'AvailableServices' => new \stdClass(),
             'MealTypes' => MealType::getList(),
             'appState' => NULL,
                 # See Frontend->getState()
