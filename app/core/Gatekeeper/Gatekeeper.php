@@ -33,7 +33,12 @@ class Gatekeeper {
     
     public function getMyZones()
     {
-        return $this->myZones;
+        // Always return an obj for JSON
+        
+        #if (count($this->myZones) == 0)
+            #return new \stdClass ();
+        #else
+            return $this->myZones;
     }
     
     
@@ -51,7 +56,12 @@ class Gatekeeper {
             
     public function listAvailableServices()
     {        
-        return $this->services;
+        // Always return an obj for JSON
+        
+        #if (count($this->services) == 0)
+            #return new \stdClass ();
+        #else
+            return $this->services;
     }
     
 

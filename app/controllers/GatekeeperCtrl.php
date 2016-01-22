@@ -70,6 +70,14 @@ class GatekeeperCtrl extends \BaseController {
             
         }
         
+        // Always return dicts for the frontend
+        if (count($response['MyZones']) == 0)
+            $response['MyZones'] = new \stdClass ();
+        
+        if (count($response['AvailableServices']) == 0)
+            $response['AvailableServices'] = new \stdClass ();
+
+        
         // Determine the app state for the frontend. 
         $response['appState'] = Frontend::getState($gatekeeper->hasOrderAhead(), $isInZone, $gatekeeper->hasService());
                 
