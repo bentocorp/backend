@@ -4,9 +4,11 @@
 #use Bento\Model\CustomerBentoBox;
 use Bento\Order\Cashier;
 use DB;
+use Mail;
+use Carbon\Carbon;
 
 
-class Order extends \Eloquent {
+class Order extends BaseModel {
 
 
     /**
@@ -19,28 +21,7 @@ class Order extends \Eloquent {
         
     #private $pk_Order = NULL;
     
-    public function __construct($attributes = array(), $pk_Order = NULL) 
-    {
-        // So I can pass a less verbose NULL into the constructor
-        if (!is_array($attributes))
-            $attributes = array();
         
-        // Make sure the parent is called
-        parent::__construct($attributes);
-        
-        // Set the pk if the parent constructor hasn't yet
-        if (!isset($this->pk_Order))
-            $this->pk_Order = $pk_Order;
-    }
-    
-    /*
-     * Less verbose than the member name, and can be standard in any model
-     */
-    private function id() {
-        return $this->pk_Order;
-    }
-    
-    
     public function getOrderJsonObj($pending = false) {
         
         if ($pending)
@@ -148,7 +129,53 @@ class Order extends \Eloquent {
         });
     }
     
-   
+    
+    public function sendOrderConfEmailToCustomer($user, $cashier)
+    {   
+        # OD
+        if ($this->order_type == 1)
+            $subject = 'Your Bento Order';
+        # OA
+        elseif ($this->order_type == 2)
+            $subject = 'Your Scheduled Bento Delivery';
+        # default
+        else
+            $subject = 'Your Bento Order';
+        
+        
+        // Send the order confirmation email
+        Mail::send('emails.transactional.order_confirmation', array(
+            'order' => $this, 
+            #'orderJson' => $orderJson, 
+            'user' => $user,
+            #'bentoBoxes' => $bentoBoxes,
+            'cashier' => $cashier,
+            ), 
+            function($message) use ($user, $subject)
+            {
+                $message->from('help@bentonow.com', 'Bento');
+                $message->to($user->email)->subject($subject);
+            }
+        );
+    }
+    
+    
+    public function getScheduledDateStr($format = 'M jS Y')
+    {
+        return Carbon::parse($this->scheduled_window_start, $this->scheduled_timezone)->format($format);
+    }
+    
+    
+    public function getScheduledTimeWindowStr()
+    {
+        $start = Carbon::parse($this->scheduled_window_start, $this->scheduled_timezone)->format('g:i');
+        $end = Carbon::parse($this->scheduled_window_end, $this->scheduled_timezone)->format('g:ia');
+        
+        $start = str_replace(':00', '', $start);
+        $end = str_replace(':00', '', $end);
+        
+        return "{$start}-{$end}";
+    }
     
         
 }

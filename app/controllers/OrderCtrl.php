@@ -459,10 +459,11 @@ class OrderCtrl extends \BaseController {
         isset($orderJson->Eta->min) ? $order->eta_min = $orderJson->Eta->min : '';
         isset($orderJson->Eta->max) ? $order->eta_max = $orderJson->Eta->max : '';
         
+        $order->order_type = $orderJson->order_type; # Is defaulted to 1, above.
+        
         // ** Order Ahead / Scheduled delivery stuff
-        if ( isset($orderJson->order_type) && $orderJson->order_type == 2 )
+        if ($orderJson->order_type == 2)
         {
-            $order->order_type = $orderJson->order_type;
             $order->fk_Kitchen = $orderJson->kitchen;
             $order->fk_OrderAheadZone = $orderJson->OrderAheadZone;
             $order->for_date = $orderJson->for_date;
@@ -579,18 +580,7 @@ class OrderCtrl extends \BaseController {
         
         
         // Send an order confirmation email
-        Mail::send('emails.transactional.order_confirmation', array(
-            'order' => $order, 
-            #'orderJson' => $orderJson, 
-            'user' => $user,
-            #'bentoBoxes' => $bentoBoxes,
-            'cashier' => $cashier,
-            ), 
-            function($message) use ($user)
-            {
-                $message->from('help@bentonow.com', 'Bento');
-                $message->to($user->email)->subject("Your Bento Order");
-            });
+        $order->sendOrderConfEmailToCustomer($user, $cashier);
         
         
         // Set the user as now having ordered, if they haven't

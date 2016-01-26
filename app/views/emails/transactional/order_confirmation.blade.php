@@ -1,3 +1,37 @@
+<?php
+
+
+
+// OD vs OA txt
+
+# Defaults
+$txtThanks = 'scheduling';
+$txtEnroute = "On the day of delivery, once your order is en route, we'll send you text message updates along the way. Enjoy your meal, and please feel free to reply directly to this email with any feedback.";
+
+
+# OD
+if ($order->order_type == 1) 
+{
+    $txtThanks = 'ordering';
+    $txtEnroute = "Once your order is en route, we'll send you text message updates. Enjoy your meal, and please feel free to reply directly to this email with any feedback.";
+}
+# OA
+else if ($order->order_type == 2) 
+{
+    # Use some defaults
+    # --
+    
+    $txtSchedDate = $order->getScheduledDateStr('l M jS');
+    $txtSchedWindow = $order->getScheduledTimeWindowStr();
+    
+    $txtWhen = "$txtSchedDate, $txtSchedWindow";
+}
+
+
+
+
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -111,7 +145,7 @@
 				<!-- block -->
 				<tr>
 					<td mc:edit="block-02" class="textblock-01" style="padding: 23px 10px 28px; font: 28px/32px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="center" bgcolor="#ffffff">
-						Hi {{$user->firstname}}. Thanks for ordering Bento!
+						Hi {{$user->firstname}}. Thanks for {{$txtThanks}} Bento!
 					</td>
 				</tr>
 				<!-- block -->
@@ -137,6 +171,14 @@
 				<tr>
 					<td height="1" style="font-size: 0; line-height: 0;" bgcolor="#fdfdfd">&nbsp;</td>
 				</tr>
+                                <?php if ($order->order_type == 2): ?>
+				<!-- block -->
+				<tr>
+					<td mc:edit="block-04" class="address-01" style="padding: 25px 30px 26px; font: 25px/25px Arial, Verdana, Helvetica, sans-serif; color: #a1a7ad; border-bottom: 1px solid #d7dbdb;" bgcolor="#ffffff">
+						When: {{$txtWhen}}
+					</td>
+				</tr>
+                                <?php endif; ?>
 				<!-- block -->
 				<tr>
 					<td mc:edit="block-04" class="address-01" style="padding: 25px 30px 26px; font: 25px/25px Arial, Verdana, Helvetica, sans-serif; color: #a1a7ad; border-bottom: 1px solid #d7dbdb;" bgcolor="#ffffff">
@@ -159,8 +201,7 @@
 								<td mc:edit="block-06" class="textblock-02" style="padding: 0 0 0px; font: 18px/22px Arial, Verdana, Helvetica, sans-serif; color: #4e5863;" align="left">
 									If anything is incorrect, please reply to this email or give us a call: <a style="text-decoration:none; color:#4e5863;" href="tel:415-300-1332">(415) 300-1332</a>.<br>
 									<br>
-									Once your order is en route, we'll send you text message updates. 
-  									Enjoy your meal, and please feel free to reply directly to this email with any feedback.<br>
+									{{$txtEnroute}}<br>
 								</td>
 							</tr>
 						</table>

@@ -37,7 +37,7 @@ class GatekeeperCtrlTest extends TestCase {
         
         // And I have no service
         $this->assertEquals($json->hasService, false);
-        $this->assertEquals($json->AvailableServices, []);
+        $this->assertEquals($json->AvailableServices, new \stdClass() );
     }
     
     
@@ -59,7 +59,7 @@ class GatekeeperCtrlTest extends TestCase {
         
         // And I have no service
         $this->assertEquals($json->hasService, false);
-        $this->assertEquals($json->AvailableServices, []);
+        $this->assertEquals($json->AvailableServices, new \stdClass() );
     }
     
     

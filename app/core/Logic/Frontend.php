@@ -17,6 +17,9 @@ use Route;
  */
 class Frontend {
 
+    
+    private static $odEncourageOa = 'Schedule a delivery below.';
+    
     /*
      * See also: https://github.com/bentocorp/backend/wiki/Logic:-appState-Decision-Tree
      * 

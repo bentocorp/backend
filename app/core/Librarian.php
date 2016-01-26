@@ -2,6 +2,7 @@
 
 
 use Bento\Timestamp\Clock;
+use Bento\Model\Order;
 use DB;
 use Carbon\Carbon;
 
@@ -46,10 +47,12 @@ class Librarian {
         
         foreach ($data as $row) 
         {
+            $order = new Order(NULL);
+            $order->fillMe($row);
             $item = new \stdClass();
             
-            $item->title = self::getTitleForApp($row, 'InProgress');
-            $item->price = '$'.$row->amount;
+            $item->title = self::getTitleForApp($order, 'InProgress');
+            $item->price = '$'.$order->amount;
             
             $items[] = $item;
         }
@@ -92,10 +95,15 @@ class Librarian {
         
         foreach ($data as $row) 
         {
+            #var_dump($row); #0
+            $order = new Order(NULL);
+            $order->fillMe($row);
+            #var_dump($order); #0
+            #die(); #0
             $item = new \stdClass();
             
-            $item->title = self::getTitleForApp($row, 'Upcoming');
-            $item->price = '$'.$row->amount;
+            $item->title = self::getTitleForApp($order, 'Upcoming');
+            $item->price = '$'.$order->amount;
             
             $items[] = $item;
         }
@@ -125,10 +133,12 @@ class Librarian {
         
         foreach ($data as $row) 
         {
+            $order = new Order(NULL);
+            $order->fillMe($row);
             $item = new \stdClass();
             
-            $item->title = self::getTitleForApp($row, 'Delivered');
-            $item->price = '$'.$row->amount;
+            $item->title = self::getTitleForApp($order, 'Delivered');
+            $item->price = '$'.$order->amount;
             
             $items[] = $item;
         }
@@ -160,10 +170,9 @@ class Librarian {
                 return 'Arriving Shortly';
             else if ($row->order_type == 2)
             {
-                $start = Carbon::parse($row->scheduled_window_start, Clock::getTimezone())->format('g:i');
-                $end = Carbon::parse($row->scheduled_window_end, Clock::getTimezone())->format('g:ia');
+                $window = $row->getScheduledTimeWindowStr();
                 
-                return "Arriving soon, from {$start}-{$end}";
+                return "Arriving soon, from $window";
             }
         }
         
@@ -186,16 +195,15 @@ class Librarian {
                     $when = 'Tomorrow';
                 // Later
                 else {
-                    $carbon = Carbon::parse($row->scheduled_window_start, Clock::getTimezone());
+                    $carbon = Carbon::parse($row->scheduled_window_start, $row->scheduled_timezone);
                     $diff = $carbon->diffForHumans();
                     $date = $carbon->format('D M jS');
                     $when = "In $diff, $date,";
                 }
                 
-                $start = Carbon::parse($row->scheduled_window_start, Clock::getTimezone())->format('g:i');
-                $end = Carbon::parse($row->scheduled_window_end, Clock::getTimezone())->format('g:ia');
+                $window = $row->getScheduledTimeWindowStr();
                 
-                return "$when {$start}-{$end}";
+                return "$when $window";
             }
         }
         
@@ -212,10 +220,10 @@ class Librarian {
             else if ($row->order_type == 2)
             {
                 $when = Carbon::parse($row->scheduled_window_start, $row->scheduled_timezone)->format('M jS Y');
-                $start = Carbon::parse($row->scheduled_window_start, Clock::getTimezone())->format('g:i');
-                $end = Carbon::parse($row->scheduled_window_end, Clock::getTimezone())->format('g:ia');
                 
-                return "$when, {$start}-{$end}";
+                $window = $row->getScheduledTimeWindowStr();
+                
+                return "$when, $window";
             }
         }
     }
