@@ -90,14 +90,63 @@ class Librarian {
             )
         ";
         $data = DB::select($sql, array($pk_User, $pk_User));
-
+        #var_dump($data); die(); #0
+        
+        
         $items = array();
         
-        foreach ($data as $row) 
+        // OD
+        $sql1 = "
+            # Get Upcoming Orders, OD on top
+            select * 
+            #select 
+                    #o.created_at utc_created_at, o.order_type, os.status, po.order_json
+            from `Order` o
+            left join OrderStatus os on (os.fk_Order = o.pk_Order)
+            left join PendingOrder po on (po.fk_Order = o.pk_Order)
+            where os.status IN ('Open')
+                    AND o.fk_User = ? AND o.order_type = 1
+            order by o.created_at desc
+        ";
+        $data1 = DB::select($sql1, array($pk_User));
+        #var_dump($data); die(); #0
+        
+        foreach ($data1 as $row1) 
         {
             #var_dump($row); #0
             $order = new Order(NULL);
-            $order->fillMe($row);
+            $order->fillMe($row1);
+            #var_dump($order); #0
+            #die(); #0
+            $item = new \stdClass();
+            
+            $item->title = self::getTitleForApp($order, 'Upcoming');
+            $item->price = '$'.$order->amount;
+            
+            $items[] = $item;
+        }
+        
+        
+        // OA
+        $sql2 = "
+            select * 
+            #select 
+                    #o.created_at utc_created_at, o.order_type, os.status, po.order_json
+            from `Order` o
+            left join OrderStatus os on (os.fk_Order = o.pk_Order)
+            left join PendingOrder po on (po.fk_Order = o.pk_Order)
+            where os.status IN ('Open')
+                    AND o.fk_User = ? AND o.order_type > 1
+            order by o.scheduled_window_start asc
+        ";
+        $data2 = DB::select($sql2, array($pk_User));
+        #var_dump($data); die(); #0
+        
+        foreach ($data2 as $row2) 
+        {
+            #var_dump($row); #0
+            $order = new Order(NULL);
+            $order->fillMe($row2);
             #var_dump($order); #0
             #die(); #0
             $item = new \stdClass();
@@ -123,7 +172,7 @@ class Librarian {
             left join OrderStatus os on (os.fk_Order = o.pk_Order)
             left join PendingOrder po on (po.fk_Order = o.pk_Order)
             where os.status IN ('Delivered')
-                            AND o.fk_User = ?
+                    AND o.fk_User = ?
             order by sortable_date desc
             limit 5
         ";
