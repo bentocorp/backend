@@ -12,8 +12,18 @@ use View;
 
 class OrderCtrl extends \BaseController {
     
+    private $data = array();
+    
+    
+    public function __construct() {
+        // Nav
+        $this->data['nav3'] = true;
+    }
+    
     
     public function getIndex() {
+        
+        $data = $this->data;
         
         // Get open orders
         $openOrders = Orders::getOpenOrders();

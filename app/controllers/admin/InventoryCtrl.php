@@ -15,6 +15,9 @@ class InventoryCtrl extends \BaseController {
         
         $data = array();
         
+        // Nav
+        $data['nav2'] = true;
+        
         // Get today's menu
         // (performed in the view-composer)
 

@@ -12,8 +12,18 @@ use Route;
 
 class DriverCtrl extends AdminBaseController {
     
+    private $data = array();
+    
+    
+    public function __construct() {
+        // Nav
+        $this->data['nav6'] = true;
+    }
+    
     
     public function getIndex() {
+        
+        $data = $this->data;
         
         // Get drivers
         $drivers = Driver::all();

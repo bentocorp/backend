@@ -475,10 +475,10 @@ class OrderCtrl extends \BaseController {
             $locEndDatetime = "$orderJson->for_date $orderJson->scheduled_window_end";
             
             // Local
-            $order->for_date = $orderJson->for_date;
+            #$order->for_date = $orderJson->for_date; # (Useless)
             $order->scheduled_window_start = $locStartDatetime;
             $order->scheduled_window_end = $locEndDatetime;
-            // Utc
+            // UTC
             $order->utc_scheduled_window_start = Carbon::parse($locStartDatetime, $kitchen->tzName)->tz('UTC')->toDateTimeString();
             $order->utc_scheduled_window_end = Carbon::parse($locEndDatetime, $kitchen->tzName)->tz('UTC')->toDateTimeString();
             

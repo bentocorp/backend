@@ -11,9 +11,18 @@ use Redirect;
 
 class MiscCtrl extends \BaseController {
 
+    private $data = array();
+    
+    
+    public function __construct() {
+        // Nav
+        $this->data['nav9'] = true;
+    }
+    
+    
     public function getIoscopy() {
         
-        $data = array();
+        $data = $this->data;
         
         $iosCopy = DB::select('SELECT * FROM admin_ios_copy order by `key` asc', array());
         $data['iosCopy'] = $iosCopy;

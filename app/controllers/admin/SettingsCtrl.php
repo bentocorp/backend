@@ -10,9 +10,18 @@ use Redirect;
 
 class SettingsCtrl extends \BaseController {
 
+    private $data = array();
+    
+    
+    public function __construct() {
+        // Nav
+        $this->data['nav10'] = true;
+    }
+    
+    
     public function getIndex() {
         
-        $data = array();
+        $data = $this->data;
         $settingsHash = array();
         
         $settings = Settings::all();

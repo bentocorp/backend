@@ -17,6 +17,9 @@ class DashboardCtrl extends \BaseController {
         
         $data = array();
                 
+        // Nav
+        $data['nav1'] = true;
+        
         // Get open orders
         $openOrders = Orders::getOpenOrders();
         $data['openOrders'] = $openOrders;

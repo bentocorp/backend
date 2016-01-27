@@ -14,9 +14,18 @@ use Redirect;
 
 class MenuCtrl extends \BaseController {
 
+    private $data = array();
+    
+    
+    public function __construct() {
+        // Nav
+        $this->data['nav5'] = true;
+    }
+    
+    
     public function getIndex() {
         
-        $data = array();
+        $data = $this->data;
         
         // Menu date
         $date = Menu::getDateForTodaysMenu();

@@ -10,9 +10,18 @@ use Redirect;
 
 class DishCtrl extends \BaseController {
 
+    private $data = array();
+    
+    
+    public function __construct() {
+        // Nav
+        $this->data['nav11'] = true;
+    }
+    
+    
     public function getIndex() {
         
-        $data = array();
+        $data = $this->data;
                 
         // Get dishes
         $dishes = Dish::orderby('type', 'asc')->orderBy('name', 'asc')->whereIn('type', array('main','side'))->get();
