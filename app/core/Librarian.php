@@ -63,35 +63,11 @@ class Librarian {
     
     public static function getUpcoming($pk_User)
     {
-        $sql = "
-            (
-            # Get Upcoming Orders, OD on top
-            select * 
-            #select 
-                    #o.created_at utc_created_at, o.order_type, os.status, po.order_json
-            from `Order` o
-            left join OrderStatus os on (os.fk_Order = o.pk_Order)
-            left join PendingOrder po on (po.fk_Order = o.pk_Order)
-            where os.status IN ('Open')
-                    AND o.fk_User = ? AND o.order_type = 1
-            order by o.created_at desc
-            )
-            UNION
-            (
-            select * 
-            #select 
-                    #o.created_at utc_created_at, o.order_type, os.status, po.order_json
-            from `Order` o
-            left join OrderStatus os on (os.fk_Order = o.pk_Order)
-            left join PendingOrder po on (po.fk_Order = o.pk_Order)
-            where os.status IN ('Open')
-                    AND o.fk_User = ? AND o.order_type > 1
-            order by o.scheduled_window_start asc
-            )
-        ";
-        $data = DB::select($sql, array($pk_User, $pk_User));
-        #var_dump($data); die(); #0
-        
+        /*
+         * We'll query OD and OA separately, because a UNION returns a random ordering
+         * of each subset, thus making it useless here.
+         * More: http://stackoverflow.com/questions/8685168/mysql-order-by-with-union-doesnt-seem-to-work
+         */
         
         $items = array();
         
