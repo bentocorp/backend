@@ -86,7 +86,7 @@ class Librarian {
             left join PendingOrder po on (po.fk_Order = o.pk_Order)
             where os.status IN ('Open')
                     AND o.fk_User = ? AND o.order_type > 1
-            order by o.created_at desc
+            order by o.scheduled_window_start asc
             )
         ";
         $data = DB::select($sql, array($pk_User, $pk_User));
@@ -214,7 +214,7 @@ class Librarian {
             if ($row->order_type == 1)
             {
                 $when = Carbon::parse($row->order_created_at, 'UTC')->tz(Clock::getTimezone())->format('M jS Y');
-                return "ASAP on $when";
+                return "$when, ASAP";
             }
             // Order Ahead
             else if ($row->order_type == 2)

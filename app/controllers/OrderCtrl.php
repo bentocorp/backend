@@ -19,6 +19,7 @@ use Input;
 use Mail;
 use Queue;
 use Stripe; use Stripe_Charge; use Stripe_Customer;
+use Carbon\Carbon;
 
 
 class OrderCtrl extends \BaseController {
@@ -464,16 +465,27 @@ class OrderCtrl extends \BaseController {
         // ** Order Ahead / Scheduled delivery stuff
         if ($orderJson->order_type == 2)
         {
-            $order->fk_Kitchen = $orderJson->kitchen;
-            $order->fk_OrderAheadZone = $orderJson->OrderAheadZone;
-            $order->for_date = $orderJson->for_date;
-            $order->scheduled_window_start = "$orderJson->for_date $orderJson->scheduled_window_start";
-            $order->scheduled_window_end = "$orderJson->for_date $orderJson->scheduled_window_end";
-            $order->fk_Menu = $orderJson->MenuId;
-            
             // Use the kitchen's timezone
             $kitchen = Kitchen::find($orderJson->kitchen);
             $order->scheduled_timezone = $kitchen->tzName;
+            
+            // Date/time stuff
+            
+            $locStartDatetime = "$orderJson->for_date $orderJson->scheduled_window_start";
+            $locEndDatetime = "$orderJson->for_date $orderJson->scheduled_window_end";
+            
+            // Local
+            $order->for_date = $orderJson->for_date;
+            $order->scheduled_window_start = $locStartDatetime;
+            $order->scheduled_window_end = $locEndDatetime;
+            // Utc
+            $order->utc_scheduled_window_start = Carbon::parse($locStartDatetime, $kitchen->tzName)->tz('UTC')->toDateTimeString();
+            $order->utc_scheduled_window_end = Carbon::parse($locEndDatetime, $kitchen->tzName)->tz('UTC')->toDateTimeString();
+            
+            // the rest...
+            $order->fk_Kitchen = $orderJson->kitchen;
+            $order->fk_OrderAheadZone = $orderJson->OrderAheadZone;
+            $order->fk_Menu = $orderJson->MenuId;
         }
         // Default TZ for OD service (actually, let's just leave it to NULL)
         #else if ( (isset($orderJson->order_type) && $orderJson->order_type == 1) || !isset($orderJson->order_type) )

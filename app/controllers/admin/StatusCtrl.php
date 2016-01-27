@@ -55,7 +55,16 @@ class StatusCtrl extends \BaseController {
     }
     
     
+    /**
+     * ONLY FOR ON DEMAND!!!
+     * 
+     * @return Back to admin
+     */
     public function getReset() {
+        
+        ####
+        # Only for On Demand!
+        ####
         
         // Clear LiveInventory
         DB::delete('delete from LiveInventory');
@@ -64,12 +73,31 @@ class StatusCtrl extends \BaseController {
         DB::delete('delete from DriverInventory');
         
         // Take all drivers off shift
-         DB::update('update Driver set on_shift = 0, order_queue = NULL', array());
+         DB::update('update Driver set on_shift = 0, order_queue = NULL WHERE on_shift = 1', array());
 
+         
         // Close any open Orders
-        DB::update('update OrderStatus set `status` = "Delivered" where `status` IN (?,?,?) AND (fk_Driver IS NOT NULL AND fk_Driver > 0)', array('Open', 'En Route', 'Assigned'));
-        DB::update('update OrderStatus set `status` = "Cancelled" where `status` IN (?,?,?) AND (fk_Driver IS NULL OR fk_Driver <= 0)', array('Open', 'En Route', 'Assigned'));
+        DB::update('
+            update OrderStatus os 
+            left join `Order` o on (os.fk_Order = o.pk_Order) 
+            set os.`status` = "Delivered" 
+            where 
+                os.`status` IN (?,?,?) AND (os.fk_Driver IS NOT NULL AND os.fk_Driver > 0) 
+                AND o.order_type = 1 
+            ', 
+            array('Open', 'En Route', 'Assigned'));
+        
+        DB::update('
+            update OrderStatus os 
+            left join `Order` o on (os.fk_Order = o.pk_Order) 
+            set os.`status` = "Cancelled" 
+            where 
+                os.`status` IN (?,?,?) AND (os.fk_Driver IS NULL OR os.fk_Driver <= 0) 
+                AND o.order_type = 1 
+            ', 
+            array('Open', 'En Route', 'Assigned'));
 
+        
         // Close any open generic_Orders
         DB::update('update generic_Order set `status` = "Delivered" where `status` IN (?,?,?) AND (fk_Driver IS NOT NULL AND fk_Driver > 0)', array('Open', 'En Route', 'Assigned'));
         DB::update('update generic_Order set `status` = "Cancelled" where `status` IN (?,?,?) AND (fk_Driver IS NULL OR fk_Driver <= 0)', array('Open', 'En Route', 'Assigned'));

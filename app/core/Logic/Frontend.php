@@ -17,7 +17,7 @@ use Route;
  */
 class Frontend {
 
-    
+    // Was thinking of appneing this when OD isn't available, but haven't.
     private static $odEncourageOa = 'Schedule a delivery below.';
     
     /*
