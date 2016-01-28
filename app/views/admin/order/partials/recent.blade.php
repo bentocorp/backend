@@ -7,6 +7,7 @@ use Bento\app\Bento;
 use Bento\Model\OrderItem;
 use Bento\core\Util\NumUtil; # This is actually used. The editor doesn't understand it in {{}}
 use Bento\Order\OrderType;
+use Carbon\Carbon;
 
 
 
@@ -28,7 +29,7 @@ if ($recentOrderQty > 0):
         <th>id</th>
         <th>Customer</th>
         <th>Address</th>
-        <th style="width:157px;"><small>Created</small> /<br><small>ETA Promise</small> /<br><small>Completed</small></th>
+        <th style="width:157px;"><small>Created</small> <br><small>ETA Promise</small> <br><small>Completed</small> <br><small>Duration</small></th>
         <th style="text-align:center;">Status</th>
         <th>Driver</th>
       </tr>
@@ -67,7 +68,29 @@ if ($recentOrderQty > 0):
                     <th scope="row">{{ $row->pk_Order }}<br>{{$orderType}}</th>
                     <td><?php echo $trak_alert?>{{ $user_name }} <br>{{ $row->user_phone }} <br><small>${{$row->amount}} {{$row->fk_Coupon}}</small></td>
                     <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}<br><small>{{ $row->user_email }}</small></td>
-                    <td><small class="utcToLoc">{{$row->order_created_at}}</small> <br><small>{{$row->eta_min}}-{{$row->eta_max}}mins.</small> <br><small class="utcToLoc">{{$row->order_updated_at}}</small></td>
+                    <td>
+                        <?php
+                        $created = Carbon::parse($row->order_created_at, 'UTC');
+                        $completed = Carbon::parse($row->order_updated_at, 'UTC');
+                        $durationDiff = $created->diff($completed);
+                        $duration = $durationDiff->format('%hhrs %imins');
+                        
+                        $durationStyle = 'style="background-color:#5cb85c"';
+                        
+                        // Was it late?
+                        $durationHours = $durationDiff->format('%h');
+                        $durationMins = $durationDiff->format('%i');
+                        $durationHoursAsMins = $durationHours*60;
+                        $durationTotal = $durationHoursAsMins + $durationMins;
+                        
+                        if ($durationTotal > $row->eta_max)
+                            $durationStyle = 'style="background-color:#d9534f"';
+                        ?>
+                        <small class="utcToLoc">{{$row->order_created_at}}</small> 
+                        <br><small>{{$row->eta_min}}-{{$row->eta_max}}mins.</small> 
+                        <br><small class="utcToLoc">{{$row->order_updated_at}}</small>
+                        <br><small><span class="badge" {{$durationStyle}}>{{$duration}}</span></small>
+                    </td>
                     <td align="center">
                         <?php echo $row->status;?><br>
                     </td>
