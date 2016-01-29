@@ -136,7 +136,7 @@ class Frontend {
         if (Status::isOpen()) 
         {
             $widget->selected = true;
-            $widget->title = "Today's $cmtNameCap";
+            $widget->title = "Today's $cmtNameCap (ASAP)";
             $widget->text = $nowAvail;
             $widget->menuPreview = NULL;
             $widget->mealMode = $cmtName;
