@@ -149,7 +149,7 @@ class Frontend {
             // IF soldout: "{Sold out text}"
             if (Status::isSoldout())
             {
-                $widget->title = "Today's $cmtNameCap";
+                $widget->title = "Today's $cmtNameCap (sold out)";
                 $widget->text = AppCopy::getValue('sold-out-text');
                 
                 // Include the menu to preview back to the frontend
@@ -195,7 +195,7 @@ class Frontend {
                         $openingAt = Carbon::createFromFormat('U', $nextFive, 'UTC')->setTimezone(Clock::getTimezone())->format('g:ia');
                     }
                      
-                    $widget->title = "Today's $cmtNameCap";
+                    $widget->title = "Today's $cmtNameCap (opening soon)";
                     $widget->text ="Opening at $openingAt for on-demand service.";
                     $widget->menuPreview = $instance->menus->$mealName;
                 }
