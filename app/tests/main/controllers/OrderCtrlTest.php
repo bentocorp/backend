@@ -1345,7 +1345,8 @@ DATA;
                             "unit_price": 12.00,
                             "items": [
                                 {"id": 1, "type": "main"},
-                                {"id": 2, "type": "side1"}
+                                {"id": 2, "type": "side1"},
+                                {"id": 3, "type": "side2"}
                             ]
                         },
                         {
@@ -1402,6 +1403,7 @@ DATA;
         DB::table('MenuInventory')->truncate();
         DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(1, 100));
         DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(2, 100));
+        DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(3, 0)); # And we don't care about neg
         DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(20, 100));
         DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(21, 100));
         
@@ -1419,6 +1421,7 @@ DATA;
         
         $this->assertEquals(98, $miIdx[1]->qty);
         $this->assertEquals(98,  $miIdx[2]->qty);
+        $this->assertEquals(-1,  $miIdx[3]->qty); # And we don't care about neg
         $this->assertEquals(95,  $miIdx[20]->qty);
         $this->assertEquals(93,  $miIdx[21]->qty);
     }
