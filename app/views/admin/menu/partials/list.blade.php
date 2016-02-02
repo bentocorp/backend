@@ -9,8 +9,8 @@ if ($menuList !== NULL): ?>
     <thead>
       <tr>
         <th style="width:90px">For Date</th>
+        <th style="width:170px;">Name</th>
         <th>Meal</th>
-        <th>Name</th>
         <th>Type</th>
         <th>Created</th>
         <th>Modified</th>
@@ -35,8 +35,8 @@ if ($menuList !== NULL): ?>
         
         echo "<tr>";
             echo "<th>$menu->for_date</th>";
-            echo "<td><cap>$menu->meal_name</cap></td>";
             echo "<td><a href='/admin/menu/edit/{$menu->pk_Menu}'>$menuName</a></td>";
+            echo "<td><cap>$menu->meal_name</cap></td>";
             echo "<td>$menu->menu_type $isOd $isOa</td>";
             echo "<td>$menu->created_at</td>";
             echo "<td>$menu->updated_at</td>";
@@ -47,6 +47,8 @@ if ($menuList !== NULL): ?>
             }
             if (count($compoundMenu['MenuItems']) == 0)
                 echo "<span class='label label-warning'>Warning</span> <b>No menu items for this menu!</b>";
+            if ($isOa != '')
+                echo "<br>OA Times: $menu->oa_times";
             echo '<br><br>';
         echo "</td></tr>";
     }?>

@@ -1,6 +1,8 @@
 <?php
 
 #use User;
+use Bento\core\Util\DbUtil;
+
 
 class OrderCtrlTest extends TestCase {
 
@@ -1353,6 +1355,13 @@ DATA;
                                 {"id": 1, "type": "main"},
                                 {"id": 2, "type": "side1"}
                             ]
+                        },
+                        {
+                            "item_type": "AddonList",
+                            "items": [
+                                {"id": 20,  "qty": 5, "unit_price": 3.75},
+                                {"id": 21,  "qty": 7, "unit_price": 2.75}
+                            ]
                         }
                     ],
                     "OrderDetails": {
@@ -1390,10 +1399,11 @@ DATA;
         );
         
         // and enough inventory for the order,
-        #DB::table('LiveInventory')->truncate();
-        #DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(1, 100));
-        #DB::insert('insert into LiveInventory (fk_item, qty) values (?, ?)', array(2, 100));
-        
+        DB::table('MenuInventory')->truncate();
+        DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(1, 100));
+        DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(2, 100));
+        DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(20, 100));
+        DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(21, 100));
         
         
         // When I attempt to order
@@ -1402,6 +1412,15 @@ DATA;
         // Then I get ok
         $this->assertResponseStatus(200);
         
+        
+        // And the inventory was deducted properly
+        $mi = DB::select('select * from MenuInventory');
+        $miIdx = DbUtil::makeIndexFromResults($mi, 'fk_item');
+        
+        $this->assertEquals(98, $miIdx[1]->qty);
+        $this->assertEquals(98,  $miIdx[2]->qty);
+        $this->assertEquals(95,  $miIdx[20]->qty);
+        $this->assertEquals(93,  $miIdx[21]->qty);
     }
     
 }

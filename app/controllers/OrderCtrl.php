@@ -468,6 +468,7 @@ class OrderCtrl extends \BaseController {
             // Use the kitchen's timezone
             $kitchen = Kitchen::find($orderJson->kitchen);
             $order->scheduled_timezone = $kitchen->tzName;
+            $orderJson->scheduled_timezone = $kitchen->tzName; # Send to queue too
             
             // Date/time stuff
             

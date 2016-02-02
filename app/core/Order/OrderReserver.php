@@ -57,49 +57,65 @@ class OrderReserver {
                 #$this->fail();
                 #$this->response->setStatusCode(410);
                 
-                // Real
-                $this->success();
-                return $this->response;
-            }
+                // Real 
+
+                $cashier = new Cashier($this->orderJsonObj, $this->pendingOrder->pk_PendingOrder, $this->pendingOrder->fk_Order);
+                $totals = $cashier->getTotalsHash();
                 
-            // ## At this point, we're sure that there isn't a duplicate order,
-            // so let's continue trying to process the order.
-
-            /* First calculate the totals */
-            $cashier = new Cashier($this->orderJsonObj, $this->pendingOrder->pk_PendingOrder, $this->pendingOrder->fk_Order);
-            $totals = $cashier->getTotalsHash();
-
-            /* Next, try to reserve the totals
-             * 
-             * The DB is set to an unsigned int, so it cannot become negative.
-             * We wrap each deduction in a transaction, and if any of them fail, we know
-             * that we don't have enough inventory to complete this order.
-             */
-            try {
                 DB::transaction(function() use ($totals)
                 {
                     foreach ($totals as $itemId => $itemQty) {
-                      DB::update("update LiveInventory set qty = qty - ? WHERE fk_item = ?", array($itemQty, $itemId));
+                      DB::update("update MenuInventory set qty = qty - ? WHERE fk_item = ?", array($itemQty, $itemId));
                     }
                 });
-            }
-            // There's not enough OD inventory
-            catch(QueryException $e) {
-                // Hard delete the pending order. We don't need it.
-                $this->fail();
-
-                $this->response->setStatusCode(410);
-
+                
+                // ## Success! Everything is good.
+                $this->success();
+                
                 return $this->response;
             }
+            // Otherwise, it's OD
+            else 
+            {
+                // ## At this point, we're sure that there isn't a duplicate order,
+                // so let's continue trying to process the order.
 
-            // ## We had enough inventory for this order.
+                /* First calculate the totals */
+                $cashier = new Cashier($this->orderJsonObj, $this->pendingOrder->pk_PendingOrder, $this->pendingOrder->fk_Order);
+                $totals = $cashier->getTotalsHash();
 
-            // ## Success! Everything is good.
-            $this->success();
+                /* Next, try to reserve the totals
+                 * 
+                 * The DB is set to an unsigned int, so it cannot become negative.
+                 * We wrap each deduction in a transaction, and if any of them fail, we know
+                 * that we don't have enough inventory to complete this order.
+                 */
+                try {
+                    DB::transaction(function() use ($totals)
+                    {
+                        foreach ($totals as $itemId => $itemQty) {
+                          DB::update("update LiveInventory set qty = qty - ? WHERE fk_item = ?", array($itemQty, $itemId));
+                        }
+                    });
+                }
+                // There's not enough OD inventory
+                catch(QueryException $e) {
+                    // Hard delete the pending order. We don't need it.
+                    $this->fail();
 
-            // Return the response, which contains the PendingOrder
-            return $this->response;
+                    $this->response->setStatusCode(410);
+
+                    return $this->response;
+                }
+
+                // ## We had enough inventory for this order.
+
+                // ## Success! Everything is good.
+                $this->success();
+
+                // Return the response, which contains the PendingOrder
+                return $this->response;
+            }
         }
         catch(\Exception $e)
         {
