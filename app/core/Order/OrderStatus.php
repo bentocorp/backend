@@ -118,11 +118,8 @@ class OrderStatus {
                     ->where('fk_Order', $pk_Order)
                     ->update($update);
 
-            // IF on-demand, Update driver inventories based on this new assignment (if any)
-            $order = Order::find($pk_Order);
-            if ($order->order_type == 1) {
-                $this->updateDriverInventories($from, $to);
-            }
+            // Update driver inventories based on this new assignment (if any)
+            $this->updateDriverInventories($from, $to);
         });
     }
     
@@ -136,6 +133,11 @@ class OrderStatus {
     private function updateDriverInventories($from, $to) {
         
         $pk_Order = $this->pk_Order;
+        
+        // Need to know order_type
+        // Only IF on-demand, update driver inventories based on this new assignment (if any)
+        // But still update their queues
+        $order = Order::find($pk_Order);
         
         /*
          * This is handled above by setDriver()
@@ -151,7 +153,8 @@ class OrderStatus {
         if ($from != NULL) 
         {
             $fromDriver = Driver::find($from);
-            $fromDriver->addOrderToInventory($pk_Order, false); // Already in a transaction
+            if ($order->order_type == 1) # OD only
+                $fromDriver->addOrderToInventory($pk_Order, false); // Already in a transaction
             $fromDriver->removeOrderFromQueue($pk_Order);
         }
         
@@ -160,7 +163,8 @@ class OrderStatus {
         if ($to != NULL) 
         {
             $toDriver = Driver::find($to);
-            $toDriver->subtractOrderFromInventory($pk_Order, false); // Already in a transaction
+            if ($order->order_type == 1) # OD only
+                $toDriver->subtractOrderFromInventory($pk_Order, false); // Already in a transaction
             
             if ($this->insertAt !== NULL) 
                 $toDriver->addOrderToQueue($pk_Order, $this->insertAt);
