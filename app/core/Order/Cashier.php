@@ -111,6 +111,11 @@ class Cashier {
         // Order Number
         $orderStr .= "Order #{$this->pk_Order}: \\n\\n";
         
+        // Delivery Window
+        if ($this->orderJsonObj->order_type == 2) {
+            $orderStr .= "Delivery Window: {$this->orderJsonObj->scheduled_window_start} - {$this->orderJsonObj->scheduled_window_end} \\n\\n";
+        }
+        
         // Summary
         $orderStr .= "Summary Checklist: \\n";
         $orderStr .= "%summary% \\n";
