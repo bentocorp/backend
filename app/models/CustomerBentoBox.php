@@ -38,6 +38,7 @@ class CustomerBentoBox extends \Eloquent {
             left join User u on (u.pk_User = o.fk_User)
             where cbb.created_at >= ? AND cbb.created_at <= ?
                AND status != 'Cancelled'
+               AND o.order_type = 1
             order by created_at asc
         ";
         
