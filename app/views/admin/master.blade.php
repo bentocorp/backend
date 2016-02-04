@@ -80,6 +80,7 @@ $mealModeName = $mealMode->name;
       </div>
     </div>
 
+    <!-- Existing Nav Count: 12 -->
     <div class="row">
         <div class="col-lg-2">
           <div id="sidebar">
@@ -102,6 +103,7 @@ $mealModeName = $mealMode->name;
             <ul class="nav nav-pills nav-stacked">
               <li role="presentation" {{ isset($nav5) ? 'class="active"' : '' }} ><a href="/admin/menu">Menus</a></li>
               <li role="presentation" {{ isset($nav11) ? 'class="active"' : '' }}><a href="/admin/dish">Dishes</a></li>
+              <li role="presentation" {{ isset($nav12) ? 'class="active"' : '' }}><a href="/admin/kitchen/oascreen">OA Screen</a></li>
               <!-- <li role="presentation"><a href="/admin/preplog">Prep Log</a></li> -->
             </ul>
 

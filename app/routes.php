@@ -150,6 +150,8 @@ Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
     Route::controller('settings', 'Bento\Admin\Ctrl\SettingsCtrl');
 
     Route::controller('reports', 'Bento\Admin\Ctrl\ReportsCtrl');
+    
+    Route::controller('kitchen', 'Bento\Admin\Ctrl\KitchenCtrl');
 
 }); // /End protected admin rotes
 
