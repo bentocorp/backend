@@ -26,7 +26,8 @@ class CustomerBentoBox extends \Eloquent {
                d2.`name` as side1_name, d2.pk_Dish as side1_id,
                d3.`name` as side2_name, d3.pk_Dish as side2_id,
                d4.`name` as side3_name, d4.pk_Dish as side3_id,
-               d5.`name` as side4_name,  d5.pk_Dish as side4_id
+               d5.`name` as side4_name,  d5.pk_Dish as side4_id,
+               o.order_type
             from CustomerBentoBox cbb
             left join Dish d1 on (cbb.fk_main = d1.pk_Dish)
             left join Dish d2 on (cbb.fk_side1 = d2.pk_Dish)
@@ -38,7 +39,7 @@ class CustomerBentoBox extends \Eloquent {
             left join User u on (u.pk_User = o.fk_User)
             where cbb.created_at >= ? AND cbb.created_at <= ?
                AND status != 'Cancelled'
-               AND o.order_type = 1
+               #AND o.order_type = 1
             order by created_at asc
         ";
         
