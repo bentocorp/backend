@@ -195,7 +195,7 @@ class Frontend {
                         $openingAt = Carbon::createFromFormat('U', $nextFive, 'UTC')->setTimezone(Clock::getTimezone())->format('g:ia');
                     }
                      
-                    $widget->title = "Today's $cmtNameCap (opening soon)";
+                    $widget->title = "Today's $mealName (opening soon)";
                     $widget->text ="Opening at $openingAt for on-demand service.";
                     $widget->menuPreview = $instance->menus->$mealName;
                 }

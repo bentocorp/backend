@@ -128,7 +128,7 @@ class Gatekeeper {
                     'kitchen' => $this->oaZone->fk_Kitchen ,
                     'zone' => $this->oaZone->pk_OrderAheadZone ,
                     'availableMenus' => $availableOaMenus ,
-                    'title' => 'Schedule a delivery',
+                    'title' => 'Schedule a future delivery',
                 );
             }
             else 
