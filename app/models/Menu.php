@@ -56,8 +56,9 @@ class Menu extends \Eloquent {
                     #IF(d.type != 'side', d.price, NULL) as price
                 FROM Menu_Item mi
                 LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)
+                left join DishTypeSort dts on (d.type = dts.type)
                 WHERE mi.fk_Menu = ? AND d.od_avail
-                order by d.type ASC, d.name ASC 
+                order by dts.sort ASC, d.sort ASC, d.name ASC 
             ";
             $menuItems = DB::select($sql2, array($pk_Menu));
             
