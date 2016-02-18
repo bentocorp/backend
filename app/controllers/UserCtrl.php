@@ -115,6 +115,7 @@ class UserCtrl extends \BaseController {
             "email" => $user->email,
             "phone" => $user->phone,
             "coupon_code" => $user->coupon_code,
+            "has_oa_subscription" => $user->has_oa_subscription,
         );
         
         return Response::json($return, 200);
