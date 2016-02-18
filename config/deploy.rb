@@ -53,7 +53,10 @@ namespace :deploy do
       # Your restart mechanism here, for example:
       # execute :touch, release_path.join('tmp/restart.txt')
       execute "touch #{deploy_to}/sanity-check.txt"
+
+      execute "sudo chmod -R 775 /sites/bento-backend"
       execute "cd #{release_path} && sudo chmod -R 775 app/storage"
+      
       execute "sudo service nginx reload && sudo service php5-fpm reload"
       #execute "cd #{release_path} && php composer.phar install"
       #execute "cd #{release_path}/build_scripts && phing stage"
