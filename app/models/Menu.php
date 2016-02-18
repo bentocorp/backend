@@ -60,6 +60,18 @@ class Menu extends \Eloquent {
                 order by d.type ASC, d.name ASC 
             ";
             $menuItems = DB::select($sql2, array($pk_Menu));
+            
+            // Get OA only Menu_Items so we can show them in this OD menu, and make people want to
+            // order OA instead (hopefully).
+            $sql3 = "
+                SELECT d.pk_Dish itemId, d.name, d.description, d.type, d.image1, d.max_per_order, d.price
+                    #IF(d.type != 'side', d.price, NULL) as price
+                FROM Menu_Item mi
+                LEFT JOIN Dish d on (mi.fk_item = d.pk_Dish)
+                WHERE mi.fk_Menu = ? AND NOT d.od_avail AND d.oa_avail
+                order by d.type ASC, d.name ASC 
+            ";
+            $menuItemsOA = DB::select($sql3, array($pk_Menu));
 
             // Setup the return
             
@@ -68,6 +80,9 @@ class Menu extends \Eloquent {
             $builtMenu['Menu'] = $menu;
             $builtMenu['MenuItems'] = $menuItems;
 
+            // Put the OA only stuff into a special place
+            $builtMenu['OAOnlyItems'] = $menuItemsOA;
+            
             // Create some friendly date text
             $carbon = new Carbon($menu->for_date);
             $builtMenu['Menu']->day_text = $carbon->format('l F jS');
