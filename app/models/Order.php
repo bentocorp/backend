@@ -93,12 +93,18 @@ class Order extends BaseModel {
             $i++;
         }
         
+        if ($where == '')
+            $where = 'd.on_shift = 1';
+        else
+            $where .= ' AND d.on_shift = 1 ';
+        
         $sql = "
         select * from (
-                SELECT fk_Driver, count(*) as `count`
-                FROM DriverInventory
+                SELECT di.fk_Driver, count(*) as `count`
+                FROM DriverInventory di
+                left join Driver d on (d.pk_Driver = di.fk_Driver)
                 where $where 
-                group by fk_Driver
+                group by di.fk_Driver
         ) t
         where t.count >= $n
         ";
