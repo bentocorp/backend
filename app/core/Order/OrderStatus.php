@@ -153,7 +153,7 @@ class OrderStatus {
         if ($from != NULL) 
         {
             $fromDriver = Driver::find($from);
-            if ($order->order_type == 1) # OD only
+            #if ($order->order_type == 1) # OD only (Actually, we need to deduct)
                 $fromDriver->addOrderToInventory($pk_Order, false); // Already in a transaction
             $fromDriver->removeOrderFromQueue($pk_Order);
         }
@@ -163,7 +163,7 @@ class OrderStatus {
         if ($to != NULL) 
         {
             $toDriver = Driver::find($to);
-            if ($order->order_type == 1) # OD only
+            #if ($order->order_type == 1) # OD only (Actually, we need to deduct)
                 $toDriver->subtractOrderFromInventory($pk_Order, false); // Already in a transaction
             
             if ($this->insertAt !== NULL) 
