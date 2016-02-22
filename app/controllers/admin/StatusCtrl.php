@@ -82,25 +82,30 @@ class StatusCtrl extends \BaseController {
             left join `Order` o on (os.fk_Order = o.pk_Order) 
             set os.`status` = "Delivered" 
             where 
-                os.`status` IN (?,?,?) AND (os.fk_Driver IS NOT NULL AND os.fk_Driver > 0) 
+                os.`status` IN (?,?,?,?) AND (os.fk_Driver IS NOT NULL AND os.fk_Driver > 0) 
                 AND o.order_type = 1 
             ', 
-            array('Open', 'En Route', 'Assigned'));
+            array('Open', 'En Route', 'Assigned', 'Arrived'));
         
         DB::update('
             update OrderStatus os 
             left join `Order` o on (os.fk_Order = o.pk_Order) 
             set os.`status` = "Cancelled" 
             where 
-                os.`status` IN (?,?,?) AND (os.fk_Driver IS NULL OR os.fk_Driver <= 0) 
+                os.`status` IN (?,?,?,?) AND (os.fk_Driver IS NULL OR os.fk_Driver <= 0) 
                 AND o.order_type = 1 
             ', 
-            array('Open', 'En Route', 'Assigned'));
+            array('Open', 'En Route', 'Assigned', 'Arrived'));
 
         
         // Close any open generic_Orders
-        DB::update('update generic_Order set `status` = "Delivered" where `status` IN (?,?,?) AND (fk_Driver IS NOT NULL AND fk_Driver > 0)', array('Open', 'En Route', 'Assigned'));
-        DB::update('update generic_Order set `status` = "Cancelled" where `status` IN (?,?,?) AND (fk_Driver IS NULL OR fk_Driver <= 0)', array('Open', 'En Route', 'Assigned'));
+        DB::update('update generic_Order set `status` = "Delivered" 
+            where `status` IN (?,?,?,?) AND (fk_Driver IS NOT NULL AND fk_Driver > 0)', 
+                array('Open', 'En Route', 'Assigned', 'Arrived'));
+        
+        DB::update('update generic_Order set `status` = "Cancelled" 
+            where `status` IN (?,?,?,?) AND (fk_Driver IS NULL OR fk_Driver <= 0)', 
+                array('Open', 'En Route', 'Assigned', 'Arrived'));
         
         return Redirect::back()
             ->with('msg', 
