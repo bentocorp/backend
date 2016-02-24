@@ -11,6 +11,8 @@ interface CouponInterface {
     
     public function getGiveAmount();
 
-    public function redeem($fk_Order);    
+    public function redeem($fk_Order);  
+    
+    public function getInvalidReasonString();
 }
 

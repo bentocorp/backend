@@ -13,11 +13,8 @@ class OrderCtrlTest extends TestCase {
         Route::enableFilters();
     }
     
-    private function getIdempotentToken() {
-        return rand(1000,9999) . chr(rand(65,90));
-    }
-    
-    
+
+        
     public function testCantOrderIfPublic()
     {
         // Given a non-authenticated user

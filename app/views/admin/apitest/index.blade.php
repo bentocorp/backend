@@ -451,7 +451,11 @@ Coupon
       <textarea name="data" class="form-control admin-jsonTextarea">
 {
     "reason": "sold out",
-    "email": "me@me.com"
+    "email": "me@me.com",
+    "lat": "12.456",
+    "long": "-10.456",
+    "address": "123 Anywhere St., San Francisco CA 94122",
+    "platform": "iOS"
 }
       </textarea>
       <input type="hidden" name="api_token" value="{{{Session::get('api_token')}}}">

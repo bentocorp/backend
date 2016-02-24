@@ -5,6 +5,7 @@ use Bento\Coupon\CouponTrait;
 
 
 /**
+ * @deprecated
  * A UserCoupon is the user's personal coupon code to give out
  */
 

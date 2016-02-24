@@ -4,19 +4,24 @@ namespace Bento\Coupon;
 
 use Bento\Model\Coupon;
 use User;
+use Lang;
 
 /**
  * A mother class to abstract away the handling of a specific type of coupon, 
  * such as a UserCoupon.
  */
 
-class AppCoupon {
+class AppCoupon implements CouponInterface {
     
     # The resolved coupon
     private $foundCoupon = NULL;
     
     # The pk of the insertion into CouponRedemption
     private $redemptionId;
+    
+    # The invalid reason
+    private $invalidReasonString;
+    
     
     /**
      * Instantiate the correct coupon type.
@@ -47,6 +52,8 @@ class AppCoupon {
         }
         
         // Otherwise...
+        $this->invalidReasonString = Lang::get('coupons.not_found');
+        
         return false;
     }
     
@@ -75,6 +82,20 @@ class AppCoupon {
     
     public function getCode() {
         return $this->foundCoupon->id();
+    }
+    
+    // Just to make the Interface happy
+    public function id() {
+        return $this->getCode();
+    }
+    
+    
+    public function getInvalidReasonString() 
+    {
+        if ($this->foundCoupon !== NULL)
+            return $this->foundCoupon->getInvalidReasonString();
+        else
+            return $this->invalidReasonString;
     }
     
         

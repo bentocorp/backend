@@ -29,7 +29,7 @@ class CouponCtrl extends \BaseController {
         
         // If this coupon doesn't exist, we're done
         if ($isValidCoupon === false)
-            return Response::json(array('error' => "We couldn't find that coupon code, or it has expired."), 404);
+            return Response::json(array('error' => $coupon->getInvalidReasonString()), 404);
         
         // So it's at least a valid code... Is it valid for this user?
         
@@ -38,7 +38,7 @@ class CouponCtrl extends \BaseController {
             return Response::json(array('amountOff' => $coupon->getGiveAmount()), 200);
         // if the code isn't valid for the user, return an error
         else
-            return Response::json(array('error' => 'Invalid coupon for you. Have you already used it?'), 400);
+            return Response::json(array('error' => $coupon->getInvalidReasonString()), 400);
     }
     
     
@@ -70,6 +70,12 @@ class CouponCtrl extends \BaseController {
         $cr->fk_user = $fk_User;
         $cr->reason = $data->reason;
         $cr->email = $data->email;
+        
+        // Some new stuff
+        isset($data->lat) ? $cr->lat = $data->lat : '';
+        isset($data->long) ? $cr->long = $data->long : '';
+        isset($data->address) ? $cr->address = $data->address : '';
+        isset($data->platform) ? $cr->platform = $data->platform : '';
         
         $cr->save();
         
