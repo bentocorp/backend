@@ -57,8 +57,8 @@ if ($recentOrderQty > 0):
 
                 // Alert if Trak Error, and not in Trak!
                 $trak_alert = '';
-                if ($row->trak_status != '200')
-                    $trak_alert = '<span class="label label-danger"><big>Onfleet Error!</big></span><br>';
+                //if ($row->trak_status != '200')
+                    //$trak_alert = '<span class="label label-danger"><big>Onfleet Error!</big></span><br>';
 
                 // OrderType
                 $orderType = OrderType::getAbbrNameFromId($row->order_type);

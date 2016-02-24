@@ -146,6 +146,20 @@ class CouponCtrlTest extends TestCase {
     }
     
     
+    public function test_AuthdUser_NotFirstTimeOrder_CanStillApply_Coupon_IfNotUsed()
+    {
+        // Given an authenticated user where has_ordered=1
+        $api_token = 'api_token=789';
+        
+        // When I attempt to use my code
+        $response = $this->call('GET', "/coupon/apply/1121113370998kkk7?$api_token");
+        $json = json_decode($response->getContent());
+
+        // Then I get ok
+        $this->assertResponseStatus(200);
+    }
+    
+    
     /**
      * already_used_self_coupon
      */
