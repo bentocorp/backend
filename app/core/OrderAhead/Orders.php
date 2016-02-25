@@ -67,7 +67,7 @@ class Orders {
             ,sum((select count(*) from CustomerBentoBox cbb where cbb.fk_Order = o.pk_Order)) `bentoCount`
         from `Order` o
         where o.scheduled_window_start >= ?
-        group by scheduled_window_start
+        group by `orderDate`
         order by `orderDate` asc
         ";
         $rows = DB::select($sql, array($date));
