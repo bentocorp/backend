@@ -80,7 +80,7 @@ $mealModeName = $mealMode->name;
       </div>
     </div>
 
-    <!-- Existing Nav Count: 12 -->
+    <!-- Existing Nav Count: 13 -->
     <div class="row">
         <div class="col-lg-2">
           <div id="sidebar">
@@ -88,15 +88,22 @@ $mealModeName = $mealMode->name;
             <div class="bg-{{$statusClass}} text-{{$statusClass}} status-bar">Status: {{$status}} / {{$mealModeName}}</div>
             <hr>
             
+            <!--
             <ul class="nav nav-pills nav-stacked">
               <li role="presentation" {{ isset($nav1) ? 'class="active"' : '' }} ><a href="/admin">OD Dashboard</a></li>
             </ul>
+            -->
 
-            <h4>Service</h4>
+            <h4>On-Demand</h4>
             <ul class="nav nav-pills nav-stacked">
+              <li role="presentation" {{ isset($nav1) ? 'class="active"' : '' }} ><a href="/admin">OD Dashboard</a></li>
               <li role="presentation" {{ isset($nav2) ? 'class="active"' : '' }} ><a href="/admin/inventory">OD Inventory</a></li>
               <li role="presentation" {{ isset($nav3) ? 'class="active"' : '' }} ><a href="/admin/order">OD Orders</a></li>
-              <li role="presentation" {{ isset($nav4) ? 'class="active"' : '' }} ><a href="/admin/pendingorder">Pending Orders</a></li>
+            </ul>
+            
+            <h4>Order Ahead</h4>
+            <ul class="nav nav-pills nav-stacked">
+              <li role="presentation" {{ isset($nav13) ? 'class="active"' : '' }} ><a href="/admin/oa/orders">OA Orders</a></li>
             </ul>
 
             <h4>Kitchen</h4>
@@ -111,6 +118,7 @@ $mealModeName = $mealMode->name;
             <ul class="nav nav-pills nav-stacked">
               <li role="presentation" {{ isset($nav6) ? 'class="active"' : '' }} ><a href="/admin/driver">Drivers</a></li>
               <li role="presentation" {{ isset($nav7) ? 'class="active"' : '' }} ><a href="/admin/user">Users</a></li>
+              <li role="presentation" {{ isset($nav4) ? 'class="active"' : '' }} ><a href="/admin/pendingorder">Pending Orders</a></li>
               <!-- <li role="presentation"><a href="/admin/coupon">Coupons</a></li> -->
             </ul>
 

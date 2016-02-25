@@ -152,6 +152,14 @@ Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
     Route::controller('reports', 'Bento\Admin\Ctrl\ReportsCtrl');
     
     Route::controller('kitchen', 'Bento\Admin\Ctrl\KitchenCtrl');
+    
+    /******************************
+     * Order Ahead Prefixed Routes
+     */
+    Route::group(array('prefix' => 'oa'), function() 
+    {
+        Route::controller('orders', 'Bento\Admin\Ctrl\OA\OrdersCtrl');
+    }); // End OA routes
 
 }); // /End protected admin rotes
 
