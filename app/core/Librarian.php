@@ -53,6 +53,7 @@ class Librarian {
             
             $item->title = self::getTitleForApp($order, 'InProgress');
             $item->price = '$'.$order->amount;
+            $item->driverId = $row->fk_Driver;
             
             $items[] = $item;
         }
@@ -98,6 +99,7 @@ class Librarian {
             
             $item->title = self::getTitleForApp($order, 'Upcoming');
             $item->price = '$'.$order->amount;
+            $item->driverId = $row1->fk_Driver;
             
             $items[] = $item;
         }
@@ -129,6 +131,7 @@ class Librarian {
             
             $item->title = self::getTitleForApp($order, 'Upcoming');
             $item->price = '$'.$order->amount;
+            $item->driverId = $row2->fk_Driver;
             
             $items[] = $item;
         }
@@ -142,8 +145,9 @@ class Librarian {
     {
         $sql = "
             # Get Past Orders
-            select o.*, o.created_at order_created_at,
-                    IF(o.order_type = 1, o.created_at, o.scheduled_window_start) as sortable_date
+            select 
+                o.*, o.created_at order_created_at, os.fk_Driver,
+                IF(o.order_type = 1, o.created_at, o.scheduled_window_start) as sortable_date
             from `Order` o
             left join OrderStatus os on (os.fk_Order = o.pk_Order)
             left join PendingOrder po on (po.fk_Order = o.pk_Order)
@@ -164,6 +168,7 @@ class Librarian {
             
             $item->title = self::getTitleForApp($order, 'Delivered');
             $item->price = '$'.$order->amount;
+            $item->driverId = $row->fk_Driver;
             
             $items[] = $item;
         }
