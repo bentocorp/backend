@@ -35,7 +35,7 @@ class UserCoupon implements CouponInterface {
         
     public function getGiveAmount() {
         
-        return "5.00";
+        return "15.00";
     }
     
     
@@ -53,6 +53,7 @@ class UserCoupon implements CouponInterface {
         # The person who is USING the coupon
         $user = User::get();
         
+        //2016-02-28: Nope. We're killing this, as per Jason, to avoid double dipping.
         // 1. A user can ALWAYS use their own coupon code, regardless of whether this is their first order or not
         
         // If it's their own coupon, just make sure they haven't already used it

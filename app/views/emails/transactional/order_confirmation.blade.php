@@ -151,7 +151,7 @@ else if ($order->order_type == 2)
 				<!-- block -->
 				<tr>
 					<td mc:edit="block-20" class="textblock-01" style="padding: 25px 40px 27px; font: 18px/24px Arial, Verdana, Helvetica, sans-serif; color: #fff;" align="center" bgcolor="#8abb5a">
-                                            Give your friends $5 off their first Bento order! Just give them your promo code: <br>
+                                            Give your friends $15 off their first Bento order! Just give them your promo code: <br>
                                             <b>{{$user->coupon_code}}</b>
 					</td>
 				</tr>
