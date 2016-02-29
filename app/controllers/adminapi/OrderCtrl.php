@@ -44,6 +44,11 @@ class OrderCtrl extends \BaseController {
         
          ## Check for some errors:
         
+        // $insertAt must not be NULL
+        if ($insertAt === NULL)
+            return Response::json(array('error' => "Did you mean to send -1 for insertAt, to tell me to append to the end?"), 
+                    400);
+        
         // A valid orderId was not passed
         if ($count == 0)
             return Response::json(array('error' => "A valid orderId was not passed. Must begin with 'o-'."), 
