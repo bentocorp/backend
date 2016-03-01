@@ -54,6 +54,8 @@ class Librarian {
             $item->title = self::getTitleForApp($order, 'InProgress');
             $item->price = '$'.$order->amount;
             $item->driverId = $row->fk_Driver;
+            $item->lat = $row->lat;
+            $item->long = $row->long;
             
             $items[] = $item;
         }
@@ -100,6 +102,8 @@ class Librarian {
             $item->title = self::getTitleForApp($order, 'Upcoming');
             $item->price = '$'.$order->amount;
             $item->driverId = $row1->fk_Driver;
+            $item->lat = $row1->lat;
+            $item->long = $row1->long;
             
             $items[] = $item;
         }
@@ -132,6 +136,8 @@ class Librarian {
             $item->title = self::getTitleForApp($order, 'Upcoming');
             $item->price = '$'.$order->amount;
             $item->driverId = $row2->fk_Driver;
+            $item->lat = $row2->lat;
+            $item->long = $row2->long;
             
             $items[] = $item;
         }
@@ -169,6 +175,8 @@ class Librarian {
             $item->title = self::getTitleForApp($order, 'Delivered');
             $item->price = '$'.$order->amount;
             $item->driverId = $row->fk_Driver;
+            $item->lat = $row->lat;
+            $item->long = $row->long;
             
             $items[] = $item;
         }
