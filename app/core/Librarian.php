@@ -18,7 +18,7 @@ class Librarian {
         $sql = "
             (
             # Get In Progress Orders
-            select * 
+            select *, os.status as order_status 
             #select 
                     #o.created_at utc_created_at, o.order_type, os.status, po.order_json
             from `Order` o
@@ -30,7 +30,7 @@ class Librarian {
             )
             UNION
             (
-            select * 
+            select *, os.status as order_status 
             #select 
                     #o.created_at utc_created_at, o.order_type, os.status, po.order_json
             from `Order` o
@@ -56,6 +56,7 @@ class Librarian {
             $item->driverId = $row->fk_Driver;
             $item->lat = $row->lat;
             $item->long = $row->long;
+            $item->order_status = $row->order_status;
             
             $items[] = $item;
         }
