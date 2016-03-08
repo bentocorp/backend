@@ -176,7 +176,7 @@ class Librarian {
             $order->fillMe($row);
             $item = new \stdClass();
             
-            $item->title = self::getTitleForApp($order, 'Recently Delivered');
+            $item->title = self::getTitleForApp($order, 'Delivered');
             $item->price = '$'.$order->amount;
             $item->driverId = $row->fk_Driver;
             $item->lat = $row->lat;
