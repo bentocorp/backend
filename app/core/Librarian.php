@@ -57,6 +57,7 @@ class Librarian {
             $item->lat = $row->lat;
             $item->long = $row->long;
             $item->order_status = $row->order_status;
+            $item->orderId = $row->pk_Order;
             
             $items[] = $item;
         }
@@ -105,6 +106,7 @@ class Librarian {
             $item->driverId = $row1->fk_Driver;
             $item->lat = $row1->lat;
             $item->long = $row1->long;
+            $item->orderId = $row1->pk_Order;
             
             $items[] = $item;
         }
@@ -139,6 +141,7 @@ class Librarian {
             $item->driverId = $row2->fk_Driver;
             $item->lat = $row2->lat;
             $item->long = $row2->long;
+            $item->orderId = $row2->pk_Order;
             
             $items[] = $item;
         }
@@ -173,7 +176,7 @@ class Librarian {
             $order->fillMe($row);
             $item = new \stdClass();
             
-            $item->title = self::getTitleForApp($order, 'Delivered');
+            $item->title = self::getTitleForApp($order, 'Recently Delivered');
             $item->price = '$'.$order->amount;
             $item->driverId = $row->fk_Driver;
             $item->lat = $row->lat;
