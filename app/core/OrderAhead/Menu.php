@@ -71,6 +71,8 @@ class Menu {
             $builtMenu['Menu'] = $menu;
             $builtMenu['MenuItems'] = $menuItems;
             $builtMenu['Times'] = self::parseTimes($oa_times);
+            // random | useDefault | first
+            $builtMenu['DefaultTimeMode'] = 'random';
 
             // Create some friendly date text
             $carbon = new Carbon($menu->for_date);
@@ -168,8 +170,9 @@ class Menu {
             
             $obj->start = $start;
             $obj->end = $end;
-            $obj->available = true;
-            $obj->delivery_price = $delivPrice;
+            $obj->available = true; # For showing that we have this time, but it's sold out; For demand shaping.
+            $obj->delivery_price = $delivPrice; # For different deliv prices per window; For demand shaping.
+            $obj->isDefault = false; # For forcing the app to default to a particular window; For demand shaping.
             
             // Push onto return array
             $retAr[] = $obj;
