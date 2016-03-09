@@ -18,24 +18,32 @@ class Librarian {
         $sql = "
             (
             # Get In Progress Orders
-            select *, os.status as order_status 
+            select 
+                o.pk_Order, o.amount, o.lat, o.long, o.order_type,
+                o.scheduled_window_start, o.scheduled_window_end, o.scheduled_timezone,
+                os.status as order_status, os.fk_Driver, d.firstname as driver_name
             #select 
                     #o.created_at utc_created_at, o.order_type, os.status, po.order_json
             from `Order` o
             left join OrderStatus os on (os.fk_Order = o.pk_Order)
             left join PendingOrder po on (po.fk_Order = o.pk_Order)
+            left join Driver d on (d.pk_Driver = os.fk_Driver)
             where os.status NOT IN ('Open', 'Delivered', 'Cancelled')
                     AND o.fk_User = ? AND o.order_type = 1
             order by o.created_at desc
             )
             UNION
             (
-            select *, os.status as order_status 
+            select 
+                o.pk_Order, o.amount, o.lat, o.long, o.order_type,
+                o.scheduled_window_start, o.scheduled_window_end, o.scheduled_timezone,
+                os.status as order_status, os.fk_Driver, d.firstname as driver_name
             #select 
                     #o.created_at utc_created_at, o.order_type, os.status, po.order_json
             from `Order` o
             left join OrderStatus os on (os.fk_Order = o.pk_Order)
             left join PendingOrder po on (po.fk_Order = o.pk_Order)
+            left join Driver d on (d.pk_Driver = os.fk_Driver)
             where os.status NOT IN ('Open', 'Delivered', 'Cancelled')
                     AND o.fk_User = ? AND o.order_type > 1
             order by o.created_at desc 
@@ -54,6 +62,7 @@ class Librarian {
             $item->title = self::getTitleForApp($order, 'InProgress');
             $item->price = '$'.$order->amount;
             $item->driverId = $row->fk_Driver;
+            $item->driverName = $row->driver_name;
             $item->lat = $row->lat;
             $item->long = $row->long;
             $item->order_status = $row->order_status;
