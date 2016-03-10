@@ -28,13 +28,20 @@ class KitchenCtrl extends \BaseController {
         
         // Lunch
         $orders = Orders::getLunchOrders($today);
+        $qtys1 = $this->getQtys($orders);
         $data['lunchOrders'] = $orders;
-        $data['lunchQtys'] = $this->getQtys($orders);
+        $data['lunchQtys'] = $qtys1->itemTotals;
+        $data['lunchBQty'] = $qtys1->bentoCount;
         
         // Dinner
         $orders2 = Orders::getDinnerOrders($today);
+        $qtys2 = $this->getQtys($orders2);
         $data['dinnerOrders'] = $orders2;
-        $data['dinnerQtys'] = $this->getQtys($orders2);
+        $data['dinnerQtys'] = $qtys2->itemTotals;
+        $data['dinnerBQty'] = $qtys2->bentoCount;
+        
+        // Special sushi bucket
+        $data['sushiBucket'] = array();
            
         return View::make('admin.kitchen.oascreen', $data);
     }
@@ -42,12 +49,15 @@ class KitchenCtrl extends \BaseController {
     
     private function getQtys($orders)
     {
+        $qtys = new \stdClass;
         $masterCount = array();
+        $bentoCount = 0;
         
         foreach ($orders as $order)
         {
-            $cashier = new Cashier(json_decode($order->order_json));
+            $cashier = new Cashier(json_decode($order->order_json), NULL, $order->pk_Order);
             $qtyHash = $cashier->getTotalsHash();
+            $bentoCount += $cashier->getTotalBentos();
             
             foreach ($qtyHash as $id => $qty) {
                 if (isset($masterCount[$id]))
@@ -57,7 +67,10 @@ class KitchenCtrl extends \BaseController {
             }
         }
         
-        return $masterCount;
+        $qtys->itemTotals = $masterCount;
+        $qtys->bentoCount = $bentoCount;
+        
+        return $qtys;
     }
     
    

@@ -135,6 +135,14 @@ CRUD Dish
         <div class="col-sm-5">{{ Form::checkbox('oa_avail', 1, null, array('style' => 'width:30px; height:30px;')); }}</div>
     </div>
     
+    <hr>
+    
+    <div class="form-group">
+        {{ Form::hidden('is_sushi', 0) }}
+        {{ Form::label('is_sushi', 'For the Sushi Station?', array('class' => 'col-sm-2 control-label')) }}
+        <div class="col-sm-5">{{ Form::checkbox('is_sushi', 1, null, array('style' => 'width:30px; height:30px;')); }}</div>
+    </div>
+    
     <div class="form-group">
         {{ Form::label('i_notes', 'Internal Notes', array('class' => 'col-sm-2 control-label label-light')) }}
         <div class="col-sm-5">{{ Form::textarea('i_notes', null, array('class' => 'form-control', 'rows' => 5)) }}</div>

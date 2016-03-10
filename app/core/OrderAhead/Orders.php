@@ -61,12 +61,15 @@ class Orders {
     {
         $sql = "
         select 
-                 date_format(o.scheduled_window_start, '%Y-%m-%d') `orderDate`
+            date_format(o.scheduled_window_start, '%Y-%m-%d') `orderDate`
             ,date_format(o.scheduled_window_start, '%W %M %D, %Y') `niceOrderDate`
-                ,count(*) order_qty
+            ,count(*) order_qty
             ,sum((select count(*) from CustomerBentoBox cbb where cbb.fk_Order = o.pk_Order)) `bentoCount`
         from `Order` o
-        where o.scheduled_window_start >= ?
+        left join OrderStatus os on (o.pk_Order = os.fk_Order)
+        WHERE 
+            o.scheduled_window_start >= ?
+            AND os.status != 'Cancelled'
         group by `orderDate`
         order by `orderDate` asc
         ";
@@ -81,7 +84,7 @@ class Orders {
      * @param date $date
      * @return Array of row objects
      */
-    public static function getOrdersByDay($date)
+    public static function getOrdersByDay($date, $statusClause)
     {
         # All OA orders
         $sql = "
@@ -107,11 +110,22 @@ class Orders {
                     o.scheduled_window_start >= '$date 00:00:00'
                 AND o.scheduled_window_start <= '$date 23:59:59'
                 AND o.order_type = 2
+                $statusClause
             ORDER BY o.scheduled_window_start ASC
         ";
         $rows = DB::select($sql, array());
         
         return $rows;
+    }
+        
+    public static function getMonetizedOrdersByDay($date)
+    {
+        return self::getOrdersByDay($date, " AND os.status != 'Cancelled' ");
+    }
+    
+    public static function getCancelledOrdersByDay($date)
+    {
+        return self::getOrdersByDay($date, " AND os.status = 'Cancelled' ");
     }
     
                         

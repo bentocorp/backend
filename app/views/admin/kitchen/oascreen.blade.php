@@ -1,6 +1,8 @@
 
 <?php
 use Bento\Admin\Model\Dish;
+
+
 ?>
 
 @extends('admin.master')
@@ -18,33 +20,40 @@ Dishes
 
 <hr>
 
-<h2>Lunch ({{count($lunchOrders)}})</h2>
-<?php
-printQtys($lunchQtys);
-?>
-
+<div class="clearfix">
+    <div style="float:left; width:50%;">
+        <h2 style="margin-top:0;">Lunch ({{count($lunchOrders)}}o/{{$lunchBQty}}b)</h2>
+        <?php printQtys($lunchQtys, $sushiBucket);?>
+    </div>
+    <div style="float:left; width:50%;">
+        <h2 style="margin-top:0;">Sushi List</h2>
+        <?php 
+        //var_dump($sushiBucket);
+        printTableStart();
+        printBucket($sushiBucket);
+        printTableEnd();
+        ?>
+    </div>
+</div>
+  
 <hr>
 
-<h2>Dinner ({{count($dinnerOrders)}})</h2>
+<h2>Dinner ({{count($dinnerOrders)}}o/{{$dinnerBQty}}b)</h2>
 <?php
-printQtys($dinnerQtys);
+//printQtys($dinnerQtys);
 ?>
 
 <br>
 
 <?php
-function printQtys($qtyHash)
+
+function printTableStart()
 {
-    // If nothing
-    if (count($qtyHash) == 0) {
-        echo '<div class="alert alert-info" role="alert">Nothing yet, sorry.</div>';
-        return;
-    }
-    
     ?>
     <table class="table table-striped" style="width:auto; font-size:200%;">
         <thead>
           <tr>
+            <th>&nbsp;</th>
             <th>Name</th>
             <th>Code</th>
             <th>Qty</th>
@@ -53,26 +62,88 @@ function printQtys($qtyHash)
 
         <tbody>
         <?php
-    
-    foreach($qtyHash as $dishId => $qty) 
-    {
-        $dish = Dish::find($dishId);
-        ?>
-        <tr>
-          <td>{{$dish->name}}</td>
-          <td>{{$dish->label}}</td>
-          <td>{{$qty}}</td>
-        </tr>
-        <?php
-    }
-    
+}
+
+
+function printTableEnd()
+{
         ?>
         </tbody>
     </table>
     <?php
 }
-?>
 
+
+function printQtys($qtyHash, & $sushiBucket)
+{   
+    // If nothing
+    if (count($qtyHash) == 0) {
+        echo '<div class="alert alert-info" role="alert">Nothing yet, sorry.</div>';
+        return;
+    }
+    
+    // Open the table
+    printTableStart();
+    
+    // Setup in the order you want
+    $buckets = array();
+    $buckets['mainBucket'] = array();
+    $buckets['sideBucket'] = array();
+    $buckets['addonBucket'] = array();
+    $buckets['miscBucket'] = array();
+        
+    // Put in buckets for sorting
+    foreach($qtyHash as $dishId => $qty) 
+    {
+        $agDish = new \stdClass();
+        $dish = Dish::find($dishId);
+        
+        $agDish->dish = $dish;
+        $agDish->qty = $qty;
+        
+        // Group by type
+        if ($dish->type == 'main')
+            $buckets['mainBucket'][] = $agDish;
+        else if ($dish->type == 'side')
+            $buckets['sideBucket'][] = $agDish;
+        else if ($dish->type == 'addon')
+            $buckets['addonBucket'][] = $agDish;
+        else
+            $buckets['miscBucket'][] = $agDish;
+        
+        // Special sushi bucket
+        if ($dish->is_sushi) {
+            #die("it's sushi");
+            $sushiBucket[] = $agDish;
+            //var_dump($sushiBucket);
+        }
+    }
+    
+    foreach($buckets as $bucket)
+    {
+        printBucket($bucket);
+    }
+    
+    // Close the table
+    printTableEnd();
+}
+
+
+function printBucket($bucket)
+{
+    foreach ($bucket as $agDish)
+    {
+        ?>
+        <tr>
+          <td>{{substr($agDish->dish->type, 0, 1)}}</td>
+          <td>{{$agDish->dish->name}}</td>
+          <td>{{$agDish->dish->label}}</td>
+          <td>{{$agDish->qty}}</td>
+        </tr>
+        <?php        
+    }
+}
+?>
 
   
 @stop

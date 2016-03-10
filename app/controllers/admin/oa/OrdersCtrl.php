@@ -39,8 +39,11 @@ class OrdersCtrl extends \BaseController {
         $data['date'] = $date;
         
         // Get orders by day
-        $orders = Orders::getOrdersByDay($date);
-        $data['orders'] = $orders;
+        $monetizedOrders = Orders::getMonetizedOrdersByDay($date);
+        $data['monetizedOrders'] = $monetizedOrders;
+        
+        $cancelledOrders = Orders::getCancelledOrdersByDay($date);
+        $data['cancelledOrders'] = $cancelledOrders;
         
         return View::make('admin.oa.orders.day', $data);
     }

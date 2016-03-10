@@ -2,6 +2,7 @@
 
 
 use User;
+use DB;
 
 
 /**
@@ -87,6 +88,14 @@ class Cashier {
         }
         
         return $totals;
+    }
+    
+    
+    public function getTotalBentos()
+    {
+        $sql = "select count(*) total from CustomerBentoBox where fk_Order = ?";
+        
+        return DB::select($sql, array($this->pk_Order))[0]->total;
     }
     
     
