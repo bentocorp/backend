@@ -78,9 +78,9 @@ class CouponCtrlTest extends TestCase {
         // Then I get ok
         $this->assertTrue($this->client->getResponse()->isOk());
         
-        // And the amount for this coupon is 5.00
+        // And the amount for this coupon is 15.00
         $json = json_decode($response->getContent());
-        $this->assertEquals('5.00', $json->amountOff);
+        $this->assertEquals('15.00', $json->amountOff);
         
         // And when I try again with the same coupon
         $response2 = $this->call('GET', "/coupon/apply/vincent2?$api_token");
@@ -101,8 +101,8 @@ class CouponCtrlTest extends TestCase {
         $this->assertResponseStatus(200);
         $json4 = json_decode($response4->getContent());
         
-        // And the amount for my personal coupon is 5.00
-        $this->assertEquals('5.00', $json4->amountOff);
+        // And the amount for my personal coupon is 15.00
+        $this->assertEquals('15.00', $json4->amountOff);
                  
         // Reset (Shouldn't need to)
         #DB::delete('delete from CouponRedemption where fk_User = ?', array(67));
@@ -215,7 +215,15 @@ class CouponCtrlTest extends TestCase {
             },
             "IdempotentToken": "%s",
             "Platform": "iOS",
-            "CouponCode": "vincentt21"
+            "CouponCode": "vincentt21",
+            
+            "order_type": "2",
+            "kitchen": "1",
+            "OrderAheadZone": "1",
+            "for_date": "2030-09-15",
+            "scheduled_window_start": "13:00",
+            "scheduled_window_end": "14:00",
+            "MenuId": "17"
         }';
         
         $parameters = array(
