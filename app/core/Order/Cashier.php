@@ -95,7 +95,10 @@ class Cashier {
     {
         $sql = "select count(*) total from CustomerBentoBox where fk_Order = ?";
         
-        return DB::select($sql, array($this->pk_Order))[0]->total;
+        $total = DB::select($sql, array($this->pk_Order))[0]->total;
+        //var_dump($total);
+        
+        return $total;
     }
     
     

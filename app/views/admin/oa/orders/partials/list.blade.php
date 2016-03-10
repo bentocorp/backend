@@ -107,8 +107,10 @@ if ($orderQty > 0):
                             <tbody>
                                 <?php 
                                 // Bentos
-                                $boxCount = 1;
-                                foreach ($bentoBoxes as $box) {
+                                $boxCount = 0;
+                                foreach ($bentoBoxes as $box) 
+                                {
+                                    $boxCount++;
                                     ?>
                                     <tr>
                                       <th scope="row">Bento Box {{$boxCount}}: ${{$box->unit_price_paid}}</th>
@@ -119,7 +121,6 @@ if ($orderQty > 0):
                                       <td>{{$box->side4_name}} - {{$box->side4_label}}</td>
                                     </tr>
                                     <?php
-                                    $boxCount++;
                                 }
                                 
                                 
@@ -130,7 +131,6 @@ if ($orderQty > 0):
                                       <td colspan="6">{{$addon->qty}}x {{$addon->name}}: ${{NumUtil::formatPriceForEmail($addon->qty * $addon->unit_price_paid)}} <small>({{$addon->qty}} @ ${{NumUtil::formatPriceForEmail($addon->unit_price_paid)}})</small></td>
                                     </tr>
                                     <?php
-                                    $boxCount++;
                                 }
                                 
                                 // Add to Master Totals
