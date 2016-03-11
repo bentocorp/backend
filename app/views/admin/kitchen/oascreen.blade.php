@@ -21,11 +21,11 @@ Dishes
 <hr>
 
 <div class="clearfix">
-    <div style="float:left; width:50%;">
+    <div style="float:left; width:49%;">
         <h2 style="margin-top:0;">Lunch ({{count($lunchOrders)}}o/{{$lunchBQty}}b)</h2>
         <?php printQtys($lunchQtys, $sushiBucket);?>
     </div>
-    <div style="float:left; width:50%;">
+    <div style="float:right; width:49%;">
         <h2 style="margin-top:0;">Sushi List</h2>
         <?php 
         //var_dump($sushiBucket);
