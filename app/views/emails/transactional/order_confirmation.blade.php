@@ -153,7 +153,10 @@ else if ($order->order_type == 2)
 					<td mc:edit="block-20" class="textblock-01" style="padding: 25px 40px 27px; font: 18px/24px Arial, Verdana, Helvetica, sans-serif; color: #fff;" align="center" bgcolor="#8abb5a">
                                             Give your friends $15 off their first Bento order! Just give them your promo code: <br>
                                             <b>{{$user->coupon_code}}</b>
-					</td>
+                                            <?php if (!$user->has_oa_subscription): ?>
+                                            <br>Want free delivery? <a href="http://subscription.bentonow.com" target="_blank" style="color:white;">Join Bento Premier!</a>
+                                            <?php endif; ?>
+                                        </td>
 				</tr>
 				<!-- shadow-blocks -->
 				<tr>
@@ -246,7 +249,8 @@ else if ($order->order_type == 2)
 				<tr>
 					<td mc:edit="block-20" class="textblock-01" style="padding: 25px 40px 27px; font: 22px/30px Arial, Verdana, Helvetica, sans-serif; color: #fff;" align="center" bgcolor="#8abb5a">
 						Made with &hearts; in our very own kitchen.<br>
-						Arigatō and Bento on!
+                                                <a href="https://www.yelp.com/biz/bento-san-francisco" target="_blank" style="color:white;">Like us? Find us on Yelp!</a><br>
+                                                Arigatō and Bento on!
 					</td>
 				</tr>
 				<!-- footer -->

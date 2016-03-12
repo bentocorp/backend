@@ -1223,7 +1223,7 @@ DATA;
     /**
      * @EmailTest
      */
-    public function testEmailWithPromoCode() 
+    public function test_Email_WithPromoCode() 
     {
         // Given:
         //  an order from an authorized user, 
@@ -1322,6 +1322,101 @@ DATA;
         
         // Clean up
         DB::update('update settings set `value` = "open" where `key` = ?', array('status'));
+    }
+    
+    
+    public function test_Email_HasOaSubscription() 
+    {
+        // Given an order ahead from an authorized user who has a Stripe card on file with us,
+        $idempotentTkn = $this->getIdempotentToken();
+        $parameters = array(
+            "data" =>
+                '{
+                    "OrderItems": [
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "unit_price": 12.00,
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"},
+                                {"id": 3, "type": "side2"}
+                            ]
+                        },
+                        {
+                            "item_type": "CustomerBentoBox",
+                            "unit_price": 10.00,
+                            "items": [
+                                {"id": 1, "type": "main"},
+                                {"id": 2, "type": "side1"}
+                            ]
+                        },
+                        {
+                            "item_type": "AddonList",
+                            "items": [
+                                {"id": 20,  "qty": 5, "unit_price": 3.75},
+                                {"id": 21,  "qty": 7, "unit_price": 2.75}
+                            ]
+                        }
+                    ],
+                    "OrderDetails": {
+                        "address": {
+                            "number": "1111",
+                            "street": "Kearny st.",
+                            "city": "San Francisco",
+                            "state": "CA",
+                            "zip": "94133"
+                        },
+                        "coords": {
+                            "lat": "37.798220",
+                            "long": "-122.405606"
+                        },
+                        "tax_cents": 137,
+                        "tip_cents": 200,
+                        "total_cents": "1537"
+                    },
+                    "Stripe": {
+                        "stripeToken": NULL
+                    },
+                    "IdempotentToken": "'.$idempotentTkn.'",
+                    "Platform": "iOS",
+                    
+                    "order_type": "2",
+                    "kitchen": "1",
+                    "OrderAheadZone": "1",
+                    "for_date": "2037-09-15",
+                    "scheduled_window_start": "13:00",
+                    "scheduled_window_end": "14:00",
+                    "MenuId": "17"
+                }'
+                ,
+            "api_token" => "00123"
+        );
+        
+        // and enough inventory for the order,
+        DB::table('MenuInventory')->truncate();
+        DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(1, 100));
+        DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(2, 100));
+        DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(3, 0)); # And we don't care about neg
+        DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(20, 100));
+        DB::insert('insert into MenuInventory (fk_item, qty) values (?, ?)', array(21, 100));
+        
+        
+        // When I attempt to order
+        $response = $this->call('POST', '/order', $parameters);
+        
+        // Then I get ok
+        $this->assertResponseStatus(200);
+        
+        
+        // And the inventory was deducted properly
+        $mi = DB::select('select * from MenuInventory');
+        $miIdx = DbUtil::makeIndexFromResults($mi, 'fk_item');
+        
+        $this->assertEquals(98, $miIdx[1]->qty);
+        $this->assertEquals(98,  $miIdx[2]->qty);
+        $this->assertEquals(-1,  $miIdx[3]->qty); # And we don't care about neg
+        $this->assertEquals(95,  $miIdx[20]->qty);
+        $this->assertEquals(93,  $miIdx[21]->qty);
     }
     
     
