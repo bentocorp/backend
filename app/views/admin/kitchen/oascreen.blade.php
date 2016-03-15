@@ -102,6 +102,17 @@ function printQtys($qtyHash, & $sushiBucket)
         $agDish->dish = $dish;
         $agDish->qty = $qty;
         
+        // Special sushi bucket
+        // VJC: And remove it from the master list, which is what they said they wanted! (I don't like it)
+        if ($dish->is_sushi) {
+            #die("it's sushi");
+            $sushiBucket[] = $agDish;
+            //var_dump($sushiBucket);
+            
+            // Return, so nothing else happens
+            continue;
+        }
+        
         // Group by type
         if ($dish->type == 'main')
             $buckets['mainBucket'][] = $agDish;
@@ -111,13 +122,6 @@ function printQtys($qtyHash, & $sushiBucket)
             $buckets['addonBucket'][] = $agDish;
         else
             $buckets['miscBucket'][] = $agDish;
-        
-        // Special sushi bucket
-        if ($dish->is_sushi) {
-            #die("it's sushi");
-            $sushiBucket[] = $agDish;
-            //var_dump($sushiBucket);
-        }
     }
     
     foreach($buckets as $bucket)
