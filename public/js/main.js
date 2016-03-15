@@ -178,6 +178,27 @@ bt.DInv.Merge = (function() {
 })();
 
 
+/******************************************************************************
+ * Clock class
+ * 
+ * @return singleton closure
+ */
+bt.Clock = (function() {
+    
+    var that = {};
+    
+    that.getLocalDate = function() 
+    {
+        var now = moment();
+        now.tz(moment.tz.guess());
+        
+        return now.format('YYYY-MM-DD');
+    }
+    
+    return that;
+})();
+
+
 
 /***************************************
  * On document ready
@@ -223,6 +244,15 @@ $(document).ready(function() {
         var createdLoc = createdUtc.tz("America/Los_Angeles");
         
         $(this).html(createdLoc.format('YYYY-MM-DD HH:mm:ss z'));
+    });
+    
+    // Countdown Timer for the OA Screen
+    //console.log(bt.Clock.getLocalDate());
+    var today = bt.Clock.getLocalDate();
+    var lunchCutoff = moment.tz(today+" 10:00", "America/Los_Angeles");
+
+    $('#countdown-lunch').countdown(lunchCutoff.toDate(), function(event) {
+        $(this).html(event.strftime('%H:%M:%S'));
     });
           
 });

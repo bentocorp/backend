@@ -22,7 +22,7 @@ Dishes
 
 <div class="clearfix">
     <div style="float:left; width:49%;">
-        <h2 style="margin-top:0;">Lunch ({{count($lunchOrders)}}o/{{$lunchBQty}}b)</h2>
+      <h2 style="margin-top:0;">Lunch ({{count($lunchOrders)}}o/{{$lunchBQty}}b) &nbsp; <span class="label label-info"><span id="countdown-lunch"></span> until 10am</span></h2>
         <?php printQtys($lunchQtys, $sushiBucket);?>
     </div>
     <div style="float:right; width:49%;">
@@ -41,6 +41,7 @@ Dishes
 <h2>Dinner ({{count($dinnerOrders)}}o/{{$dinnerBQty}}b)</h2>
 <?php
 //printQtys($dinnerQtys);
+// To do: Don't hardcode this. Re-use this template again.
 ?>
 
 <br>

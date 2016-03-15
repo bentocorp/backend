@@ -46,6 +46,7 @@ $mealModeName = $mealMode->name;
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/moment-with-locales.min.js"></script>
     <script src="/js/moment-timezone-with-data.min.js"></script>
+    <script src="/js/jquery.countdown.min.js"></script>
     <script src="/js/main.js"></script>
     
   </head>
