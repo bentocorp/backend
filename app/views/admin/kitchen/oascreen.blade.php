@@ -26,7 +26,7 @@ Dishes
         <?php printQtys($lunchQtys, $sushiBucket);?>
     </div>
     <div style="float:right; width:49%;">
-        <h2 style="margin-top:0;">Sushi List</h2>
+        <h2 style="margin-top:0;">Sushi Station</h2>
         <?php 
         //var_dump($sushiBucket);
         printTableStart();
