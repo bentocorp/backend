@@ -22,7 +22,7 @@ Dishes
 
 <div class="clearfix">
     <div style="float:left; width:49%;">
-      <h2 style="margin-top:0;">Lunch ({{count($lunchOrders)}}o/{{$lunchBQty}}b) &nbsp; <span class="label label-info"><span id="countdown-lunch"></span> until 10am</span></h2>
+      <h2 style="margin-top:0;">Lunch ({{count($lunchOrders)}}o/{{$lunchBQty}}b)</h2>
         <?php printQtys($lunchQtys, $sushiBucket);?>
     </div>
     <div style="float:right; width:49%;">
@@ -33,6 +33,7 @@ Dishes
         printBucket($sushiBucket);
         printTableEnd();
         ?>
+        <h1 style="font-size:150px;"><span class="label label-info" style="padding:.2em .2em .3em .2em"><span id="countdown-lunch"></span></span></h1>
     </div>
 </div>
   
