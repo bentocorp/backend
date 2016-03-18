@@ -8,6 +8,7 @@ if ($menuList !== NULL): ?>
 <table class="table">
     <thead>
       <tr>
+        <th style="width:90px">Kitchen</th>
         <th style="width:90px">For Date</th>
         <th style="width:170px;">Name</th>
         <th>Meal</th>
@@ -34,6 +35,7 @@ if ($menuList !== NULL): ?>
             $isOa = '(OA)';
         
         echo "<tr>";
+            echo "<th>$menu->kitchen_name</th>";
             echo "<th>$menu->for_date</th>";
             echo "<td><a href='/admin/menu/edit/{$menu->pk_Menu}'>$menuName</a></td>";
             echo "<td><cap>$menu->meal_name</cap></td>";
@@ -41,7 +43,7 @@ if ($menuList !== NULL): ?>
             echo "<td>$menu->created_at</td>";
             echo "<td>$menu->updated_at</td>";
         echo "</tr>";
-        echo "<tr><td colspan='6' style='padding-left:40px;'>";
+        echo "<tr><td colspan='7' style='padding-left:40px;'>";
             foreach ($compoundMenu['MenuItems'] as $menuItem) {
                 echo "<i>$menuItem->type:</i> $menuItem->name  &nbsp;|&nbsp; ";
             }

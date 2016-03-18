@@ -91,9 +91,11 @@ class Menu extends \Eloquent {
         $sql = "SELECT m.*,
                     mt.name meal_name,
                     mt.order meal_order,
-                    mt.startTime meal_start
+                    mt.startTime meal_start,
+                    k.name kitchen_name
                 FROM Menu m
                 left join MealType mt on (m.fk_MealType = mt.pk_MealType)
+                left join Kitchen k on (m.fk_Kitchen = k.pk_Kitchen)
                 WHERE m.for_date $dateComparator ? AND m.published
                 ORDER BY m.for_date $sort
          ";

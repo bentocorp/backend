@@ -143,7 +143,8 @@ CRUD Menu
     <div class="form-group" id="oa_times">
         {{ Form::label('oa_times', 'Time Slots', array('class' => 'col-sm-2 control-label')) }}
         <div class="col-sm-5">
-          <p>Lunch: {{ Form::radio('oa_times', '11:00-12:00,12:00-13:00,13:00-14:00', null, array('class' => '', 'required'=>true)); }} 11:00-12:00,12:00-13:00,13:00-14:00<p>
+          <p>Lunch SF: {{ Form::radio('oa_times', '11:00-12:00,12:00-13:00,13:00-14:00', null, array('class' => '', 'required'=>true)); }} 11:00-12:00,12:00-13:00,13:00-14:00<p>
+          <p>Lunch EB: {{ Form::radio('oa_times', '11:30-12:30,12:30-13:30,13:30-14:30', null, array('class' => '', 'required'=>true)); }} 11:30-12:30,12:30-13:30,13:30-14:30<p>
           <p>Dinner: {{ Form::radio('oa_times', '17:00-18:00,18:00-19:00,19:00-20:00,20:00-21:00', null, array('class' => '', 'required'=>true)); }} 17:00-18:00,18:00-19:00,19:00-20:00,20:00-21:00</p>
         </div>
     </div>
