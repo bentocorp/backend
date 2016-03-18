@@ -74,7 +74,11 @@ if ($orderQty > 0):
                 
                 ?>
                 <tr>
-                    <th scope="row">{{ $row->pk_Order }}<br>{{$orderType}}</th>
+                    <th scope="row">
+                      {{ $row->pk_Order }}<br>
+                      {{$orderType}}<br>
+                      {{$row->oaz_name}}
+                    </th>
                     <td><?php echo $trak_alert?>{{ $user_name }} <br>{{ $row->user_phone }} <br><small>${{$row->amount}} {{$row->fk_Coupon}}</small></td>
                     <td>{{{ $row->number }}} {{{ $row->street }}} {{{ $row->city }}}, {{{ $row->state }}} {{{ $row->zip }}}<br><small>{{ $row->user_email }}</small></td>
                     <td>

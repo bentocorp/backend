@@ -98,11 +98,15 @@ class Orders {
                 u.phone as user_phone, u.email as user_email,
                 concat(d.firstname, ' ', d.lastname) as driver_name,
                 u.is_top_customer,
-                d.pk_Driver
+                d.pk_Driver,
+                oaz.name oaz_name,
+                k.name kitchen_name
             from `Order` o
             left join OrderStatus os on (o.pk_Order = os.fk_Order)
             left join Driver d on (os.fk_Driver = d.pk_Driver)
             left join User u on (o.fk_User = u.pk_User)
+            left join Kitchen k on (o.fk_Kitchen = k.pk_Kitchen)
+            left join OrderAheadZone oaz on (o.fk_OrderAheadZone = oaz.pk_OrderAheadZone)
             #WHERE os.status IN ('Delivered', 'Cancelled')
             WHERE
                 # Convert from local timestamp to UTC, since that's what the DB and servers store time in
