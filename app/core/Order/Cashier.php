@@ -182,7 +182,7 @@ class Cashier {
         $orderStr .= $checklist;
         $orderStr .= "[ ] Accuracy \\n";
         $orderStr .= "[ ] Mochi, ask which type of soy sauce, wasabi, offer utensils \\n";
-        $orderStr .= "[ ] FREE Coconut Rice Pudding! \\n"; // VJC: Remove after this week
+        //$orderStr .= "[ ] FREE Coconut Rice Pudding! \\n"; // VJC: Remove after this week
         
         $orderStr .= "\\nArigatō!";
         
