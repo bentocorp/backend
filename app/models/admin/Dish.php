@@ -21,6 +21,10 @@ class Dish extends \Eloquent {
         
         unset($data['_token']);
         
+        // Default to NULL
+        if (isset($data['our_cost']) && $data['our_cost'] == '')
+            $data['our_cost'] = NULL;
+        
         DB::table('Dish')
                     ->where('pk_Dish', $id)
                     ->update($data);

@@ -19,7 +19,10 @@ App::before(function($request)
 
 App::after(function($request, $response)
 {
-	//
+    $response->headers->set('Access-Control-Allow-Origin','*');
+    $response->headers->set('Access-Control-Allow-Methods','POST, GET, OPTIONS');
+    
+    return $response;
 });
 
 /*

@@ -139,8 +139,17 @@ CRUD Dish
     
     <div class="form-group">
         {{ Form::hidden('is_sushi', 0) }}
-        {{ Form::label('is_sushi', 'For the Sushi Station?', array('class' => 'col-sm-2 control-label')) }}
+        {{ Form::label('is_sushi', 'For the Sushi Station?', array('class' => 'col-sm-2 control-label label-light')) }}
         <div class="col-sm-5">{{ Form::checkbox('is_sushi', 1, null, array('style' => 'width:30px; height:30px;')); }}</div>
+    </div>
+    
+    <div class="form-group">
+        {{ Form::label('our_cost', 'Our Cost', array('class' => 'col-sm-2 control-label label-light')) }}
+        <div class="col-sm-5">{{ @Form::number('our_cost', null, array(
+                    'class' => 'form-control',
+                    'min' => '0.00',
+                    'step' => '.01',
+        ))}}</div>
     </div>
     
     <div class="form-group">
