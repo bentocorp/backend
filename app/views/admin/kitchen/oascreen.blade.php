@@ -52,7 +52,7 @@ Dishes
 function printTableStart()
 {
     ?>
-    <table class="table table-striped" style="width:auto; font-size:200%;">
+    <table class="table table-striped table-condensed" style="width:auto; font-size:200%;">
         <thead>
           <tr>
             <th>&nbsp;</th>
