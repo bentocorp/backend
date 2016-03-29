@@ -143,8 +143,8 @@ function printBucket($bucket)
         <tr>
           <td>{{substr($agDish->dish->type, 0, 1)}}</td>
           <td>{{$agDish->dish->name}}</td>
-          <td>{{$agDish->dish->label}}</td>
-          <td>{{$agDish->qty}}</td>
+          <td style="font-size:150%"><b>{{$agDish->dish->label}}</b></td>
+          <td style="font-size:150%"><b>{{$agDish->qty}}</b></td>
         </tr>
         <?php        
     }
