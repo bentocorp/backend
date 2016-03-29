@@ -5,7 +5,7 @@ use Bento\Admin\Model\Dish;
 
 ?>
 
-@extends('admin.master')
+@extends('admin.master-noside')
 
 @section('content')
 
