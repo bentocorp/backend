@@ -129,7 +129,7 @@ class CouponCtrlTest extends TestCase {
     }
     
     
-    public function test_AuthdUser_NotFirstTimeOrder_CanStillApply_SelfUserCoupon_IfNotUsed()
+    public function test_AuthdUser_NotFirstTimeOrder_CanNotStillApply_SelfUserCoupon_IfNotUsed()
     {
         // Given an authenticated user where has_ordered=1
         $api_token = 'api_token=08764';
@@ -139,7 +139,7 @@ class CouponCtrlTest extends TestCase {
         $json = json_decode($response->getContent());
 
         // Then I get ok
-        $this->assertResponseStatus(200);
+        $this->assertResponseStatus(400);
         
         // reset (Shouldn't need to)
         #DB::delete('delete from CouponRedemption where fk_User = ?', array(7));
@@ -239,22 +239,27 @@ class CouponCtrlTest extends TestCase {
         
         // When I attempt to order
         $parameters['data'] = sprintf($data, $idempotentTkn);
-        $response = $this->call('POST', '/order', $parameters);   
+        $response = $this->call('POST', '/order', $parameters);
+        $json = json_decode($response->getContent());
         //---------------------------------------------------------------------
 
-        // Then I get ok
-        $this->assertResponseStatus(200);
-        
-        // And when I attempt to use my code again (with a new idempotent token)
-        $parameters['data'] = sprintf($data, $this->getIdempotentToken());
-        $response2 = $this->call('POST', '/order', $parameters);
-        $json2 = json_decode($response2->getContent());
-        
         // Then I get an error
         $this->assertResponseStatus(400);
         
         // and it's the correct error
-        $this->assertEquals(Lang::get('coupons.already_used_self_coupon'), $json2->error);
+        $this->assertEquals(Lang::get('coupons.not_first_order'), $json->error);
+        
+        
+//        // And when I attempt to use my code again (with a new idempotent token)
+//        $parameters['data'] = sprintf($data, $this->getIdempotentToken());
+//        $response2 = $this->call('POST', '/order', $parameters);
+//        $json2 = json_decode($response2->getContent());
+//        
+//        // Then I get an error
+//        $this->assertResponseStatus(400);
+//        
+//        // and it's the correct error
+//        $this->assertEquals(Lang::get('coupons.already_used_self_coupon'), $json2->error);
         
         // reset
         DB::delete('delete from CouponRedemption where fk_User = ?', array(6));

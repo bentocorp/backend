@@ -57,6 +57,7 @@ class UserCoupon implements CouponInterface {
         // 1. A user can ALWAYS use their own coupon code, regardless of whether this is their first order or not
         
         // If it's their own coupon, just make sure they haven't already used it
+        /*
         if ( $this->id() == $user->coupon_code ) 
         {
             $results = DB::select('select * from CouponRedemption where fk_User = ? AND fk_Coupon = ?', 
@@ -69,17 +70,19 @@ class UserCoupon implements CouponInterface {
                 $this->invalidReasonString = Lang::get('coupons.already_used_self_coupon');
                 return false;
             }
-        }        
+        }
+         * 
+         */
         // 2. For all else, the auto-generated user coupon codes are only good for your FIRST order
-        else
-        {
+        //else
+        //{
             if ($user->has_ordered) {
                 $this->invalidReasonString = Lang::get('coupons.not_first_order');
                 return false;
             }
             else
                 return true;
-        }
+        //}
     }
     
     
